@@ -22,7 +22,7 @@ namespace SOM.Models
         public DateTime m_dUpdateDate { get; set; }
         public int m_iOrderLineStatus { get; set; }
         public TL4MsgInfoLine m_L4MsgInfoLine { get; set; }
-        //m_eimOELineInterface: TL4EngineInterfaceMng;
+        public TL4EngineInterfaceMng m_eimOELineInterface { get; set; }
 
     }
 }

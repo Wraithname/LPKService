@@ -62,6 +62,7 @@
     <Compile Include="Models\TCheckResult.cs" />
     <Compile Include="Models\TL4MsgInfo.cs" />
     <Compile Include="Models\TMessageResult.cs" />
+    <Compile Include="PartitionOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ using Work.Models;
 
 namespace SOM.Infostraction
 {
-    class TL4EngineInterfaceMngRepo : ITL4EngineInterfaceMng
+    public class TL4EngineInterfaceMngRepo : ITL4EngineInterfaceMng
     {
         public object CheckValue(string strTableNameOrigin, string strFieldNameOrigin, string strAliasFieldNameOrigin, bool bIsValidValue, TL4MsgInfo l4MsgInfo, string strTableNameDec, string strFieldNameDec, string strWhereOptional = "")
         {
