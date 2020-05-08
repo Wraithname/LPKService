@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LPKService.SDK
+namespace SOM
 {
-    public interface IWorker
+    class L4EngineInterface
     {
-        void Load();
-        void Unload();
-        void DoWork();
     }
 }

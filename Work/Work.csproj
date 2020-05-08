@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2629E52F-4257-4783-8EBF-39D7E647CC03}</ProjectGuid>
+    <ProjectGuid>{882D4DD8-C734-4D0F-AAC0-577DA73202E6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LPKService.SDK</RootNamespace>
-    <AssemblyName>LPKService.SDK</AssemblyName>
+    <RootNamespace>Work</RootNamespace>
+    <AssemblyName>Work</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,7 +41,10 @@
       <HintPath>..\packages\Oracle.ManagedDataAccess.19.7.0\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -53,12 +56,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IWorker.cs" />
+    <Compile Include="L4L3InterfaceServiceConst.cs" />
+    <Compile Include="L4L3InterfaceServiceGlobalCheck.cs" />
+    <Compile Include="L4L3InterfaceUtility.cs" />
+    <Compile Include="Models\TCheckResult.cs" />
+    <Compile Include="Models\TL4MsgInfo.cs" />
+    <Compile Include="Models\TMessageResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Logger\Logger.csproj">
+      <Project>{3bccb274-37c3-40a5-a177-9708c46d22b4}</Project>
+      <Name>Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LPKService\LPKService.csproj">
+      <Project>{71a99aae-e98e-4ebd-a19c-06690db65874}</Project>
+      <Name>LPKService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repository\Repository.csproj">
+      <Project>{87b4638a-8693-43a8-8e42-ddec8415c880}</Project>
+      <Name>Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

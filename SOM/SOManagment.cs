@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SOM
 {
+    enum TShiptoType { Shipto,Billto};
     public class SOManagment
     {
+
     }
 }

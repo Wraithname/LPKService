@@ -6,16 +6,17 @@ using System.Threading;
 using System.Linq;
 using Logger;
 using Oracle.ManagedDataAccess.Client;
+using Repository;
 namespace LPKService
 {
     public partial class LPKService : ServiceBase
     {
 
         private Log logger = LogFactory.GetLogger(nameof(LPKService));
-        Thread ThreadWrok;
+        //Thread ThreadWrok;
         AutoResetEvent ShutdownEvent = new AutoResetEvent(false);
         ManualResetEvent PauseEvent = new ManualResetEvent(false);
-        private int timeout;
+        //private int timeout;
         public LPKService()
         {
             InitializeComponent();
@@ -35,7 +36,7 @@ namespace LPKService
             //    exitEvent.Set();
             //};
 
-            OracleConnection conn = Config.DBOracleUtils.GetDBConnection();
+            OracleConnection conn = BaseRepo.GetDBConnection();
 
             Console.WriteLine("Get Connection: " + conn);
             try
