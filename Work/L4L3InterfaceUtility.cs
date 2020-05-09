@@ -51,7 +51,7 @@ namespace Work
             string stm = @"SELECT ACR.AN_CONTROL_VALUE AS AN_CONTROL_VALUE FROM ATTRB_CONTROL_RULES ACR,
 ATTRB_CONTROL_VERSION ACV WHERE TRIM(SUBSTR(" + SAttrbValue + ", 1, length(" + SAttrbValue + "))) = " +
 "TRIM(SUBSTR(ACR.AN_CONTROL_VALUE, 1, length(" + SAttrbValue + ")))AND ACR.ATTRB_CODE =" + SAttrbCode + "AND ACR.DUMMY_KEY = ACV.DUMMY_KEY " +
-"AND TO_CHAR(ACV.EXPIRATION_DATE, 'DD/MM/YYYY') = '01/01/1970' ";
+"AND TO_CHAR(ACV.EXPIRATION_DATE, "DD/MM/YYYY") = "01/01/1970" ";
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 return connection.QueryFirstOrDefault<string>(stm, odp);
