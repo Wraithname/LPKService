@@ -8,7 +8,7 @@ using SOM.Repo;
 namespace SOM
 {
     enum TShiptoType { Shipto,Billto};
-    public class SOManagment:ISOManagment
+    public class SOManagment
     {
 
     }
