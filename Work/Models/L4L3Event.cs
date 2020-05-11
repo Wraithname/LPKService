@@ -7,7 +7,7 @@ using Repository;
 
 namespace Work.Models
 {
-    class L4L3Event:BaseModel
+    class L4L3Event
     {
         [Column("KEY_MSG_COUNTER", "Счетчик сообщений")]
         public int keyMsgCounter { get; set; }

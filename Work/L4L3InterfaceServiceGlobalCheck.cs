@@ -3,9 +3,15 @@ using Logger;
 
 namespace Work
 {
-    public class L4L3InterfaceServiceGlobalCheck
+    interface IGlobalCheck
     {
-        private Log logger = LogFactory.GetLogger(nameof(LPKService));
+        TCheckResult InitResultWithFalse();
+        void MngSuccesed(TL4MsgInfo l4MsgInfo, TCheckResult result);
+        void SetMsgResult(TL4MsgInfo l4MsgInfo, int newStatus, string newRemark, string logMessage = "");
+    }
+    public class L4L3InterfaceServiceGlobalCheck:IGlobalCheck
+    {
+        private Log logger = LogFactory.GetLogger(nameof(L4L3InterfaceServiceGlobalCheck));
         public TCheckResult InitResultWithFalse()
         {
             TCheckResult result = new TCheckResult();

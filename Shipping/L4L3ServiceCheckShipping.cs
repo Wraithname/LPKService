@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Work.Models;
+using Logger;
 
 namespace Shipping
 {
@@ -21,6 +22,7 @@ namespace Shipping
     }
     class L4L3ServiceCheckShipping : L4L3ServCheckShip
     {
+        private Log logger = LogFactory.GetLogger(nameof(IL4L3SerShipping));
         public bool CheckBolExistIsShip(string strBolId)
         {
             throw new NotImplementedException();

@@ -28,6 +28,6 @@ namespace SOM.Repo
         void LoadAttrb(TL4MsgInfoLine tL4MsgInfoLine, string strProductType, int iSoID, int iSoLineID, TCheckRelatedList attrbSO, List<string> strArrayOfAttributes);
         int RetrievePeriodNumID(DateTime dDeliveryDate, int iPeriodCode, string sPeriodID, DateTime dStopDate);
         int RetrieveShipToCode(int iCustomerId, int iShiptoId);
-        //void SetOEHeaderValues();
+        void SetOEHeaderValues(TSoHeader order, TL4EngineInterfaceMng eimOrderEntry, bool bUpdatingOrder = false);
     }
 }

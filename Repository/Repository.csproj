@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes.cs" />
-    <Compile Include="BaseModel.cs" />
     <Compile Include="BaseRepo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

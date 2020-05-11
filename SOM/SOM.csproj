@@ -56,8 +56,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CCManagement.cs" />
     <Compile Include="Infostraction\TL4EngineInterfaceMngRepo.cs" />
     <Compile Include="Infostraction\TL4MsgInfoLineRepo.cs" />
+    <Compile Include="Models\AddresEngine.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\CustomerCat.cs" />
+    <Compile Include="Models\CustomerCatCredit.cs" />
     <Compile Include="Models\TCheckRelatedList.cs" />
     <Compile Include="Models\TDeleteResponse.cs" />
     <Compile Include="Models\THeaderNote.cs" />
@@ -67,9 +72,12 @@
     <Compile Include="Models\TSoLine.cs" />
     <Compile Include="Infostraction\TSoHeaderRepo.cs" />
     <Compile Include="Infostraction\TSoLineRepo.cs" />
+    <Compile Include="Models\ZipCatalogue.cs" />
+    <Compile Include="Repo\ICCManagement.cs" />
     <Compile Include="Repo\ISOManagment.cs" />
     <Compile Include="Repo\ITL4EngineInterfaceMng.cs" />
     <Compile Include="Repo\ITL4MsgInfoLine.cs" />
+    <Compile Include="Repo\ITSoHeader.cs" />
     <Compile Include="Repo\ITSoLine.cs" />
     <Compile Include="SOManagment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
