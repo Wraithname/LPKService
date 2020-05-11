@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("L4L3InterfaceService")]
+[assembly: AssemblyTitle("Shipping")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("L4L3InterfaceService")]
+[assembly: AssemblyProduct("Shipping")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("e3decca0-d6fe-4584-a435-9255ead3aff0")]
+[assembly: Guid("deae560d-cb0b-40df-92cb-621d5e321c72")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //

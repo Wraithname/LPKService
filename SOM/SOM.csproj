@@ -58,7 +58,6 @@
   <ItemGroup>
     <Compile Include="Infostraction\TL4EngineInterfaceMngRepo.cs" />
     <Compile Include="Infostraction\TL4MsgInfoLineRepo.cs" />
-    <Compile Include="L4EngineInterface.cs" />
     <Compile Include="Models\TCheckRelatedList.cs" />
     <Compile Include="Models\TDeleteResponse.cs" />
     <Compile Include="Models\THeaderNote.cs" />

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SOM
+namespace WorkTests
 {
-    class L4EngineInterface
+    class L4L3InterfaceServiceGlobalCheckL4L3InterfaceServiceGlobalCheck
     {
     }
 }
