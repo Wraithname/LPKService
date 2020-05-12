@@ -7,7 +7,7 @@ using Repository;
 
 namespace Shipping.Models
 {
-    public class L4L3Shipping:BaseModel
+    public class L4L3Shipping
     {
         [Column("MSG_COUNTER", "Счетчик сообщений")]
         public int msgCounter { get; set; }

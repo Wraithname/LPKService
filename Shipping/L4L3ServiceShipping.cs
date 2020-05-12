@@ -8,6 +8,7 @@ using Logger;
 
 namespace Shipping
 {
+    //Используется таблица L4_L3_SHIPPING
     public enum TPieceAction { paAssign , paDeAssign }
     interface IL4L3SerShipping
     {

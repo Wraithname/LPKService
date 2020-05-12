@@ -11,9 +11,11 @@ using Dapper;
 using Oracle.ManagedDataAccess.Client;
 using Repository;
 using Logger;
+using SOM.Infostraction;
 
 namespace SOM
 {
+    //Используется таблица L4_L3_CUSTOMER
     class CCManagement : ICCManagement
     {
         private Log logger = LogFactory.GetLogger(nameof(CCManagement));
@@ -34,11 +36,11 @@ namespace SOM
 
         public bool CheckCustomerExists(string strCustomerDescrId, OracleDynamicParameters odp = null)
         {
-            int RecordCount=0;
+            int RecordCount = 0;
             string str = "select count(*) from   customer_catalogue where  customer_descr_id  = " + strCustomerDescrId;
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                RecordCount= connection.QueryFirstOrDefault<int>(str, odp);
+                RecordCount = connection.QueryFirstOrDefault<int>(str, odp);
             }
             if (RecordCount > 0)
                 return true;
@@ -50,22 +52,87 @@ namespace SOM
         {
             throw new NotImplementedException();
         }
-
-        public bool FillAddressEngine(AddresEngine addrEngine, string pModUserId, OracleDynamicParameters odp = null)
+        
+        public bool FillAddressEngine(AddresCat adrescat, string pModUserId, OracleDynamicParameters odp = null)
         {
+            AddressEngine addressEngine = new AddressEngine();
             Country cnt = new Country();
+            ZipCatalogue zip = new ZipCatalogue();
             logger.Trace("Init 'FillAddressEngine' function");
-            string str = "SELECT * FROM COUNTRY WHERE COUNTRY =  ";
+            bool result = true;
+            string str = "SELECT * FROM COUNTRY WHERE COUNTRY =  "+ adrescat.country;
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 cnt = connection.QueryFirstOrDefault<Country>(str, odp);
             }
-            return false;
+            if (cnt == null)
+            {
+                str = "INSERT INTO COUNTRY ( " +
+                    "COUNTRY," +
+                    "COUNTRY_CODE," +
+                    "COUNTRY_ON_DOC," +
+                    "MOD_USER_ID," +
+                    "MOD_DATETIME" +
+                    ") VALUES (" +
+                    ":P_COUNTRY," +
+                    ":P_COUNTRY_CODE," +
+                    ":P_COUNTRY_ON_DOC," +
+                    ":P_MOD_USER_ID," +
+                    "SYSDATE )";
+                odp.Add("P_COUNTRY", adrescat.country);
+                odp.Add("P_COUNTRY_CODE", adrescat.country.Substring(0, 40));
+                odp.Add("P_COUNTRY_ON_DOC", adrescat.country);
+                odp.Add("P_MOD_USER_ID", pModUserId);
+                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                {
+                    connection.Execute(str, odp);
+                }
+                odp = null;
+            }
+            str = "SELECT * FROM ZIP_CATALOGUE WHERE COUNTRY = " + adrescat.country + " AND ZIP_CODE = " + adrescat.zipCode + " AND CITY = " + adrescat.city;
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                zip = connection.QueryFirstOrDefault<ZipCatalogue>(str, odp);
+            }
+            if(zip==null)
+            {
+                str = "INSERT INTO ZIP_CATALOGUE ( " +
+                    "COUNTRY," +
+                    "ZIP_CODE," +
+                    "CITY," +
+                    "MOD_USER_ID," +
+                    "MOD_DATETIME" +
+                    ") VALUES (" +
+                    ":P_COUNTRY," +
+                    ":P_ZIP_CODE," +
+                    ":P_CITY," +
+                    ":P_MOD_USER_ID," +
+                    "SYSDATE )";
+                odp.Add("P_COUNTRY", adrescat.country);
+                odp.Add("P_ZIP_CODE", adrescat.zipCode);
+                odp.Add("P_CITY", adrescat.city);
+                odp.Add("P_MOD_USER_ID", pModUserId);
+                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                {
+                    connection.Execute(str, odp);
+                }
+                odp = null;
+            }
+            return result;
         }
 
-        public int GetCustIDFromDescr(string sCustomerDescrId)
+        public int GetCustIDFromDescr(string sCustomerDescrId, OracleDynamicParameters odp = null)
         {
-            throw new NotImplementedException();
+            int res = 0;
+            string str = "SELECT CUSTOMER_ID FROM CUSTOMER_CATALOG WHERE CUSTOMER_DESCR_ID = " + sCustomerDescrId;
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                res = connection.QueryFirstOrDefault<int>(str, odp);
+                if (res > 0)
+                    return res;
+                else
+                    return -1;
+            }
         }
     }
 }

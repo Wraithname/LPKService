@@ -7,8 +7,8 @@ namespace SOM.Repo
     interface ICCManagement
     {
         TCheckResult CustomerMng(TL4MsgInfo l4MsgInfo);
-        bool FillAddressEngine(AddresEngine addrEngine,string pModUserId, OracleDynamicParameters odp = null);
-        int GetCustIDFromDescr(string sCustomerDescrId);
+        bool FillAddressEngine(AddresCat adrescat,string pModUserId, OracleDynamicParameters odp = null);
+        int GetCustIDFromDescr(string sCustomerDescrId, OracleDynamicParameters odp = null);
         string CheckClassificationType(string strClassification, OracleDynamicParameters odp = null);
         bool CheckCustomerExists(string strCustomerDescrId, OracleDynamicParameters odp = null);
     }

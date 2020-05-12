@@ -2,7 +2,7 @@
 using Repository;
 namespace Work.Models
 {
-    public class L4L3SoLine:BaseModel
+    public class L4L3SoLine
     {
         [Column("KEY_MSG_COUNTER", "Счетчик сообщений")]
         public int keyMsgCounter { get; set; }

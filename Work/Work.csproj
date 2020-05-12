@@ -59,6 +59,7 @@
     <Compile Include="L4L3InterfaceServiceConst.cs" />
     <Compile Include="L4L3InterfaceServiceGlobalCheck.cs" />
     <Compile Include="L4L3InterfaceUtility.cs" />
+    <Compile Include="Models\L4L3Customer.cs" />
     <Compile Include="Models\L4L3Event.cs" />
     <Compile Include="Models\L4L3SoHeader.cs" />
     <Compile Include="Models\L4L3SoLine.cs" />

@@ -7,6 +7,7 @@ using SOM.Repo;
 
 namespace SOM
 {
+    //Используется таблица L4_L3_SO_HEADER
     enum TShiptoType { Shipto,Billto};
     public class SOManagment
     {
