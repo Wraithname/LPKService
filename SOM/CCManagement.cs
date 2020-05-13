@@ -16,7 +16,7 @@ using SOM.Infostraction;
 namespace SOM
 {
     //Используется таблица L4_L3_CUSTOMER
-    class CCManagement : ICCManagement
+    public class CCManagement : ICCManagement
     {
         private Log logger = LogFactory.GetLogger(nameof(CCManagement));
         public string CheckClassificationType(string strClassification, OracleDynamicParameters odp = null)

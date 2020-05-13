@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuncionalTest", "FuncionalT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipping", "Shipping\Shipping.csproj", "{DEAE560D-CB0B-40DF-92CB-621D5E321C72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LPKServiceSDK", "LPKServiceSDK\LPKServiceSDK.csproj", "{27304222-679B-4E18-8B73-2F9707D35853}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{DEAE560D-CB0B-40DF-92CB-621D5E321C72}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DEAE560D-CB0B-40DF-92CB-621D5E321C72}.Release|x86.ActiveCfg = Release|x86
 		{DEAE560D-CB0B-40DF-92CB-621D5E321C72}.Release|x86.Build.0 = Release|x86
+		{27304222-679B-4E18-8B73-2F9707D35853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27304222-679B-4E18-8B73-2F9707D35853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27304222-679B-4E18-8B73-2F9707D35853}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{27304222-679B-4E18-8B73-2F9707D35853}.Debug|x86.Build.0 = Debug|Any CPU
+		{27304222-679B-4E18-8B73-2F9707D35853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27304222-679B-4E18-8B73-2F9707D35853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27304222-679B-4E18-8B73-2F9707D35853}.Release|x86.ActiveCfg = Release|Any CPU
+		{27304222-679B-4E18-8B73-2F9707D35853}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,7 +17,7 @@ namespace Shipping
         TCheckResult LocalSetPiece(TL4MsgInfo l4MsgInfo,TPieceAction action, TForShipping forShipping);
         TCheckResult L4L3MaterialMovement(TL4MsgInfo l4MsgInfo);
     }
-    class L4L3ServiceShipping : IL4L3SerShipping
+    public class L4L3ServiceShipping : IL4L3SerShipping
     {
         private Log logger = LogFactory.GetLogger(nameof(IL4L3SerShipping));
         public void CreateBol(string strBolId)
