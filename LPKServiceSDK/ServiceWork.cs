@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Work.Models;
+using Oracle.ManagedDataAccess.Client;
+using Repository;
+using Dapper.Oracle;
+using Dapper;
 
 namespace LPKServiceSDK
 {
@@ -45,7 +49,17 @@ namespace LPKServiceSDK
 
         public string GetBolId(int msgCounter)
         {
-            throw new NotImplementedException();
+            string res = "";
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            string str = "SELECT nvl(BOL_ID,'' '') as BOL_ID FROM L4_L3_DELIVERY WHERE MSG_COUNTER = :P_MSG_COUNTER ";
+            odp.Add("P_MSG_COUNTER", msgCounter);
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                res= connection.QueryFirstOrDefault<string>(str, odp);
+            }
+            if (res != "")
+                return res;
+            return "-";
         }
 
         public void GetNewMessage()
@@ -75,12 +89,29 @@ namespace LPKServiceSDK
 
         public void UpdateMsgStatus(TL4MsgInfo l4MsgInfo)
         {
-            throw new NotImplementedException();
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            string str = "UPDATE L4_L3_EVENT SET   MSG_STATUS  = %p, MSG_REMARK  = %p WHERE MSG_COUNTER = %p ";
+            odp.Add("P_MSG_STATUS", l4MsgInfo.msgReport.status);
+            odp.Add("P_MSG_REMARK", l4MsgInfo.msgReport.remark);
+            odp.Add("P_MSG_COUNTER", l4MsgInfo.msgCounter);
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                connection.Execute(str, odp);
+            }
         }
 
         public void UpdateStatusMessage(int msgCounter, int status, string remark)
         {
-            throw new NotImplementedException();
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            string str = "UPDATE L4_L3_DELIVERY_EVENT SET MSG_STATUS = :P_MSG_STATUS, MSG_REMARK = :P_MSG_REMARK, " +
+                "MSG_PROCCESS_DATETIME = SYSDATE WHERE  MSG_COUNTER = :P_MSG_COUNTER";
+            odp.Add("P_MSG_STATUS", status);
+            odp.Add("P_MSG_REMARK", remark);
+            odp.Add("P_MSG_COUNTER", msgCounter);
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                connection.Execute(str, odp);
+            }
         }
     }
 }
