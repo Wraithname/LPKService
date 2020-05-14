@@ -18,7 +18,7 @@ namespace SOM.Repo
         bool LineIsSalesApproval(int iSoID,int iSoLineID);
         bool ReadyForClosing(int iSoID, int iSoLineID);
         int ManageShipTo(TL4MsgInfo l4MsgInfo,TL4EngineInterfaceMng eimOrderEntry);
-        TCheckResult SalesOrderMng(TL4MsgInfo l4MsgInfo);
+        TCheckResult SalesOrderMng(L4L3SoHeader soHeader,TL4MsgInfo l4MsgInfo);
         bool ExistCustomer(string m_iCustSoldDescrID);
         void CreateNewOrder(DataSet QryData, TL4MsgInfo l4MsgInfo);
         bool AlreadyInsertInSuspended(int iSoID);

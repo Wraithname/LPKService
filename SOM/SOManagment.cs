@@ -89,7 +89,7 @@ namespace SOM
             throw new NotImplementedException();
         }
 
-        public TCheckResult SalesOrderMng(TL4MsgInfo l4MsgInfo)
+        public TCheckResult SalesOrderMng(L4L3SoHeader soHeader, TL4MsgInfo l4MsgInfo)
         {
             throw new NotImplementedException();
         }

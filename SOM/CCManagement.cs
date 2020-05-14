@@ -48,7 +48,7 @@ namespace SOM
                 return false;
         }
 
-        public TCheckResult CustomerMng(TL4MsgInfo l4MsgInfo)
+        public TCheckResult CustomerMng(L4L3Customer customer, TL4MsgInfo l4MsgInfo)
         {
             throw new NotImplementedException();
         }

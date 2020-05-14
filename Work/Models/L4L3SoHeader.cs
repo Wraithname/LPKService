@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Repository;
+﻿using Repository;
+using System;
 
 namespace Work.Models
 {
-    class L4L3SoHeader
+    public class L4L3SoHeader
     {
         [Column("KEY_MSG_COUNTER", "Счетчик сообщений")]
         public int keyMsgCounter { get; set; }

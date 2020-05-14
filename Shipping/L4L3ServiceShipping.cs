@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Work.Models;
+using Shipping.Models;
 using Logger;
 
 namespace Shipping
@@ -12,7 +13,7 @@ namespace Shipping
     public enum TPieceAction { paAssign , paDeAssign }
     interface IL4L3SerShipping
     {
-        TCheckResult ShippingMng(TL4MsgInfo l4MsgInfo);
+        TCheckResult ShippingMng(L4L3Shipping ship,TL4MsgInfo l4MsgInfo);
         void CreateBol(string strBolId);
         TCheckResult LocalSetPiece(TL4MsgInfo l4MsgInfo,TPieceAction action, TForShipping forShipping);
         TCheckResult L4L3MaterialMovement(TL4MsgInfo l4MsgInfo);
@@ -35,7 +36,7 @@ namespace Shipping
             throw new NotImplementedException();
         }
 
-        public TCheckResult ShippingMng(TL4MsgInfo l4MsgInfo)
+        public TCheckResult ShippingMng(L4L3Shipping ship, TL4MsgInfo l4MsgInfo)
         {
             throw new NotImplementedException();
         }

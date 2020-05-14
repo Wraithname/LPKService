@@ -1,0 +1,31 @@
+﻿using Work.Models;
+using Work.Repo;
+using Oracle.ManagedDataAccess.Client;
+using Dapper;
+using Dapper.Oracle;
+using Repository;
+using Logger;
+
+namespace Work.Infostraction
+{
+    public class L4L3SoHeaderRepo : IL4L3SoHeader
+    {
+        private Log logger = LogFactory.GetLogger(nameof(L4L3SoHeader));
+        public L4L3SoHeader GetData(TL4MsgInfo l4MsgInfo)
+        {
+            L4L3SoHeader soHeader = new L4L3SoHeader();
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            string str = "SELECT * FROM L4_L3_SO_HEADER WHERE MSG_COUNTER = :P_MSG_COUNTER";
+            odp.Add("P_MSG_COUNTER", l4MsgInfo.msgCounter);
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                soHeader = connection.QueryFirstOrDefault<L4L3SoHeader>(str, odp);
+            }
+            if (soHeader == null)
+            {
+                logger.Error($"Нет данных в таблице L4_L3_SO_HEADER, для Msg_Counter: {l4MsgInfo.msgCounter}");
+            }
+            return soHeader;
+        }
+    }
+}
