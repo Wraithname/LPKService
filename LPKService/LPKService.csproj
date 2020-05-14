@@ -92,7 +92,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IServiceWork.cs" />
     <Compile Include="LPKService.cs">
       <SubType>Component</SubType>
     </Compile>
