@@ -53,14 +53,14 @@ namespace SOM
             throw new NotImplementedException();
         }
         
-        public bool FillAddressEngine(AddresCat adrescat, string pModUserId, OracleDynamicParameters odp = null)
+        public bool FillAddressEngine(L4L3Customer customer, string pModUserId, OracleDynamicParameters odp = null)
         {
             AddressEngine addressEngine = new AddressEngine();
             Country cnt = new Country();
             ZipCatalogue zip = new ZipCatalogue();
             logger.Trace("Init 'FillAddressEngine' function");
             bool result = true;
-            string str = "SELECT * FROM COUNTRY WHERE COUNTRY =  "+ adrescat.country;
+            string str = "SELECT * FROM COUNTRY WHERE COUNTRY =  "+ customer.country;
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 cnt = connection.QueryFirstOrDefault<Country>(str, odp);
@@ -79,9 +79,9 @@ namespace SOM
                     ":P_COUNTRY_ON_DOC," +
                     ":P_MOD_USER_ID," +
                     "SYSDATE )";
-                odp.Add("P_COUNTRY", adrescat.country);
-                odp.Add("P_COUNTRY_CODE", adrescat.country.Substring(0, 40));
-                odp.Add("P_COUNTRY_ON_DOC", adrescat.country);
+                odp.Add("P_COUNTRY", customer.country);
+                odp.Add("P_COUNTRY_CODE", customer.country.Substring(0, 40));
+                odp.Add("P_COUNTRY_ON_DOC", customer.country);
                 odp.Add("P_MOD_USER_ID", pModUserId);
                 using (OracleConnection connection = BaseRepo.GetDBConnection())
                 {
@@ -89,7 +89,7 @@ namespace SOM
                 }
                 odp = null;
             }
-            str = "SELECT * FROM ZIP_CATALOGUE WHERE COUNTRY = " + adrescat.country + " AND ZIP_CODE = " + adrescat.zipCode + " AND CITY = " + adrescat.city;
+            str = "SELECT * FROM ZIP_CATALOGUE WHERE COUNTRY = " + customer.country + " AND ZIP_CODE = " + customer.zipCode + " AND CITY = " + customer.city;
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 zip = connection.QueryFirstOrDefault<ZipCatalogue>(str, odp);
@@ -108,9 +108,9 @@ namespace SOM
                     ":P_CITY," +
                     ":P_MOD_USER_ID," +
                     "SYSDATE )";
-                odp.Add("P_COUNTRY", adrescat.country);
-                odp.Add("P_ZIP_CODE", adrescat.zipCode);
-                odp.Add("P_CITY", adrescat.city);
+                odp.Add("P_COUNTRY", customer.country);
+                odp.Add("P_ZIP_CODE", customer.zipCode);
+                odp.Add("P_CITY", customer.city);
                 odp.Add("P_MOD_USER_ID", pModUserId);
                 using (OracleConnection connection = BaseRepo.GetDBConnection())
                 {
@@ -118,6 +118,18 @@ namespace SOM
                 }
                 odp = null;
             }
+            if(result)
+            result=addressEngine.SetAddressFullName(customer.customerName);
+            if (result)
+                result = addressEngine.SetZipCode(customer.zipCode);
+            if (result)
+                result = addressEngine.SetAddress1(customer.address1);
+            if (result)
+                result = addressEngine.SetAddress2(customer.address2);
+            if (result)
+                result = addressEngine.SetAddress3(customer.address3);
+            if (result)
+                result = addressEngine.SetCity(customer.city);
             return result;
         }
 

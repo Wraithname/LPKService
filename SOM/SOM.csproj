@@ -78,7 +78,7 @@
     <Compile Include="Infostraction\AddressEngine.cs" />
     <Compile Include="Infostraction\TL4EngineInterfaceMngRepo.cs" />
     <Compile Include="Infostraction\TL4MsgInfoLineRepo.cs" />
-    <Compile Include="Models\AddresCat.cs" />
+    <Compile Include="Models\AddressCat.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\CustomerCat.cs" />
     <Compile Include="Models\CustomerCatCredit.cs" />
