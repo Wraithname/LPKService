@@ -8,6 +8,8 @@ using Logger;
 
 namespace Shipping
 {
+    //Используется таблица L4_L3_Shipping
+    //Файл L4L3ServiceCheckShipping
     public enum TForShipping { YESShipped,NOShipped }
     interface L4L3ServCheckShip
     {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SOM.Models;
 using SOM.Repo;
 using Work.Models;
+using Work;
 using Dapper.Oracle;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
@@ -16,6 +17,7 @@ using SOM.Infostraction;
 namespace SOM
 {
     //Используется таблица L4_L3_CUSTOMER
+    //Файл CCManagment.pas
     public class CCManagement : ICCManagement
     {
         private Log logger = LogFactory.GetLogger(nameof(CCManagement));
@@ -50,6 +52,32 @@ namespace SOM
 
         public TCheckResult CustomerMng(L4L3Customer customer, TL4MsgInfo l4MsgInfo)
         {
+            TCheckResult checkres = new TCheckResult();
+            TL4EngineInterfaceMngRepo engInterf = new TL4EngineInterfaceMngRepo();
+            AddressEngine addressEngine = new AddressEngine();
+            bool res = true;
+            float el4CustomerId;
+            int iTmp;
+            string l4CustomerId, CustomerIdForL4m, ShiptoForL4, sAddressIdBillTo, sDestinationAddressId, l4CreateUserId, l4ModUserId;
+            logger.Trace("Init 'CustomerMng' function");
+            l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
+            try
+            {
+                l4CustomerId = customer.customerId.ToString();
+                el4CustomerId = customer.customerId;
+                CustomerIdForL4m = l4CustomerId;
+                logger.Trace("LOG_TRACE e - 'CustomerIdForL4':" + CustomerIdForL4m + "'l4CustomerId':" + l4CustomerId);
+                if(l4MsgInfo.opCode==L4L3InterfaceServiceConst.OP_CODE_DEL)
+                {
+          //          if (cCatalEngine.LoadData(l4CustomerId) > 0) then
+          //          begin
+          //          if cCatalEngine.IsCustomerDeletable(cCatalEngine.GetCustomerID) then
+          //          cCatalEngine.DeleteCustomer(cCatalEngine.GetCustomerID);
+          //          end
+                }
+                
+            }
+            catch { }
             throw new NotImplementedException();
         }
         
@@ -130,6 +158,22 @@ namespace SOM
                 result = addressEngine.SetAddress3(customer.address3);
             if (result)
                 result = addressEngine.SetCity(customer.city);
+            if (result)
+                result = addressEngine.SetState(customer.state);
+            if (result)
+                result = addressEngine.SetCountry(customer.country);
+            if (result)
+                result = addressEngine.SetContactName(customer.contactName);
+            if (result)
+                result = addressEngine.SetContactPhone1(customer.contactPhone);
+            if (result)
+                result = addressEngine.SetContactFax(customer.contactFax);
+            if (result)
+                result = addressEngine.SetContactMobile(customer.contactMobile);
+            if (result)
+                result = addressEngine.SetEmailAddress(customer.contactEmail);
+            if (result)
+                result = addressEngine.SaveData(false);
             return result;
         }
 

@@ -11,6 +11,7 @@ using Work.Models;
 namespace SOM
 {
     //Используется таблица L4_L3_SO_HEADER
+    //Файл SOManagment.pas
     enum TShiptoType { Shipto,Billto};
     public class SOManagment : ISOManagment
     {

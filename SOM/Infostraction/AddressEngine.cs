@@ -4,11 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SOM.Repo;
+using SOM.Models;
 
 namespace SOM.Infostraction
 {
     class AddressEngine : IAddressCat
     {
+        AddresCat adressCatalog;
+
+        public AddressEngine()
+        {
+            this.adressCatalog = new AddresCat();
+        }
+
         public bool SaveData(bool action)
         {
             throw new NotImplementedException();

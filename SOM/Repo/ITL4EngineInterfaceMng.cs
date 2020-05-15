@@ -7,7 +7,7 @@ namespace SOM.Repo
     interface ITL4EngineInterfaceMng
     {
         string DecodeUserToUserId(string pL4UserName);
-        TL4EngineInterfaceMng Create(TL4MsgInfo pL4MsgInfoPtr);
+        TL4EngineInterfaceMng Create(L4L3Customer customer, TL4MsgInfo pL4MsgInfoPtr);
         bool NotifyErrorMessage(string Text, string Caption = "", bool pFatal = true);
         bool NotifyErrorMessage(string Text, string pErrorCode);
         bool NotifyErrorTree(bool pFatal);

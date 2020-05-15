@@ -11,6 +11,12 @@ namespace SOM.Infostraction
 {
     public class TL4EngineInterfaceMngRepo : ITL4EngineInterfaceMng
     {
+        TL4EngineInterfaceMng TL4Engine;
+        public TL4EngineInterfaceMngRepo()
+        {
+            this.TL4Engine = new TL4EngineInterfaceMng();
+        }
+
         public object CheckValue(string strTableNameOrigin, string strFieldNameOrigin, string strAliasFieldNameOrigin, bool bIsValidValue, TL4MsgInfo l4MsgInfo, string strTableNameDec, string strFieldNameDec, string strWhereOptional = "")
         {
             throw new NotImplementedException();
@@ -21,7 +27,7 @@ namespace SOM.Infostraction
             throw new NotImplementedException();
         }
 
-        public TL4EngineInterfaceMng Create(TL4MsgInfo pL4MsgInfoPtr)
+        public TL4EngineInterfaceMng Create(L4L3Customer customer, TL4MsgInfo pL4MsgInfoPtr)
         {
             throw new NotImplementedException();
         }
