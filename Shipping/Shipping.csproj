@@ -73,6 +73,7 @@
     <Compile Include="Infostraction\L4L3ShippingRepo.cs" />
     <Compile Include="L4L3ServiceCheckShipping.cs" />
     <Compile Include="L4L3ServiceShipping.cs" />
+    <Compile Include="Models\L4L3RmAndMatCat.cs" />
     <Compile Include="Models\L4L3Shipping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repo\IL4L3Shipping.cs" />

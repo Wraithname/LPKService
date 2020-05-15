@@ -36,5 +36,11 @@
         public const int BOL_NOT_SENT = 1;//equal to BOL_CREATED in AUX_VALUES
         public const int BOL_SENT = 2;//equal to BOL_SHIPPED in AUX_VALUES
         public const string BOL_HEADER_TABLE = "EXT_BOL_HEADER";
+
+        ////Constant related to piece
+        //PIECE_STATUS_EXIST=STY_PIECE_STATUS_EXISTING;// defined in StockYardConsts Unit
+        //PIECE_STATUS_GONE=STY_PIECE_STATUS_GONE;// defined in StockYardConsts Unit
+        //PIECE_READY_TO_SHIP=YES;// defined in StockYardConsts Unit
+        //PIECE_SHIPPED=STY_PIECE_EXIT_TYPE_SHIPPING;// defined in StockYardConsts Unit
     }
 }
