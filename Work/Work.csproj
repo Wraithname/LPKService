@@ -74,25 +74,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infostraction\L4L3CustomerRepo.cs" />
-    <Compile Include="Infostraction\L4L3SoHeaderRepo.cs" />
-    <Compile Include="L4L3InterfaceServiceConst.cs" />
-    <Compile Include="L4L3InterfaceServiceGlobalCheck.cs" />
+    <Compile Include="IServiceWork.cs" />
     <Compile Include="L4L3InterfaceUtility.cs" />
-    <Compile Include="Models\JoinedModel.cs" />
-    <Compile Include="Models\L4L3Customer.cs" />
-    <Compile Include="Models\L4L3DelEventDel.cs" />
     <Compile Include="Models\L4L3Delivery.cs" />
     <Compile Include="Models\L4L3Event.cs" />
-    <Compile Include="Models\L4L3SoHeader.cs" />
     <Compile Include="Models\L4L3SoLine.cs" />
-    <Compile Include="Models\TCheckResult.cs" />
-    <Compile Include="Models\TL4MsgInfo.cs" />
-    <Compile Include="Models\TMessageResult.cs" />
     <Compile Include="PartitionOrder.cs" />
+    <Compile Include="ProcedureAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repo\IL4L3Customer.cs" />
-    <Compile Include="Repo\IL4L3SoHeader.cs" />
+    <Compile Include="ServiceWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -103,13 +93,17 @@
       <Project>{3bccb274-37c3-40a5-a177-9708c46d22b4}</Project>
       <Name>Logger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LPKService\LPKService.csproj">
-      <Project>{71a99aae-e98e-4ebd-a19c-06690db65874}</Project>
-      <Name>LPKService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Repository\Repository.csproj">
       <Project>{87b4638a-8693-43a8-8e42-ddec8415c880}</Project>
       <Name>Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shipping\Shipping.csproj">
+      <Project>{deae560d-cb0b-40df-92cb-621d5e321c72}</Project>
+      <Name>Shipping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SOM\SOM.csproj">
+      <Project>{96f27ac8-799d-4031-84e8-d2664412f29e}</Project>
+      <Name>SOM</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

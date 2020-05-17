@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SOM.Models;
 using SOM.Repo;
-using Work.Models;
+using SOM.Infostraction;
+using Repository.Models;
 
 namespace SOM
 {
@@ -90,8 +91,10 @@ namespace SOM
             throw new NotImplementedException();
         }
 
-        public TCheckResult SalesOrderMng(L4L3SoHeader soHeader, TL4MsgInfo l4MsgInfo)
+        public TCheckResult SalesOrderMng(TL4MsgInfo l4MsgInfo)
         {
+            L4L3CustomerRepo customerRepo = new L4L3CustomerRepo();
+            L4L3Customer customers = customerRepo.GetData(l4MsgInfo);
             throw new NotImplementedException();
         }
 

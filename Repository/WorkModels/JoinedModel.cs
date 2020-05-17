@@ -1,6 +1,5 @@
-﻿using Repository;
-
-namespace Work.Models
+﻿
+namespace Repository.Models
 {
     public class JoinedModel
     {

@@ -1,7 +1,5 @@
-﻿using Work.Models;
-using SOM.Models;
-
-namespace SOM.Repo
+﻿using Repository.Models;
+namespace Repository.Repo
 {
     interface ITL4MsgInfoLine
     {

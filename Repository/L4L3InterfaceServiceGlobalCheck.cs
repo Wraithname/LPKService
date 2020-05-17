@@ -1,7 +1,7 @@
-﻿using Work.Models;
+﻿using Repository.Models;
 using Logger;
 
-namespace Work
+namespace Repository
 {
     interface IGlobalCheck
     {

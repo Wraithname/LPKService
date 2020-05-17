@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
-using SOM.Models;
-using SOM.Repo;
+using Repository.Models;
+using Repository.Repo;
 using Repository;
-using Work.Models;
 
-namespace SOM.Infostraction
+namespace Repository.Infostraction
 {
     class TL4MsgInfoLineRepo:ITL4MsgInfoLine
     {

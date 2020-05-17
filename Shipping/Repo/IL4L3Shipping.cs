@@ -1,10 +1,6 @@
-﻿using System;
+﻿using Shipping.Models;
+using Repository.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Shipping.Models;
-using Work.Models;
 
 namespace Shipping.Repo
 {

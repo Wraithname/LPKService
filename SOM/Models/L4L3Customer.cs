@@ -1,6 +1,6 @@
 ﻿using Repository;
 
-namespace Work.Models
+namespace SOM.Models
 {
     public class L4L3Customer
     {

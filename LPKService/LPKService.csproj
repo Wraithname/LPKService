@@ -114,6 +114,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ServiceInstaller.resx">
+      <DependentUpon>ServiceInstaller.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Logger\Logger.csproj">
       <Project>{3bccb274-37c3-40a5-a177-9708c46d22b4}</Project>
       <Name>Logger</Name>
@@ -122,11 +127,10 @@
       <Project>{87b4638a-8693-43a8-8e42-ddec8415c880}</Project>
       <Name>Repository</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ServiceInstaller.resx">
-      <DependentUpon>ServiceInstaller.cs</DependentUpon>
-    </EmbeddedResource>
+    <ProjectReference Include="..\Work\Work.csproj">
+      <Project>{882d4dd8-c734-4d0f-aac0-577da73202e6}</Project>
+      <Name>Work</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

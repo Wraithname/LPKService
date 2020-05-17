@@ -1,6 +1,5 @@
-﻿using Work.Models;
-
-namespace SOM.Models
+﻿
+namespace Repository.Models
 {
     public class TL4MsgInfoLine
     {

@@ -1,9 +1,10 @@
-﻿using Work.Models;
-using Work.Repo;
+﻿using SOM.Models;
+using SOM.Repo;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using Repository;
+using Repository.Models;
 using Logger;
 
 namespace SOM.Infostraction

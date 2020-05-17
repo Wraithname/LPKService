@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Work.Models;
-using Work;
+﻿using System.Collections.Generic;
+using Repository.Models;
 using Shipping.Models;
 using Logger;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using Repository;
+using Shipping.Infostraction;
 
 namespace Shipping
 {
@@ -18,9 +14,9 @@ namespace Shipping
     public enum TPieceAction { paAssign, paDeAssign }
     interface IL4L3SerShipping
     {
-        TCheckResult ShippingMng(L4L3Shipping ship, TL4MsgInfo l4MsgInfo);
+        TCheckResult ShippingMng(TL4MsgInfo l4MsgInfo);
         void CreateBolIfNotEx(string strBolId);
-        TCheckResult LocalSetPiece(TL4MsgInfo l4MsgInfo, TPieceAction action, TForShipping forShipping);
+        TCheckResult LocalSetPiece(TL4MsgInfo l4MsgInfo, L4L3Shipping ship, TPieceAction action, TForShipping forShipping);
         TCheckResult L4L3MaterialMovement(TL4MsgInfo l4MsgInfo);
     }
     public class L4L3ServiceShipping : IL4L3SerShipping
@@ -59,8 +55,8 @@ namespace Shipping
 
         public TCheckResult L4L3MaterialMovement(TL4MsgInfo l4MsgInfo)
         {
-            TCheckResult checkResult = new TCheckResult();
-            checkResult.isOK = false;
+            L4L3InterfaceServiceGlobalCheck global = new L4L3InterfaceServiceGlobalCheck();
+            TCheckResult checkResult = global.InitResultWithFalse();
             List<L4L3RmAndMatCat> l4L3Rms = new List<L4L3RmAndMatCat>();
             OracleDynamicParameters odp = new OracleDynamicParameters();
             string str = "select  l4.material_id as sap_code, " +
@@ -99,7 +95,7 @@ namespace Shipping
             return checkResult;
         }
 
-        public TCheckResult LocalSetPiece(TL4MsgInfo l4MsgInfo, TPieceAction action, TForShipping forShipping)
+        public TCheckResult LocalSetPiece(TL4MsgInfo l4MsgInfo, L4L3Shipping ship, TPieceAction action, TForShipping forShipping)
         {
             TCheckResult checkResult = new TCheckResult();
             OracleDynamicParameters odp = new OracleDynamicParameters();
@@ -150,9 +146,49 @@ namespace Shipping
             return checkResult;
         }
         //Сделать модель Piece
-        public TCheckResult ShippingMng(L4L3Shipping ship, TL4MsgInfo l4MsgInfo)
+        public TCheckResult ShippingMng(TL4MsgInfo l4MsgInfo)
         {
-            throw new NotImplementedException();
+            TCheckResult result = new TCheckResult();
+            TForShipping forShipping=TForShipping.NOShipped;
+            L4L3InterfaceServiceGlobalCheck global = new L4L3InterfaceServiceGlobalCheck();
+            logger.Error($"ShippingMng - STARTED -> MsgId: {l4MsgInfo.msgCounter}");
+            L4L3ShippingRepo shippingRepo = new L4L3ShippingRepo();
+            L4L3Shipping ship = shippingRepo.GetData(l4MsgInfo);
+            if(ship==null)
+            {
+                result.isOK = false;
+                result.data = $"В таблице {l4l3unterfacetable} поле {l4MsgInfo.msgCounter} запись не найдена";
+                global.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                return result;
+            }
+            L4L3ServiceCheckShipping checkship = new L4L3ServiceCheckShipping();
+            result = checkship.ShippingCheck(ship, l4MsgInfo);
+            if(result.isOK)
+            {
+                if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_NEW && ship.bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
+                {
+                    CreateBolIfNotEx(ship.bolId);
+                    forShipping = TForShipping.NOShipped;
+                }
+                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_UPD && ship.bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
+                    forShipping = TForShipping.NOShipped;
+                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_UPD && ship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
+                    forShipping = TForShipping.YESShipped;
+                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_NEW && ship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
+                    forShipping = TForShipping.YESShipped;
+                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_DEL && ship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
+                    forShipping = TForShipping.YESShipped;
+                result = LocalSetPiece(l4MsgInfo,ship ,TPieceAction.paAssign, forShipping);
+            }
+            if (!result.isOK)
+            {
+                global.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                logger.Error(result.data);
+            }
+            else
+                global.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS, result.data);
+            logger.Error($"ShippingMng - STOPPED -> MsgId:{l4MsgInfo.msgCounter}");
+            return result;
         }
     }
 }

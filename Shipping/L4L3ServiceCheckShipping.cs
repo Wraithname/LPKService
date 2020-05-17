@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Work.Models;
+using Repository;
+using Repository.Models;
+using Shipping.Models;
 using Logger;
+using Oracle.ManagedDataAccess.Client;
+using Dapper.Oracle;
+using Dapper;
+using System.Collections.Generic;
 
 namespace Shipping
 {
@@ -14,25 +16,43 @@ namespace Shipping
     interface L4L3ServCheckShip
     {
         bool CheckPiece(string pieceId, string soId, string soLineId);
-        bool L4L3ShipPieceSOCheck();
+        bool L4L3ShipPieceSOCheck(L4L3Shipping ship);
         bool CheckBolExistNotShip(string strBolId);
         bool CheckBolExistIsShip(string strBolId);
-        bool ShippingIsPieceAssignedToBOL(TForShipping forShipping);
+        bool ShippingIsPieceAssignedToBOL(L4L3Shipping ship, TForShipping forShipping);
         bool CheckIfPieceRelatedToBOL(string strBolId, TForShipping forShipping);
-        TCheckResult ShippingCheck(TL4MsgInfo l4MsgInfo);
-        TCheckResult ShippingGeneralCheck(TL4MsgInfo l4MsgInfo);
+        TCheckResult ShippingCheck(L4L3Shipping ship, TL4MsgInfo l4MsgInfo);
+        TCheckResult ShippingGeneralCheck(L4L3Shipping ship, TL4MsgInfo l4MsgInfo);
     }
     class L4L3ServiceCheckShipping : L4L3ServCheckShip
     {
         private Log logger = LogFactory.GetLogger(nameof(IL4L3SerShipping));
         public bool CheckBolExistIsShip(string strBolId)
         {
-            throw new NotImplementedException();
+            string bolId = "";
+            OracleDynamicParameters odp = null;
+            string str = $"SELECT BOL_ID FROM EXT_BOL_HEADER WHERE STATUS='{L4L3InterfaceServiceConst.BOL_SENT.ToString()}' AND BOL_ID='{strBolId}'";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                bolId = connection.QueryFirstOrDefault<string>(str, odp);
+            }
+            if (bolId != "")
+                return true;
+            return false;
         }
 
         public bool CheckBolExistNotShip(string strBolId)
         {
-            throw new NotImplementedException();
+            string bolId = "";
+            OracleDynamicParameters odp = null;
+            string str = $"SELECT BOL_ID FROM EXT_BOL_HEADER WHERE STATUS='{L4L3InterfaceServiceConst.BOL_NOT_SENT.ToString()}' AND BOL_ID='{strBolId}'";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                bolId = connection.QueryFirstOrDefault<string>(str, odp);
+            }
+            if (bolId != "")
+                return true;
+            return false;
         }
 
         public bool CheckIfPieceRelatedToBOL(string strBolId, TForShipping forShipping)
@@ -45,23 +65,24 @@ namespace Shipping
             throw new NotImplementedException();
         }
 
-        public bool L4L3ShipPieceSOCheck()
+        public bool L4L3ShipPieceSOCheck(L4L3Shipping ship)
+        {
+            return CheckPiece(ship.pieceId, ship.soId, ship.soLineId);
+        }
+
+        public TCheckResult ShippingCheck(L4L3Shipping ship,TL4MsgInfo l4MsgInfo)
         {
             throw new NotImplementedException();
         }
 
-        public TCheckResult ShippingCheck(TL4MsgInfo l4MsgInfo)
+        public TCheckResult ShippingGeneralCheck(L4L3Shipping ship, TL4MsgInfo l4MsgInfo)
         {
             throw new NotImplementedException();
         }
 
-        public TCheckResult ShippingGeneralCheck(TL4MsgInfo l4MsgInfo)
+        public bool ShippingIsPieceAssignedToBOL(L4L3Shipping ship, TForShipping forShipping)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool ShippingIsPieceAssignedToBOL(TForShipping forShipping)
-        {
+            
             throw new NotImplementedException();
         }
     }

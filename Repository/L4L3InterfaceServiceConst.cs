@@ -1,4 +1,4 @@
-﻿namespace Work
+﻿namespace Repository
 {
     public class L4L3InterfaceServiceConst
     {

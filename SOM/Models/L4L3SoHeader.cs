@@ -1,7 +1,7 @@
 ﻿using Repository;
 using System;
 
-namespace Work.Models
+namespace SOM.Models
 {
     public class L4L3SoHeader
     {

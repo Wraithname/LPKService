@@ -1,12 +1,13 @@
-﻿using Work.Models;
-using Work.Repo;
+﻿using SOM.Models;
+using SOM.Repo;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using Repository;
+using Repository.Models;
 using Logger;
 
-namespace Work.Infostraction
+namespace SOM.Infostraction
 {
     public class L4L3SoHeaderRepo : IL4L3SoHeader
     {

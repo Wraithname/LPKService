@@ -4,8 +4,7 @@ using System.Timers;
 using System.Runtime.InteropServices;
 using System.Configuration;
 using Logger;
-using Oracle.ManagedDataAccess.Client;
-using Repository;
+using Work;
 namespace LPKService
 {
     public enum ServiceState
@@ -33,13 +32,12 @@ namespace LPKService
     {
         private Log logger = LogFactory.GetLogger(nameof(LPKService));
         private int timeout;
+        ServiceWork working = new ServiceWork();
         Timer timer = new Timer();
         public LPKService()
         {
-
             InitializeComponent();
             base.CanPauseAndContinue = true;
-            
         }
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
@@ -55,7 +53,6 @@ namespace LPKService
             //    eventArgs.Cancel = true;
             //    exitEvent.Set();
             //};
-            OracleConnection conn = BaseRepo.GetDBConnection();
             logger.Debug("Запуск как консольное приложение");
 
             logger.Debug("Завершение работы консольного приложения");
@@ -80,7 +77,7 @@ namespace LPKService
 
         private void OnTimer(object sender, ElapsedEventArgs e)
         {
-            throw new NotImplementedException();
+            working.MngLoop();
         }
 
         protected override void OnContinue()

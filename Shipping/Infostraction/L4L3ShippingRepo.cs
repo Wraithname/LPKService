@@ -1,11 +1,12 @@
 ﻿using Shipping.Models;
 using Shipping.Repo;
-using Work.Models;
+using Repository.Models;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using Repository;
 using Logger;
+using System.Collections.Generic;
 
 namespace Shipping.Infostraction
 {

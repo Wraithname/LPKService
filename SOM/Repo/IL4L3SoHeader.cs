@@ -1,6 +1,7 @@
-﻿using Work.Models;
+﻿using Repository.Models;
+using SOM.Models;
 
-namespace Work.Repo
+namespace SOM.Repo
 {
     interface IL4L3SoHeader
     {

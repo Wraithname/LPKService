@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SOM.Models;
 using SOM.Repo;
-using Work.Models;
-using Work;
+using Repository.Models;
 using Dapper.Oracle;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
@@ -50,8 +45,10 @@ namespace SOM
                 return false;
         }
 
-        public TCheckResult CustomerMng(L4L3Customer customer, TL4MsgInfo l4MsgInfo)
+        public TCheckResult CustomerMng(TL4MsgInfo l4MsgInfo)
         {
+            L4L3CustomerRepo customerRepo = new L4L3CustomerRepo();
+            L4L3Customer customer = customerRepo.GetData(l4MsgInfo);
             TCheckResult checkres = new TCheckResult();
             TL4EngineInterfaceMngRepo engInterf = new TL4EngineInterfaceMngRepo();
             AddressEngine addressEngine = new AddressEngine();

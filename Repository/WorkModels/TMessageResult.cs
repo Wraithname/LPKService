@@ -1,4 +1,4 @@
-﻿namespace Work.Models
+﻿namespace Repository.Models
 {
     public class TMessageResult
     {

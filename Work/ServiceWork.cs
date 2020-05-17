@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Work.Models;
 using Oracle.ManagedDataAccess.Client;
-using Repository;
 using Dapper.Oracle;
 using Dapper;
-
-namespace LPKServiceSDK
+using Repository.Models;
+using Repository;
+using System.Threading;
+namespace Work
 {
 
     public class ServiceWork : IServiceWork
@@ -23,7 +20,7 @@ namespace LPKServiceSDK
         const int op_update_bol = 2;
         const int op_delete_bol = 3;
         #endregion
-        List<Action<Work.Models.TL4MsgInfo>> actions = new List<Action<Work.Models.TL4MsgInfo>>();
+        List<Action<TL4MsgInfo>> actions = new List<Action<TL4MsgInfo>>();
 
         public ServiceWork()
         {
@@ -254,7 +251,9 @@ namespace LPKServiceSDK
 
         public void MngLoop()
         {
-            throw new NotImplementedException();
+            GetNewMessageDelivery();
+            GetNewMessage();
+            GetAutoCloseOrder();
         }
 
         public void UpdateBolPosition(int msgCounter, int posNumId)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
 using Logger;
@@ -12,7 +6,6 @@ using Repository;
 
 namespace Work
 {
-    enum tForShipping { NOShipped, YESShipped }
     public class L4L3InterfaceUtility
     {
         private Log logger = LogFactory.GetLogger(nameof(LPKService));

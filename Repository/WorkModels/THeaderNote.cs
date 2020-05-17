@@ -1,4 +1,4 @@
-﻿namespace SOM.Models
+﻿namespace Repository.Models
 {
     public class THeaderNote
     {
