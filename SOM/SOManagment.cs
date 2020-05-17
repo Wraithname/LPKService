@@ -16,12 +16,62 @@ namespace SOM
     enum TShiptoType { Shipto,Billto};
     public class SOManagment : ISOManagment
     {
+        public void AddVsw_detailsToOrder(TL4MsgInfo l4MsgInfo)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool AlreadyInsertInSuspended(int iSoID)
         {
             throw new NotImplementedException();
         }
 
+        public TCheckResult AttributeCheck(DataSet qryData, TL4MsgInfo l4MsgInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void BlockForProcess(TL4MsgInfo l4MsgInfo, bool serRSer)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool CheckInquiryLinesStatus(int iMsgCounter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CheckUpdateOPCODE(TL4MsgInfo l4MsgInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearMassNote()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CloseLine(int iSoId, int iSoLineId, int iSoTypeCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CompareAttributes(TCheckRelatedList chlAttrbListFromSap, TCheckRelatedList chlAttrbListFromDB, List<string> strAttrbCodesFromSap, TL4EngineInterfaceMng eimOrderEntry, bool mandatory = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CompareHeaderValues(TSoHeader objsoHeader, TL4EngineInterfaceMng eimOrderEntry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CompareLines(TSoHeader objsoHeader, int iNumOfLine, TL4EngineInterfaceMng eimOrderEntry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CompareLineValues(int iLineId, TL4EngineInterfaceMng eimOrderEntry)
         {
             throw new NotImplementedException();
         }
@@ -37,6 +87,16 @@ namespace SOM
         }
 
         public bool ExistCustomer(string m_iCustSoldDescrID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsBlocked(int msgCounter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsCustomerInternal(int iCustomerId)
         {
             throw new NotImplementedException();
         }
@@ -98,7 +158,42 @@ namespace SOM
             throw new NotImplementedException();
         }
 
+        public void SaveInMassForHeaderNote(int pSoId, string pHeaderNote)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveInMassForLineNote(int pSoId, int pSoLineId, string pLineNote, string pSapUser)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveNote()
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetOEHeaderValues(TSoHeader order, TL4EngineInterfaceMng eimOrderEntry, bool bUpdatingOrder = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetOELinesValues(TSoLine order, bool bReordered = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateCreditStatus(TSoHeader objsoHeader, int iLineId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateHeaderFields(TSoHeader objsoHeader)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateLineFields(TSoHeader objsoHeader)
         {
             throw new NotImplementedException();
         }

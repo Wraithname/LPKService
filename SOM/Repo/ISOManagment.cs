@@ -29,5 +29,24 @@ namespace SOM.Repo
         int RetrievePeriodNumID(DateTime dDeliveryDate, int iPeriodCode, string sPeriodID, DateTime dStopDate);
         int RetrieveShipToCode(int iCustomerId, int iShiptoId);
         void SetOEHeaderValues(TSoHeader order, TL4EngineInterfaceMng eimOrderEntry, bool bUpdatingOrder = false);
+        void SetOELinesValues(TSoLine order, bool bReordered = false);
+        bool CompareHeaderValues(TSoHeader objsoHeader,TL4EngineInterfaceMng eimOrderEntry);
+        bool CompareLineValues(int iLineId, TL4EngineInterfaceMng eimOrderEntry);
+        bool CompareLines(TSoHeader objsoHeader, int iNumOfLine, TL4EngineInterfaceMng eimOrderEntry);
+        void UpdateCreditStatus(TSoHeader objsoHeader, int iLineId);
+        void UpdateHeaderFields(TSoHeader objsoHeader);
+        void UpdateLineFields(TSoHeader objsoHeader);
+        void CloseLine(int iSoId, int iSoLineId, int iSoTypeCode);
+        void AddVsw_detailsToOrder(TL4MsgInfo l4MsgInfo);
+        bool CompareAttributes(TCheckRelatedList chlAttrbListFromSap, TCheckRelatedList chlAttrbListFromDB, List<string> strAttrbCodesFromSap, TL4EngineInterfaceMng eimOrderEntry, bool mandatory = true);
+        bool IsCustomerInternal(int iCustomerId);
+        void CheckUpdateOPCODE(TL4MsgInfo l4MsgInfo);
+        TCheckResult AttributeCheck(DataSet qryData, TL4MsgInfo l4MsgInfo);
+        void BlockForProcess(TL4MsgInfo l4MsgInfo, bool serRSer);
+        bool IsBlocked(int msgCounter);
+        void SaveInMassForLineNote(int pSoId, int pSoLineId, string pLineNote, string pSapUser);
+        void SaveInMassForHeaderNote(int pSoId, string pHeaderNote);
+        void SaveNote();
+        void ClearMassNote();
     }
 }
