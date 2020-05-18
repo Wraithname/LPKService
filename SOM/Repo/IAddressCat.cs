@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SOM.Models;
 
 namespace SOM.Repo
 {
     interface IAddressCat
     {
+        void Create(TL4EngineInterfaceMng interfaceMng);
         bool SetAddressFullName(string custName);
         bool SetZipCode(string zimCode);
         bool SetAddress1(string address1);
@@ -22,5 +24,7 @@ namespace SOM.Repo
         bool SetContactMobile(string contactMobile);
         bool SetEmailAddress(string contactEmail);
         bool SaveData(bool action);
+        int LoadData(int addressId);
+        string GetAddressId();
     }
 }

@@ -125,9 +125,12 @@ namespace Work
                 return res;
             return "-";
         }
-
+        //Основная логика работы (подумать насчёт потоков)
         public void GetNewMessage()
         {
+            TL4MsgInfo l4MsgInfo = new TL4MsgInfo();
+            bool isOpCodeOk;
+            string acceptOrderConsts;
             throw new NotImplementedException();
         }
 
@@ -255,7 +258,7 @@ namespace Work
             GetNewMessage();
             GetAutoCloseOrder();
         }
-
+        //Сделать модели
         public void UpdateBolPosition(int msgCounter, int posNumId)
         {
             throw new NotImplementedException();

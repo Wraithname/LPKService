@@ -76,6 +76,8 @@
   <ItemGroup>
     <Compile Include="CCManagement.cs" />
     <Compile Include="Infostraction\AddressEngine.cs" />
+    <Compile Include="Infostraction\CCatalEngine.cs" />
+    <Compile Include="Infostraction\CCreditEngine.cs" />
     <Compile Include="Infostraction\L4L3CustomerRepo.cs" />
     <Compile Include="Infostraction\L4L3SoHeaderRepo.cs" />
     <Compile Include="Infostraction\TL4EngineInterfaceMngRepo.cs" />
@@ -92,7 +94,9 @@
     <Compile Include="Infostraction\TSoLineRepo.cs" />
     <Compile Include="Models\ZipCatalogue.cs" />
     <Compile Include="Repo\IAddressCat.cs" />
+    <Compile Include="Repo\ICCatalEngine.cs" />
     <Compile Include="Repo\ICCManagement.cs" />
+    <Compile Include="Repo\ICCreditEngine.cs" />
     <Compile Include="Repo\IL4L3Customer.cs" />
     <Compile Include="Repo\IL4L3SoHeader.cs" />
     <Compile Include="Repo\ISOManagment.cs" />

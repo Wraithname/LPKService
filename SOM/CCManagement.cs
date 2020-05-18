@@ -51,36 +51,136 @@ namespace SOM
             L4L3Customer customer = customerRepo.GetData(l4MsgInfo);
             TCheckResult checkres = new TCheckResult();
             TL4EngineInterfaceMngRepo engInterf = new TL4EngineInterfaceMngRepo();
+            engInterf.Create(customer, l4MsgInfo);
             AddressEngine addressEngine = new AddressEngine();
+            CCatalEngine catalEngine = new CCatalEngine();
+            CCreditEngine creditEngine = new CCreditEngine();
             bool res = true;
             float el4CustomerId;
-            int iTmp;
-            string l4CustomerId, CustomerIdForL4m, ShiptoForL4, sAddressIdBillTo, sDestinationAddressId, l4CreateUserId, l4ModUserId;
+            string l4CustomerId="", customerIdForL4m = "", l4CreateUserId = "", l4ModUserId = "";
             logger.Trace("Init 'CustomerMng' function");
             l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
             try
             {
                 l4CustomerId = customer.customerId.ToString();
                 el4CustomerId = customer.customerId;
-                CustomerIdForL4m = l4CustomerId;
-                logger.Trace("LOG_TRACE e - 'CustomerIdForL4':" + CustomerIdForL4m + "'l4CustomerId':" + l4CustomerId);
-                if(l4MsgInfo.opCode==L4L3InterfaceServiceConst.OP_CODE_DEL)
+                customerIdForL4m = l4CustomerId;
+                logger.Trace("LOG_TRACE e - 'CustomerIdForL4':" + customerIdForL4m + "'l4CustomerId':" + l4CustomerId);
+                if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_DEL)
                 {
-          //          if (cCatalEngine.LoadData(l4CustomerId) > 0) then
-          //          begin
-          //          if cCatalEngine.IsCustomerDeletable(cCatalEngine.GetCustomerID) then
-          //          cCatalEngine.DeleteCustomer(cCatalEngine.GetCustomerID);
-          //          end
+                    if (catalEngine.LoadData(l4CustomerId) > 0)
+                    {
+                        if (catalEngine.IsCustomerDeletable(catalEngine.GetCustomerID()))
+                            catalEngine.DeleteCustomer(catalEngine.GetCustomerID());
+                    }
+                    else
+                        engInterf.NotifyErrorMessage($"Заказчик {l4CustomerId} не существует");
                 }
-                
+                else
+                {
+                    if (res)
+                    {
+                        l4CustomerId = engInterf.GetCreateUserId();
+                        if (l4CustomerId == "")
+                            res = false;
+                    }
+                    if (res)
+                    {
+                        l4ModUserId = engInterf.GetModUserId();
+                        if (l4ModUserId == "")
+                            res = false;
+                    }
+                    if (res)
+                    {
+
+                    }
+                    // =====================================================================
+                    // ADDRESS_CATALOG
+                    // =====================================================================
+                    if (res)
+                        res = FillAddressEngine(customer,addressEngine, l4ModUserId);
+                    logger.Trace("'CustomerMng - Load Customer Catalog data'");
+                    // =====================================================================
+                    // CUSTOMER_CATALOG
+                    // =====================================================================
+                    if (res)
+                        res = catalEngine.SetCustomerDescrId(l4CustomerId);
+                    if (res)
+                        res = catalEngine.SetAddressIdCatalog(addressEngine.GetAddressId());
+                    if (res)
+                        res = catalEngine.SetInternalCustomerFlag(Convert.ToBoolean(customer.internalCustomerFlag));
+                    if (res)
+                        res = catalEngine.SetInquiryValidityDays(30);
+                    if (res)
+                        res = catalEngine.SetCustomerCurrencyCode(customer.customerCurrencyCode);
+                    if (res)
+                        res = catalEngine.SetClassificationType(CheckClassificationType(customer.customerClassificationType));
+                    if (res)
+                        res = catalEngine.SetWeightUnit("<NULL>");
+                    if (res)
+                        res = catalEngine.SetCustomerShortName(customer.customerName.Substring(0, 80));
+                    if (res)
+                        res = catalEngine.SetCreationUserId(l4CreateUserId);
+                    if (res)
+                        res = catalEngine.SetInn(customer.inn.Substring(0, 40));
+                    if (res)
+                        res = catalEngine.SetKpp(customer.kpp.Substring(0, 40));
+                    if (res)
+                        res = catalEngine.SetRwStationCode(customer.rwstationCode.Substring(0, 40));
+                    if (res)
+                        res = catalEngine.SetRegion(customer.region.Substring(0, 40));
+                    if (res)
+                        res = catalEngine.SetLevel4CustomerId(customerIdForL4m);
+                    if(res)
+                    {
+                        DateTime date = new DateTime();
+                        if(customer.vailityFlag.ToString()=="_YES")
+                        {
+                            if (catalEngine.GetExpirationDate() != date)
+                                if (res)
+                                    res = catalEngine.SetExpirationDate(date);
+                        }
+                        else
+                        {
+                            if (catalEngine.GetExpirationDate() == date)
+                                if (res)
+                                    res = catalEngine.SetExpirationDate(new DateTime());
+                        }
+                    }
+                    if (res)
+                        res = catalEngine.SaveData(false);
+                    if (res)
+                        res = catalEngine.ForceModUserDatetime(false, l4ModUserId);
+                    logger.Trace("'CustomerMng - Load Customer Catalog Credit Data'");
+                    // =====================================================================
+                    // CUSTOMER_CATALOG_CREDIT
+                    // =====================================================================
+                    if (res)
+                        res = creditEngine.SetCustomerID(GetCustIDFromDescr(l4CustomerId));
+                    if (res)
+                        res = creditEngine.SetAddressIdBillTo(Convert.ToInt32(addressEngine.GetAddressId()));
+                    if (res)
+                        res = creditEngine.SetCreditStatus(1);
+                    if (res)
+                        res = creditEngine.SaveData(false);
+                    if (res)
+                        res = creditEngine.ForceModUserDatetime(false, l4ModUserId);
+                    // =====================================================================
+                    // final operations
+                    // =====================================================================
+                    if (!res && l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
+                        engInterf.NotifyErrorMessage("CistomerMng - Unknown fatal error.");
+                    if (res && l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
+                        engInterf.NotifyErrorMessage("Запись успешно обработана", "");
+                }
+                logger.Trace("End ''CustomerMng'' function");
+                return checkres;
             }
-            catch { }
-            throw new NotImplementedException();
+            catch { return checkres; }
         }
         
-        public bool FillAddressEngine(L4L3Customer customer, string pModUserId, OracleDynamicParameters odp = null)
+        public bool FillAddressEngine(L4L3Customer customer,AddressEngine addressEngine, string pModUserId, OracleDynamicParameters odp = null)
         {
-            AddressEngine addressEngine = new AddressEngine();
             Country cnt = new Country();
             ZipCatalogue zip = new ZipCatalogue();
             logger.Trace("Init 'FillAddressEngine' function");

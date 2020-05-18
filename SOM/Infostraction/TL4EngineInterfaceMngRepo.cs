@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SOM.Models;
 using SOM.Repo;
-using Work.Models;
+using Repository.Models;
 
 namespace SOM.Infostraction
 {
@@ -27,7 +27,7 @@ namespace SOM.Infostraction
             throw new NotImplementedException();
         }
 
-        public TL4EngineInterfaceMng Create(L4L3Customer customer, TL4MsgInfo pL4MsgInfoPtr)
+        public void Create(L4L3Customer customer, TL4MsgInfo pL4MsgInfoPtr)
         {
             throw new NotImplementedException();
         }

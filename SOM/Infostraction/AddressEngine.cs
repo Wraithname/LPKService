@@ -8,13 +8,28 @@ using SOM.Models;
 
 namespace SOM.Infostraction
 {
-    class AddressEngine : IAddressCat
+    public class AddressEngine : IAddressCat
     {
         AddresCat adressCatalog;
 
         public AddressEngine()
         {
             this.adressCatalog = new AddresCat();
+        }
+
+        public void Create(TL4EngineInterfaceMng interfaceMng)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetAddressId()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int LoadData(int addressId)
+        {
+            throw new NotImplementedException();
         }
 
         public bool SaveData(bool action)

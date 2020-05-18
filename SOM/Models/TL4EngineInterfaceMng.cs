@@ -1,5 +1,5 @@
-﻿
-namespace Repository.Models
+﻿using Repository.Models;
+namespace SOM.Models
 { 
     public class TL4EngineInterfaceMng
     {

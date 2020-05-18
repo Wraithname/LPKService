@@ -1,13 +1,13 @@
 ﻿using System;
 using SOM.Models;
-using Work.Models;
+using Repository.Models;
 
 namespace SOM.Repo
 {
     interface ITL4EngineInterfaceMng
     {
         string DecodeUserToUserId(string pL4UserName);
-        TL4EngineInterfaceMng Create(L4L3Customer customer, TL4MsgInfo pL4MsgInfoPtr);
+        void Create(L4L3Customer customer, TL4MsgInfo pL4MsgInfoPtr);
         bool NotifyErrorMessage(string Text, string Caption = "", bool pFatal = true);
         bool NotifyErrorMessage(string Text, string pErrorCode);
         bool NotifyErrorTree(bool pFatal);
