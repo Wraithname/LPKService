@@ -15,5 +15,7 @@ namespace SOM.Repo
         bool SetCreditStatus(int num);
         bool SaveData(bool flag);
         bool ForceModUserDatetime(bool falg, string modUserId, string str = "");
+        int LoadData(int num);
+        int GetAddressIdBillTo();
     }
 }

@@ -32,5 +32,6 @@ namespace SOM.Repo
         bool IsCustomerDeletable(int customID);
         int GetCustomerID();
         void DeleteCustomer(int customID);
+        int GetAddressIdCatalog();
     }
 }

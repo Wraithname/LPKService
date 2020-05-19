@@ -23,11 +23,11 @@ namespace SOM
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 res = connection.QueryFirstOrDefault<string>(str, odp);
-                if (res != "")
-                    return res;
-                else
-                    return "N/A";
             }
+            if (res != "")
+                return res;
+            else
+                return "N/A";
 
         }
 
@@ -57,7 +57,7 @@ namespace SOM
             CCreditEngine creditEngine = new CCreditEngine();
             bool res = true;
             float el4CustomerId;
-            string l4CustomerId="", customerIdForL4m = "", l4CreateUserId = "", l4ModUserId = "";
+            string l4CustomerId="", customerIdForL4m = "", sAddressIdBillTo="",l4CreateUserId = "", l4ModUserId = "";
             logger.Trace("Init 'CustomerMng' function");
             l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
             try
@@ -92,7 +92,32 @@ namespace SOM
                     }
                     if (res)
                     {
-
+                        if(catalEngine.LoadData(l4CustomerId)>0)
+                        {
+                            if(addressEngine.LoadData(catalEngine.GetAddressIdCatalog())!=1)
+                            {
+                                engInterf.NotifyErrorMessage($"Ошибка при обработке заказчика - Фатальная ошибка - поле ADDRESS_ID={catalEngine.GetAddressIdCatalog().ToString() } не найдено");
+                                res = false;
+                            }
+                            if (res)
+                                res = catalEngine.SetCustomerDescrId(l4CustomerId);
+                        }
+                        if(creditEngine.LoadData(catalEngine.GetCustomerID())>0)
+                        {
+                            if(addressEngine.LoadData(creditEngine.GetAddressIdBillTo())!=1)
+                            {
+                                try
+                                {
+                                    sAddressIdBillTo = creditEngine.GetAddressIdBillTo().ToString();
+                                }
+                                catch
+                                {
+                                    sAddressIdBillTo = "";
+                                }
+                                engInterf.NotifyErrorMessage($"Ошибка при обработке заказчика - Фатальная ошибка - поле ADDRESS_ID={sAddressIdBillTo} не найдено");
+                                res = false;
+                            }
+                        }
                     }
                     // =====================================================================
                     // ADDRESS_CATALOG
@@ -134,7 +159,7 @@ namespace SOM
                     if(res)
                     {
                         DateTime date = new DateTime();
-                        if(customer.vailityFlag.ToString()=="_YES")
+                        if(customer.vailityFlag.ToString()=="Y")
                         {
                             if (catalEngine.GetExpirationDate() != date)
                                 if (res)
@@ -169,9 +194,17 @@ namespace SOM
                     // final operations
                     // =====================================================================
                     if (!res && l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
+                    {
                         engInterf.NotifyErrorMessage("CistomerMng - Unknown fatal error.");
+                        checkres.data = "CistomerMng - Unknown fatal error.";
+                        checkres.isOK = false;
+                    }
                     if (res && l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
+                    {
                         engInterf.NotifyErrorMessage("Запись успешно обработана", "");
+                        checkres.data = "CistomerMng - Unknown fatal error.";
+                        checkres.isOK = true;
+                    }
                 }
                 logger.Trace("End ''CustomerMng'' function");
                 return checkres;
@@ -281,11 +314,11 @@ namespace SOM
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 res = connection.QueryFirstOrDefault<int>(str, odp);
-                if (res > 0)
-                    return res;
-                else
-                    return -1;
             }
+            if (res > 0)
+                return res;
+            else
+                return -1;
         }
     }
 }

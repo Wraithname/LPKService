@@ -23,5 +23,19 @@ namespace Repository
             OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["default"].ConnectionString);
             return conn;
         }
+        public static char BoolToChar(bool flag)
+        {
+            char answ='N';
+            if (flag)
+                answ = 'Y';
+            return answ;
+        }
+        public static bool CharToBool(char flag)
+        {
+            bool flager = true;
+            if (flag == 'N')
+                flager = false;
+            return flager;
+        }
     }
 }

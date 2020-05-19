@@ -6,6 +6,7 @@ using Dapper;
 using Repository.Models;
 using Repository;
 using System.Threading;
+using Work.Models;
 namespace Work
 {
 
@@ -27,10 +28,139 @@ namespace Work
             ProcedureAction procedure = new ProcedureAction();
             actions = procedure.GetActions();
         }
-        //Сделать модели
         public void CreateBol(int msgCounter, string bolId, bool allBol)
         {
-            throw new NotImplementedException();
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            DeliveryESOHandSOL deliveryev = new DeliveryESOHandSOL();
+            string autoFlag = "N", vehicleSap = "-";
+            try
+            {
+                if (bolId != "")
+                {
+                    string str = "SELECT LDE.MSG_COUNTER, " +
+                        "lde.op_code, " +
+                        "LD.BOL_ID, " +
+                        "LD.BOL_POSITION_ID, " +
+                        "LD.SO_ID, " +
+                        "LD.SO_LINE_ID, " +
+                        "LD.ENTRY_QNT, " +
+                        "nvl(soh.so_id,-1) as SO_ID_MET, " +
+                        "nvl(SOL.SO_LINE_ID,-1) as SO_LINE_ID_MET " +
+                        "FROM L4_L3_DELIVERY_EVENT lde join L4_L3_DELIVERY ld on LDE.MSG_COUNTER = LD.MSG_COUNTER " +
+                        "left join SALES_ORDER_HEADER soh on SOH.SO_DESCR_ID = ld.SO_ID||''_''||(nvl(to_number(ld.SO_LINE_ID),0)/10) " +
+                        "left join SALES_ORDER_LINE sol on SOL.SO_ID  = SOH.SO_ID and SOL.SO_LINE_ID = nvl(to_number(lD.SO_LINE_ID),0)/10 " +
+                        "WHERE LDE.MSG_COUNTER = :MSG_COUNTER";
+                    odp.Add("MSG_COUNTER", msgCounter);
+                    using (OracleConnection connection = BaseRepo.GetDBConnection())
+                    {
+                        deliveryev = connection.QueryFirstOrDefault<DeliveryESOHandSOL>(str, odp);
+                    }
+                    if (deliveryev != null)
+                    {
+                        str = "INSERT INTO EXT_BOL_POSITION (WEIGHT, POS_NUM_ID, BOL_ID, POS_ID, SO_ID, SO_LINE_ID, SO_ID_MET, SO_LINE_ID_MET) " +
+                            "VALUES (:WEIGHT, SQN_EXT_BOL_POSITION.NEXTVAL, :BOL_ID, :POS_ID, :SO_ID, :SO_LINE_ID, :SO_ID_MET, :SO_LINE_ID_MET)";
+                        odp.Add("WEIGHT", deliveryev.entryQnt);
+                        odp.Add("BOL_ID", bolId);
+                        odp.Add("POS_ID", deliveryev.bolPositionId);
+                        odp.Add("SO_ID", deliveryev.soId);
+                        odp.Add("SO_LINE_ID", deliveryev.soLineId);
+                        odp.Add("SO_ID_MET", deliveryev.soIdMet);
+                        odp.Add("SO_LINE_ID_MET", deliveryev.soLineIdMet);
+                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        {
+                            connection.Execute(str, odp);
+                        }
+                        UpdateStatusMessage(deliveryev.msgCounter, bol_created, "");
+                    }
+                    else
+                    {
+                        VecAuto auto = new VecAuto();
+                        str = "SELECT nvl(VEHICLE_ID,''-'') as VEHICLE_ID, case when nvl(AUTO_FLG,''03'') = ''03'' then ''N'' else ''Y'' end as AUTO_FLG FROM L4_L3_DELIVERY WHERE MSG_COUNTER	= :MSG_COUNTER ";
+                        odp.Add("MSG_COUNTER", msgCounter);
+                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        {
+                            auto = connection.QueryFirstOrDefault<VecAuto>(str, odp);
+                        }
+                        if (auto != null)
+                        {
+                            autoFlag = auto.autoFlg;
+                            vehicleSap = auto.vehicleId;
+                        }
+                        odp = null;
+                        str = "INSERT INTO EXT_BOL_HEADER (MOD_USER_ID,MOD_DATETIME,BOL_ID,CREATION_DATETIME,SHIP_DATETIME,VEHICLE_ID_SAP,ON_AUTO_SHIPPING,STATUS) " +
+                            "VALUES (-999,SYSDATE,:BOL_ID,SYSDATE,SYSDATE,:VEHICLE_ID_SAP,:ON_AUTO_SHIPPING,1";
+                        odp.Add("BOL_ID", bolId);
+                        odp.Add("VEHICLE_ID_SAP", vehicleSap);
+                        odp.Add("ON_AUTO_SHIPPING", autoFlag);
+                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        {
+                            connection.Execute(str, odp);
+                        }
+                        odp = null;
+                        List<DeliveryESOHandSOL> deliv = new List<DeliveryESOHandSOL>();
+                        str = "SELECT LDE.MSG_COUNTER, " +
+                        "lde.op_code, " +
+                        "LD.BOL_ID, " +
+                        "LD.BOL_POSITION_ID, " +
+                        "LD.SO_ID, " +
+                        "LD.SO_LINE_ID, " +
+                        "LD.ENTRY_QNT, " +
+                        "nvl(soh.so_id,-1) as SO_ID_MET, " +
+                        "nvl(SOL.SO_LINE_ID,-1) as SO_LINE_ID_MET " +
+                        "FROM L4_L3_DELIVERY_EVENT lde join L4_L3_DELIVERY ld on LDE.MSG_COUNTER = LD.MSG_COUNTER " +
+                        "left join SALES_ORDER_HEADER soh on SOH.SO_DESCR_ID = ld.SO_ID||''_''||(nvl(to_number(ld.SO_LINE_ID),0)/10) " +
+                        "left join SALES_ORDER_LINE sol on SOL.SO_ID  = SOH.SO_ID and SOL.SO_LINE_ID = nvl(to_number(lD.SO_LINE_ID),0)/10 " +
+                        "WHERE LDE.MSG_STATUS = :MSG_STATUS " +
+                        "AND LDE.MSG_ID = :MSG_ID " +
+                        "AND   LD.BOL_ID = :BOL_ID " +
+                        "AND LDE.MSG_COUNTER = :MSG_COUNTER ";
+                        odp.Add("MSG_STATUS", bol_new);
+                        odp.Add("MSG_ID", bol_new_sap_met);
+                        odp.Add("BOL_ID", bolId);
+                        odp.Add("MSG_COUNTER", msgCounter);
+                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        {
+                            deliv = connection.Query<DeliveryESOHandSOL>(str, odp).AsList();
+                        }
+                        if (deliveryev != null)
+                        {
+                            foreach (DeliveryESOHandSOL del in deliv)
+                            {
+                                if (del.opCode == op_new_bol)
+                                {
+                                    if (!ExistBolPosition(bolId, del.bolPositionId.ToString()))
+                                    {
+                                        odp = null;
+                                        str = "INSERT INTO EXT_BOL_POSITION (WEIGHT, POS_NUM_ID, BOL_ID, POS_ID, SO_ID, SO_LINE_ID, SO_ID_MET, SO_LINE_ID_MET) " +
+                                            "VALUES (:WEIGHT, SQN_EXT_BOL_POSITION.NEXTVAL, :BOL_ID, :POS_ID, :SO_ID, :SO_LINE_ID, :SO_ID_MET, :SO_LINE_ID_MET) ";
+                                        odp.Add("WEIGHT");
+                                        odp.Add("BOL_ID");
+                                        odp.Add("POS_ID");
+                                        odp.Add("SO_ID");
+                                        odp.Add("SO_LINE_ID");
+                                        odp.Add("SO_ID_MET");
+                                        odp.Add("SO_LINE_ID_MET");
+                                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                                        {
+                                            connection.Execute(str, odp);
+                                        }
+                                        UpdateStatusMessage(del.msgCounter, bol_created, "");
+                                    }
+                                    else
+                                        UpdateStatusMessage(del.msgCounter, bol_error, "Позиция заказа уже существует");
+                                }
+                            }
+                        }
+                    }
+                    UpdateStatusMessage(msgCounter, bol_created, "");
+                }
+                else
+                    UpdateStatusMessage(msgCounter, bol_error, "BOL_ID is null");
+            }
+            catch(Exception e)
+            {
+                UpdateStatusMessage(msgCounter, bol_error, e.Message);
+            }
         }
 
         public void DeleteBol(int msgCounter, string bolId, int posNumId)
@@ -108,6 +238,32 @@ namespace Work
         //Сделать модели
         public void GetAutoCloseOrder()
         {
+            string str1 = "UPDATE  SALES_ORDER_LINE " +
+                "SET     SO_LINE_STATUS = 4 " +
+                " , MOD_DATETIME = sysdate" +
+                ", MANUAL_CLOSE_ORDER = 'Y' " +
+                "WHERE SO_ID = :SO_ID " +
+                "AND   SO_LINE_ID = :SO_LINE_ID";
+            try
+            {
+                string str2 = "SELECT l2.*, " +
+                    "sol.so_id as met_so_id, " +
+                    "sol.so_line_id as met_so_line_id " +
+                    "FROM (  select l.MSG_DATETIME, l.MSG_COUNTER, sh5.so_id , sh5.so_line_id ,sh5.ORDER_STATUS, sh5.SO_TYPE_CODE " +
+                    "FROM L4_L3_EVENT l join(select shm.MSG_COUNTER, shm.SO_ID , shm.so_line_id, shm.ORDER_STATUS, shm.SO_TYPE_CODE " +
+                    "FROM ( SELECT MAX(sh.MSG_COUNTER) as MSG_COUNTER , sh.SO_ID , sl.so_line_id , sl.ORDER_STATUS, sl.SO_TYPE_CODE " +
+                    "FROM L4_L3_SO_HEADER sh JOIN L4_L3_SO_LINE sl ON sh.MSG_COUNTER =sl.MSG_COUNTER " +
+                    "WHERE sl.ORDER_STATUS =40 " +
+                    "GROUP BY sh.SO_ID , sl.so_line_id, sl.ORDER_STATUS, sl.SO_TYPE_CODE) shm ) sh5 on sh5.MSG_COUNTER=l.MSG_COUNTER " +
+                    " WHERE l.MSG_STATUS = 1 " +
+                    "AND   l.msg_id = 4301 ) l2 join SALES_ORDER_LINE sol on sol.SO_DESCR_ID = l2.so_id or sol.SO_DESCR_ID = l2.so_id||''_''||to_number(l2.so_line_id)/10 " +
+                    "WHERE sol.SO_LINE_STATUS = 3 " +
+                    "AND    l2.MSG_DATETIME > SYSDATE - 7";
+            }
+            catch
+            {
+
+            }
             throw new NotImplementedException();
         }
 
@@ -258,10 +414,58 @@ namespace Work
             GetNewMessage();
             GetAutoCloseOrder();
         }
-        //Сделать модели
+
         public void UpdateBolPosition(int msgCounter, int posNumId)
         {
-            throw new NotImplementedException();
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            DeliverySOHandSOL del = new DeliverySOHandSOL();
+            string str1="";
+            string str = "SELECT LD.BOL_POSITION_ID  , " +
+                " nvl(LD.VEHICLE_ID,''-'') as VEHICLE_ID, " +
+                "LD.BOL_ID, " +
+                "LD.SO_ID, " +
+                "LD.SO_LINE_ID, " +
+                "LD.ENTRY_QNT, " +
+                "nvl(soh.so_id,-1) as SO_ID_MET, " +
+                "nvl(SOL.SO_LINE_ID,-1) as SO_LINE_ID_MET " +
+                "FROM L4_L3_DELIVERY ld " +
+                "left join SALES_ORDER_HEADER soh on SOH.SO_DESCR_ID = ld.SO_ID||''_''||(nvl(to_number(ld.SO_LINE_ID),0)/10) " +
+                "left join SALES_ORDER_LINE sol on SOL.SO_ID  = SOH.SO_ID and SOL.SO_LINE_ID = nvl(to_number(lD.SO_LINE_ID),0)/10 " +
+                "WHERE ld.MSG_COUNTER = :MSG_COUNTER ";
+            odp.Add("MSG_COUNTER", msgCounter);
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                del=connection.QueryFirstOrDefault<DeliverySOHandSOL>(str, odp);
+            }
+            if (del!=null)
+            {
+                if (del.vehicleId!="-")
+                {
+                    odp = new OracleDynamicParameters();
+                    str1 = "UPDATE EXT_BOL_HEADER SET VEHICLE_ID_SAP = :VEHICLE_ID_SAP WHERE BOL_ID = :BOL_ID ";
+                    odp.Add("VEHICLE_ID_SAP",del.vehicleId);
+                    odp.Add("BOL_ID",del.bolId);
+                    using (OracleConnection connection = BaseRepo.GetDBConnection())
+                    {
+                        connection.Execute(str, odp);
+                    }
+                }
+                odp = new OracleDynamicParameters();
+                str1 = "UPDATE EXT_BOL_POSITION SET WEIGHT = :WEIGHT , SO_ID  = :SO_ID, SO_LINE_ID = :SO_LINE_ID , SO_ID_MET  = :SO_ID_MET, SO_LINE_ID_MET = :SO_LINE_ID_MET WHERE POS_NUM_ID = :POS_NUM_ID";
+                odp.Add("WEIGHT",del.entryQnt);
+                odp.Add("SO_ID",del.soId);
+                odp.Add("SO_LINE_ID",del.soLineId);
+                odp.Add("SO_ID_MET",del.soIdMet);
+                odp.Add("SO_LINE_ID_MET",del.soLineIdMet);
+                odp.Add("POS_NUM_ID", posNumId);
+                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                {
+                    connection.Execute(str, odp);
+                }
+                UpdateStatusMessage(msgCounter, bol_created, "");
+            }
+            else
+                UpdateStatusMessage(msgCounter, bol_error, "BOL_POSITION_ID is null");
         }
 
         public void UpdateMsgStatus(TL4MsgInfo l4MsgInfo)
