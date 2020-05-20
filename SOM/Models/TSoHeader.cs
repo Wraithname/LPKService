@@ -11,7 +11,7 @@ namespace SOM.Models
         public string m_strCustPO { get; set; }
         public DateTime m_dCustPODate { get; set; }
         public string m_strInquirtNumber { get; set; }
-        public DateTime m_dInquryNumber { get; set; }
+        public DateTime m_dInquiryDate { get; set; }
         public string m_iInsertUser { get; set; }
         public DateTime m_dInsertDate { get; set; }
         public string m_iUpdateUser { get; set; }

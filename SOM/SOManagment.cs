@@ -8,14 +8,20 @@ using SOM.Models;
 using SOM.Repo;
 using SOM.Infostraction;
 using Repository.Models;
+using Oracle.ManagedDataAccess.Client;
+using Dapper;
+using Dapper.Oracle;
+using Repository;
 
 namespace SOM
 {
     //Используется таблица L4_L3_SO_HEADER
     //Файл SOManagment.pas
-    enum TShiptoType { Shipto,Billto};
+    public enum TContractType { coInternal , coContract }
+    public enum TShiptoType { Shipto,Billto};
     public class SOManagment : ISOManagment
     {
+
         public void AddVsw_detailsToOrder(TL4MsgInfo l4MsgInfo)
         {
             throw new NotImplementedException();
@@ -81,6 +87,23 @@ namespace SOM
             throw new NotImplementedException();
         }
 
+        public TContractType DecodeContractType(string soid, string strCustomerId)
+        {
+            OracleDynamicParameters odp = null;
+            char flag;
+            string str = "select internal_customer_flag " +
+                "from customer_catalog " +
+                "where  customer_descr_id = p_customer_descr_id";
+            odp.Add("p_customer_descr_id", strCustomerId,OracleMappingType.Varchar2);
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                flag = connection.QueryFirstOrDefault<char>(str, odp);
+            }
+            if (flag == 'Y' || soid.Substring(0, 3) == "OMK")
+                return TContractType.coInternal;
+            return TContractType.coContract;
+        }
+
         public TDeleteResponse DeleteOrder(int iOrderID)
         {
             throw new NotImplementedException();
@@ -141,7 +164,7 @@ namespace SOM
             throw new NotImplementedException();
         }
 
-        public int RetrievePeriodNumID(DateTime dDeliveryDate, int iPeriodCode, string sPeriodID, DateTime dStopDate)
+        public int RetrievePeriodNumID(DateTime dDeliveryDate, int iPeriodCode, string sPeriodID = "", DateTime dStopDate = new DateTime())
         {
             throw new NotImplementedException();
         }

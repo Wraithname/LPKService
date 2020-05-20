@@ -75,6 +75,7 @@
     <Compile Include="Infostaction\TL4MsgInfoLineRepo.cs" />
     <Compile Include="L4L3InterfaceServiceConst.cs" />
     <Compile Include="L4L3InterfaceServiceGlobalCheck.cs" />
+    <Compile Include="L4L3InterfaceUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repo\ITL4MsgInfoLine.cs" />
     <Compile Include="WorkModels\JoinedModel.cs" />

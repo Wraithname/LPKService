@@ -20,7 +20,7 @@ namespace SOM.Infostraction
         {
             this.customerCat = new CustomerCat();
         }
-
+        //Узнать про функцию
         public void Create(TL4EngineInterfaceMng interfaceMng)
         {
             throw new NotImplementedException();

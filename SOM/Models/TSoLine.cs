@@ -1,4 +1,5 @@
-﻿using System
+﻿using System;
+using Repository.Models;
 namespace SOM.Models
 {
     public class TSoLine

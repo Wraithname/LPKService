@@ -87,6 +87,8 @@
     <Compile Include="Models\CustomerCatCredit.cs" />
     <Compile Include="Models\L4L3Customer.cs" />
     <Compile Include="Models\L4L3SoHeader.cs" />
+    <Compile Include="Models\L4L3SoLine.cs" />
+    <Compile Include="Models\LinesCom.cs" />
     <Compile Include="Models\TL4EngineInterfaceMng.cs" />
     <Compile Include="Models\TSoHeader.cs" />
     <Compile Include="Models\TSoLine.cs" />

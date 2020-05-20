@@ -6,12 +6,16 @@ using Dapper.Oracle;
 using Repository;
 using Repository.Models;
 using Logger;
+using System.Collections.Generic;
 
 namespace SOM.Infostraction
 {
     public class L4L3SoHeaderRepo : IL4L3SoHeader
     {
         private Log logger = LogFactory.GetLogger(nameof(L4L3SoHeader));
+
+        
+
         public L4L3SoHeader GetData(TL4MsgInfo l4MsgInfo)
         {
             L4L3SoHeader soHeader = new L4L3SoHeader();

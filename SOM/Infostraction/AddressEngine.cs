@@ -16,7 +16,7 @@ namespace SOM.Infostraction
         {
             this.adressCatalog = new AddresCat();
         }
-
+        //Узнать про функцию
         public void Create(TL4EngineInterfaceMng interfaceMng)
         {
             throw new NotImplementedException();
@@ -24,14 +24,14 @@ namespace SOM.Infostraction
 
         public string GetAddressId()
         {
-            throw new NotImplementedException();
+            return adressCatalog.addressId.ToString();
         }
-
+        //Узнать про функцию
         public int LoadData(int addressId)
         {
             throw new NotImplementedException();
         }
-
+        //Узнать про функцию
         public bool SaveData(bool action)
         {
             throw new NotImplementedException();
@@ -39,67 +39,132 @@ namespace SOM.Infostraction
 
         public bool SetAddress1(string address1)
         {
-            throw new NotImplementedException();
+            if (address1 != "")
+            {
+                adressCatalog.address1 = address1;
+                return true;
+            }
+            return false;
         }
 
         public bool SetAddress2(string address2)
         {
-            throw new NotImplementedException();
+            if (address2 != "")
+            {
+                adressCatalog.address2 = address2;
+                return true;
+            }
+            return false;
         }
 
         public bool SetAddress3(string address3)
         {
-            throw new NotImplementedException();
+            if (address3 != "")
+            {
+                adressCatalog.contactMobile = address3;
+                return true;
+            }
+            return false;
         }
 
         public bool SetAddressFullName(string custName)
         {
-            throw new NotImplementedException();
+            if (custName != "")
+            {
+                adressCatalog.addressFullName = custName;
+                return true;
+            }
+            return false;
         }
 
         public bool SetCity(string city)
         {
-            throw new NotImplementedException();
+            if (city != "")
+            {
+                adressCatalog.city = city;
+                return true;
+            }
+            return false;
         }
 
         public bool SetContactFax(string contactFax)
         {
-            throw new NotImplementedException();
+            if (contactFax != "")
+            {
+                adressCatalog.contactFax = contactFax;
+                return true;
+            }
+            return false;
         }
 
         public bool SetContactMobile(string contactMobile)
         {
-            throw new NotImplementedException();
+            if (contactMobile != "")
+            {
+                adressCatalog.contactMobile = contactMobile;
+                return true;
+            }
+            return false;
         }
 
         public bool SetContactName(string contactName)
         {
-            throw new NotImplementedException();
+            if (contactName != "")
+            {
+                adressCatalog.contactName = contactName;
+                return true;
+            }
+            return false;
         }
 
         public bool SetContactPhone1(string contactPhone)
         {
-            throw new NotImplementedException();
+            if (contactPhone != "")
+            {
+                adressCatalog.contactPhone1 = contactPhone;
+                return true;
+            }
+            return false;
         }
 
         public bool SetCountry(string country)
         {
-            throw new NotImplementedException();
+            if (country != "")
+            {
+                adressCatalog.country = country;
+                return true;
+            }
+            return false;
         }
 
         public bool SetEmailAddress(string contactEmail)
         {
-            throw new NotImplementedException();
+            if (contactEmail != "")
+            {
+                adressCatalog.emailAddress = contactEmail;
+                return true;
+            }
+            return false;
         }
 
         public bool SetState(string state)
         {
-            throw new NotImplementedException();
+            if (state != "")
+            {
+                adressCatalog.state = state;
+                return true;
+            }
+            return false;
         }
 
         public bool SetZipCode(string zimCode)
         {
-            throw new NotImplementedException();
+            if (zimCode != "")
+            {
+                adressCatalog.zipCode = zimCode;
+                return true;
+            }
+            return false;
         }
     }
 }

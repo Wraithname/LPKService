@@ -7,7 +7,7 @@ using Repository;
 
 namespace Repository.Infostraction
 {
-    class TL4MsgInfoLineRepo:ITL4MsgInfoLine
+    public class TL4MsgInfoLineRepo:ITL4MsgInfoLine
     {
         public void UpdateMsgStatus(TL4MsgInfo l4MsgInfo)
         {

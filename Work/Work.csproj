@@ -75,12 +75,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IServiceWork.cs" />
-    <Compile Include="L4L3InterfaceUtility.cs" />
     <Compile Include="Models\DeliveryESOHandSOL.cs" />
     <Compile Include="Models\DeliverySOHandSOL.cs" />
     <Compile Include="Models\L4L3Delivery.cs" />
     <Compile Include="Models\L4L3Event.cs" />
-    <Compile Include="Models\L4L3SoLine.cs" />
     <Compile Include="Models\VecAuto.cs" />
     <Compile Include="PartitionOrder.cs" />
     <Compile Include="ProcedureAction.cs" />

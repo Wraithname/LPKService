@@ -11,40 +11,50 @@ namespace SOM.Infostraction
 {
     public class TL4EngineInterfaceMngRepo : ITL4EngineInterfaceMng
     {
-        TL4EngineInterfaceMng TL4Engine;
-        public TL4EngineInterfaceMngRepo()
+        TL4EngineInterfaceMng tL4Engine;
+        TL4MsgInfo l4MsgInfo;
+        #region Constant
+        string userNameNotDefined = "NOT DEFINED";
+        int msgRemarkMaxLen = 4000;
+        #endregion
+        public TL4EngineInterfaceMngRepo(TL4MsgInfo l4MsgInfo)
         {
-            this.TL4Engine = new TL4EngineInterfaceMng();
+            this.l4MsgInfo = l4MsgInfo;
         }
-
-        public object CheckValue(string strTableNameOrigin, string strFieldNameOrigin, string strAliasFieldNameOrigin, bool bIsValidValue, TL4MsgInfo l4MsgInfo, string strTableNameDec, string strFieldNameDec, string strWhereOptional = "")
+        public TL4EngineInterfaceMngRepo(L4L3Customer customer, TL4MsgInfo pL4MsgInfoPtr)
         {
-            throw new NotImplementedException();
+            this.tL4Engine = new TL4EngineInterfaceMng();
+            this.l4MsgInfo = new TL4MsgInfo();
+            tL4Engine.m_QryData = customer;
+            tL4Engine.m_L4MsgInfoPtr = pL4MsgInfoPtr;
         }
-
-        public object CheckValue(string strTableNameOrigin, string strFieldNameOrigin, string strAliasFieldNameOrigin, bool bIsValidValue, TL4MsgInfoLine l4MsgInfoLine, string strTableNameDec, string strFieldNameDec, string strWhereOptional)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Create(L4L3Customer customer, TL4MsgInfo pL4MsgInfoPtr)
-        {
-            throw new NotImplementedException();
-        }
-
+        //Узнать про функцию
         public string DecodeUserToUserId(string pL4UserName)
         {
-            throw new NotImplementedException();
+            string res="";
+            if (pL4UserName == "")
+            {
+                NotifyErrorMessage("TL4EngineInterfaceMng.DecodeUserNameToUserId: pL4UserName = ''''.");
+                return res;
+            }
+            else
+            {
+                try
+                {
+                    return res;
+                }
+                catch { return res; }
+            }
         }
 
         public DateTime GetCreateDate()
         {
             throw new NotImplementedException();
         }
-
+        //Узнать про функцию (Точнее какой набор данных хранит в себе TL4EngineInterfaceMng)
         public string GetCreateUserId()
         {
-            throw new NotImplementedException();
+            return DecodeUserToUserId("BCKPROC");
         }
 
         public DateTime GetModDateitme()
@@ -54,22 +64,26 @@ namespace SOM.Infostraction
 
         public string GetModUserId()
         {
-            throw new NotImplementedException();
+            return GetCreateUserId();
         }
 
         public int GetMsgCounter()
         {
-            throw new NotImplementedException();
+            return l4MsgInfo.msgCounter;
         }
 
         public bool NotifyErrorMessage(string Text, string Caption = "", bool pFatal = true)
         {
-            throw new NotImplementedException();
+            if (pFatal)
+                l4MsgInfo.msgReport.status = -1;
+            l4MsgInfo.msgReport.remark = "";
+            l4MsgInfo.msgReport.remark = ((l4MsgInfo.msgReport.remark)+Caption+Text).Substring(0,msgRemarkMaxLen);
+            return !pFatal;
         }
 
-        public bool NotifyErrorMessage(string Text, string pErrorCode)
+        public bool NotifyErrorMessage(string text, string pErrorCode)
         {
-            throw new NotImplementedException();
+            return NotifyErrorMessage(text, "", true);
         }
 
         public bool NotifyErrorTree(bool pFatal)

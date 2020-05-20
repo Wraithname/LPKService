@@ -26,7 +26,7 @@ namespace SOM.Repo
         string ProductTypeCheck(string l4ProductType);
         void UpdateOrder(DataSet QryData, TL4MsgInfo l4MsgInfo, bool bIsDeletion = false);
         void LoadAttrb(TL4MsgInfoLine tL4MsgInfoLine, string strProductType, int iSoID, int iSoLineID, TCheckRelatedList attrbSO, List<string> strArrayOfAttributes);
-        int RetrievePeriodNumID(DateTime dDeliveryDate, int iPeriodCode, string sPeriodID, DateTime dStopDate);
+        int RetrievePeriodNumID(DateTime dDeliveryDate, int iPeriodCode, string sPeriodID="", DateTime dStopDate=new DateTime());
         int RetrieveShipToCode(int iCustomerId, int iShiptoId);
         void SetOEHeaderValues(TSoHeader order, TL4EngineInterfaceMng eimOrderEntry, bool bUpdatingOrder = false);
         void SetOELinesValues(TSoLine order, bool bReordered = false);
@@ -48,5 +48,6 @@ namespace SOM.Repo
         void SaveInMassForHeaderNote(int pSoId, string pHeaderNote);
         void SaveNote();
         void ClearMassNote();
+        TContractType DecodeContractType(string soid, string strCustomerId);
     }
 }
