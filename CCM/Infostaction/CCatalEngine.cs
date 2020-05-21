@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SOM.Models;
-using SOM.Repo;
+using CCM.Models;
+using CCM.Repo;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using Repository;
 
-namespace SOM.Infostraction
+namespace CCM.Infostraction
 {
     public class CCatalEngine:ICCatalEngine
     {

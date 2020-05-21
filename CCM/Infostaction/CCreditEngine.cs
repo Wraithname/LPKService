@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SOM.Models;
-using SOM.Repo;
+using CCM.Models;
+using CCM.Repo;
 
-namespace SOM.Infostraction
+namespace CCM.Infostraction
 {
     public class CCreditEngine:ICCreditEngine
     {

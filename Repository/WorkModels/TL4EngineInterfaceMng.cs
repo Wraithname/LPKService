@@ -1,9 +1,9 @@
-﻿using Repository.Models;
-namespace SOM.Models
+﻿
+namespace Repository.WorkModels
 { 
     public class TL4EngineInterfaceMng
     {
         public TL4MsgInfo m_L4MsgInfoPtr { get; set; }
-        public L4L3Customer m_QryData { get; set; }
+        public object m_QryData { get; set; }
     }
 }

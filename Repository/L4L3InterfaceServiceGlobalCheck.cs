@@ -1,5 +1,5 @@
-﻿using Repository.Models;
-using Logger;
+﻿using Repository.WorkModels;
+using NLog;
 
 namespace Repository
 {
@@ -11,7 +11,7 @@ namespace Repository
     }
     public class L4L3InterfaceServiceGlobalCheck:IGlobalCheck
     {
-        private Log logger = LogFactory.GetLogger(nameof(L4L3InterfaceServiceGlobalCheck));
+        private Logger logger = LogManager.GetLogger(nameof(Repository));
         public TCheckResult InitResultWithFalse()
         {
             TCheckResult result = new TCheckResult();

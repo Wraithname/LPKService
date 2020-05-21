@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
-using Repository.Models;
+using Repository.WorkModels;
 using Repository.Repo;
 using Repository;
 

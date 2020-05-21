@@ -1,28 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dapper;
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
 using SOM.Models;
 using SOM.Infostraction;
-using Repository.Models;
+using Repository.WorkModels;
 using Repository.Infostraction;
 using Repository;
-using Logger;
+using NLog;
 
 namespace SOM.Repo
 {
     public enum TLineStatus { IsClosed, IsOpened}
     public class TSoLineRepo : ITSoLine
     {
-        SOManagment som = new SOManagment();
+        TSoLine newData ;
+        SOManagment som ;
+        TL4MsgInfoLineRepo msgInfoLine = new TL4MsgInfoLineRepo();
         TCheckRelatedList attributesOfLine=new TCheckRelatedList();
         List<string> slArrayofAttributes=new List<string>();
-        private Log logger = LogFactory.GetLogger(nameof(L4L3SoHeader));
+        private Logger logger = LogManager.GetLogger(nameof(SOM));
+
+        public TSoLineRepo()
+        {
+            this.newData = new TSoLine();
+            this.som = new SOManagment();
+        }
+
         public int CheckValueType(bool bisValid, TL4MsgInfoLine l4MsgInfo)
         {
             bisValid = false;
@@ -185,7 +190,6 @@ namespace SOM.Repo
 
         public TSoLine Create(LinesCom line, TL4MsgInfo l4MsgInfo, int iCustomerID, int iShipToCode, bool lbIsUpdate)
         {
-            TSoLine newData = new TSoLine();
             L4L3InterfaceUtility inter = new L4L3InterfaceUtility();
             bool bVerifyData = true;
             int iSysDatePeriodNumID = 0;
@@ -265,16 +269,15 @@ namespace SOM.Repo
                 return newData; }
         }
 
-        public string GetMsgStatus(TL4MsgInfoLine l4MsgInfo)
+        public string GetMsgStatus()
         {
-            return l4MsgInfo.tL4MsgInfo.msgReport.remark;
+            return newData.m_L4MsgInfoLine.tL4MsgInfo.msgReport.remark;
         }
-        public void UpdateMsgStatus(TL4MsgInfo l4MsgInfo)
-        {
-            TL4MsgInfoLineRepo msgInfoLine = new TL4MsgInfoLineRepo();
-            msgInfoLine.UpdateMsgStatus(l4MsgInfo);
+        public void UpdateMsgStatus()
+        {   
+            msgInfoLine.UpdateMsgStatus(newData.m_L4MsgInfoLine.tL4MsgInfo);
         }
-
+        //Узнать про определение статуса
         public TLineStatus GetLineStatus(int linestatus)
         {
             throw new NotImplementedException();

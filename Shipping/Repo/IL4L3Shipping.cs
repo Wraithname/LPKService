@@ -1,6 +1,5 @@
 ﻿using Shipping.Models;
-using Repository.Models;
-using System.Collections.Generic;
+using Repository.WorkModels;
 
 namespace Shipping.Repo
 {

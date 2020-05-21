@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SOM.Models;
-using SOM.Repo;
-using Repository.Models;
+using Repository.Repo;
+using Repository.WorkModels;
 
-namespace SOM.Infostraction
+namespace Repository.Infostraction
 {
     public class TL4EngineInterfaceMngRepo : ITL4EngineInterfaceMng
     {
@@ -21,7 +16,7 @@ namespace SOM.Infostraction
         {
             this.l4MsgInfo = l4MsgInfo;
         }
-        public TL4EngineInterfaceMngRepo(L4L3Customer customer, TL4MsgInfo pL4MsgInfoPtr)
+        public TL4EngineInterfaceMngRepo(object customer, TL4MsgInfo pL4MsgInfoPtr)
         {
             this.tL4Engine = new TL4EngineInterfaceMng();
             this.l4MsgInfo = new TL4MsgInfo();

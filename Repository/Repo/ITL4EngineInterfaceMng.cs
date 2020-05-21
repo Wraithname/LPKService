@@ -1,8 +1,6 @@
 ﻿using System;
-using SOM.Models;
-using Repository.Models;
 
-namespace SOM.Repo
+namespace Repository.Repo
 {
     interface ITL4EngineInterfaceMng
     {

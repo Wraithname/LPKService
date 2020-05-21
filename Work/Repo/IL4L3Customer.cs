@@ -1,6 +1,6 @@
-﻿using SOM.Models;
-using Repository.Models;
-namespace SOM.Repo
+﻿using Work.Models;
+using Repository.WorkModels;
+namespace Work.Repo
 {
     interface IL4L3Customer
     {

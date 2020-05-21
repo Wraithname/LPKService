@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Text;
 using Dapper;
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
 using SOM.Models;
 using Repository;
-using Repository.Models;
+using Repository.WorkModels;
 using SOM.Repo;
 using Logger;
 using SOM;

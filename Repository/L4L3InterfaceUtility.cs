@@ -1,13 +1,13 @@
 ﻿using Dapper;
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
-using Logger;
+using NLog;
 
 namespace Repository
 {
     public class L4L3InterfaceUtility
     {
-        private Log logger = LogFactory.GetLogger(nameof(Repository));
+        private Logger logger = LogManager.GetLogger(nameof(Repository));
         string[] coloursAttributes = { "PAINT_FIN_BOTTOM_COLOUR", "PAINT_FIN_TOP_COLOUR", "PAINT_PRIME_TOP_TYPE", "PAINT_PRIME_BOTTOM_TYPE" };
         //Узнать что это и для чего
         public void GlobalVarInit()

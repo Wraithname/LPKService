@@ -1,4 +1,4 @@
-﻿using Repository.Models;
+﻿using Repository.WorkModels;
 using SOM.Models;
 
 namespace SOM.Repo

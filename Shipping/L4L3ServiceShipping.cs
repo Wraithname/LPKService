@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Repository.Models;
+using Repository.WorkModels;
 using Shipping.Models;
-using Logger;
+using NLog;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
@@ -26,7 +26,7 @@ namespace Shipping
         const int soLineAcceptedOpen = 3;
         const int soLineAcceptedClosed = 4;
         #endregion
-        private Log logger = LogFactory.GetLogger(nameof(IL4L3SerShipping));
+        private Logger logger = LogManager.GetLogger(nameof(Shipping));
         public void CreateBolIfNotEx(string strBolId)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();

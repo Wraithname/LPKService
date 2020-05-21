@@ -3,8 +3,12 @@ using System.ServiceProcess;
 using System.Timers;
 using System.Runtime.InteropServices;
 using System.Configuration;
-using Logger;
+using NLog;
 using Work;
+using Repository.WorkModels;
+using System.Collections.Generic;
+using LPKServiceSDK;
+
 namespace LPKService
 {
     public enum ServiceState
@@ -30,9 +34,8 @@ namespace LPKService
     };
     public partial class LPKService : ServiceBase
     {
-        private Log logger = LogFactory.GetLogger(nameof(LPKService));
+        private Logger logger=LogManager.GetLogger(nameof(LPKService));
         private int timeout;
-        ServiceWork working = new ServiceWork();
         Timer timer = new Timer();
         public LPKService()
         {
@@ -77,7 +80,7 @@ namespace LPKService
 
         private void OnTimer(object sender, ElapsedEventArgs e)
         {
-            working.MngLoop();
+            MngLoop();
         }
 
         protected override void OnContinue()
@@ -113,5 +116,6 @@ namespace LPKService
             base.OnPause();
             
         }
+
     }
 }

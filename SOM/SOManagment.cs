@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SOM.Models;
 using SOM.Repo;
 using SOM.Infostraction;
-using Repository.Models;
+using Repository.WorkModels;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using Repository;
+using NLog;
 
 namespace SOM
 {
@@ -21,10 +19,13 @@ namespace SOM
     public enum TShiptoType { Shipto,Billto};
     public class SOManagment : ISOManagment
     {
-
+        private Logger logger = LogManager.GetLogger(nameof(SOM));
+        List<TLineNote> lines = new List<TLineNote>();
+        TLineNote line;
         public void AddVsw_detailsToOrder(TL4MsgInfo l4MsgInfo)
         {
-            throw new NotImplementedException();
+            string vsw_detail, sodescId;
+            int soidv;
         }
 
         public bool AlreadyInsertInSuspended(int iSoID)
@@ -188,11 +189,27 @@ namespace SOM
 
         public void SaveInMassForLineNote(int pSoId, int pSoLineId, string pLineNote, string pSapUser)
         {
-            throw new NotImplementedException();
+            line = new TLineNote();
+            line.soId = pSoId;
+            line.soLineId = pSoLineId;
+            line.lineNote = pLineNote;
+            line.sSAPUser = pSapUser;
+            lines.Add(line);
+            
         }
 
         public void SaveNote()
         {
+            if(lines.Count>0)
+            {
+                foreach(TLineNote line in lines)
+                {
+                    if(line.lineNote!="")
+                    {
+                        
+                    }
+                }
+            }
             throw new NotImplementedException();
         }
 

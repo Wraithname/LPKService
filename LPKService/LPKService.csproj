@@ -59,6 +59,9 @@
     <Reference Include="Dapper.Oracle, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.Oracle.1.2.1\lib\net452\Dapper.Oracle.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.7.2\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="Oracle.DataAccess, Version=2.112.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86">
       <HintPath>..\packages\Oracle.DataAccess.x86.2.112.1.0\lib\Oracle.DataAccess.dll</HintPath>
     </Reference>
@@ -111,6 +114,12 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +128,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logger\Logger.csproj">
-      <Project>{3bccb274-37c3-40a5-a177-9708c46d22b4}</Project>
-      <Name>Logger</Name>
+    <ProjectReference Include="..\LPKServiceSDK\LPKServiceSDK.csproj">
+      <Project>{27304222-679b-4e18-8b73-2f9707d35853}</Project>
+      <Name>LPKServiceSDK</Name>
     </ProjectReference>
     <ProjectReference Include="..\Repository\Repository.csproj">
       <Project>{87b4638a-8693-43a8-8e42-ddec8415c880}</Project>

@@ -1,4 +1,4 @@
-﻿using Repository.Models;
+﻿using Repository.WorkModels;
 namespace Repository.Repo
 {
     interface ITL4MsgInfoLine

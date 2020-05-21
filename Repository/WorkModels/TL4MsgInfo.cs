@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Repository.Models
+namespace Repository.WorkModels
 {
     public class TL4MsgInfo
     {

@@ -1,6 +1,6 @@
 ﻿using Repository.WorkModels;
 
-namespace Work
+namespace LPKServiceSDK
 {
     public interface IServiceWork
     {

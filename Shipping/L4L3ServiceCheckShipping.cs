@@ -1,8 +1,8 @@
 ﻿using System;
 using Repository;
-using Repository.Models;
+using Repository.WorkModels;
 using Shipping.Models;
-using Logger;
+using NLog;
 using Oracle.ManagedDataAccess.Client;
 using Dapper.Oracle;
 using Dapper;
@@ -26,7 +26,7 @@ namespace Shipping
     }
     class L4L3ServiceCheckShipping : L4L3ServCheckShip
     {
-        private Log logger = LogFactory.GetLogger(nameof(IL4L3SerShipping));
+        private Logger logger = LogManager.GetLogger(nameof(Shipping));
         public bool CheckBolExistIsShip(string strBolId)
         {
             string bolId = "";

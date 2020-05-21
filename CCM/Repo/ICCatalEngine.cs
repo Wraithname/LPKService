@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SOM.Models;
+using Repository.WorkModels;
 
-namespace SOM.Repo
+namespace CCM.Repo
 {
     interface ICCatalEngine
     {

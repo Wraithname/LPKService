@@ -1,5 +1,5 @@
 ﻿using SOM.Models;
-using Repository.Models;
+using Repository.WorkModels;
 using Dapper.Oracle;
 
 namespace SOM.Repo

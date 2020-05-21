@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using SOM.Infostraction;
 using Shipping.Infostraction;
-using Repository.Models;
+using Repository.WorkModels;
+using Work.Infostraction;
+using Work.Models;
 
 namespace Work
 {
-    class ProcedureAction
+    public class ProcedureAction
     {
         
         public List<Action<TL4MsgInfo>> GetActions()
@@ -20,17 +22,18 @@ namespace Work
                 som.SalesOrderMng(l4MsgInfo); };
             actions.Add(targets);
             //L4_L3_CUSTOMER_CATALOG
-            SOM.CCManagement custom = new SOM.CCManagement();
+            CCM.CCManagement custom = new CCM.CCManagement();
             L4L3CustomerRepo customerRepo = new L4L3CustomerRepo();
             targets = delegate (TL4MsgInfo l4MsgInfo) {
-                custom.CustomerMng(l4MsgInfo); };
+                L4L3Customer cust = customerRepo.GetData(l4MsgInfo);
+                custom.CustomerMng(cust,l4MsgInfo); };
             actions.Add(targets);
             //L4_L3_SHIPPING
-            Shipping.L4L3ServiceShipping shipp = new Shipping.L4L3ServiceShipping();
-            L4L3ShippingRepo shippingRepo = new L4L3ShippingRepo();
-            targets = delegate (TL4MsgInfo l4MsgInfo) {
-                shipp.ShippingMng(l4MsgInfo); };
-            actions.Add(targets);
+            //Shipping.L4L3ServiceShipping shipp = new Shipping.L4L3ServiceShipping();
+            //L4L3ShippingRepo shippingRepo = new L4L3ShippingRepo();
+            //targets = delegate (TL4MsgInfo l4MsgInfo) {
+            //    shipp.ShippingMng(l4MsgInfo); };
+            //actions.Add(targets);
             return actions;
         }
     }

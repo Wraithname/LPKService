@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Repository.WorkModels;
 using Oracle.ManagedDataAccess.Client;
-using Dapper.Oracle;
 using Dapper;
-using Repository.Models;
+using Dapper.Oracle;
 using Repository;
-using System.Threading;
 using Work.Models;
 namespace Work
 {
-
-    public class ServiceWork : IServiceWork
+    class ServiceWorker : IServiceWork
     {
         #region Constant
         const int bol_new = 1;
@@ -22,12 +20,12 @@ namespace Work
         const int op_delete_bol = 3;
         #endregion
         List<Action<TL4MsgInfo>> actions = new List<Action<TL4MsgInfo>>();
-
-        public ServiceWork()
+        public ServiceWorker()
         {
             ProcedureAction procedure = new ProcedureAction();
             actions = procedure.GetActions();
         }
+
         public void CreateBol(int msgCounter, string bolId, bool allBol)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
@@ -157,7 +155,7 @@ namespace Work
                 else
                     UpdateStatusMessage(msgCounter, bol_error, "BOL_ID is null");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 UpdateStatusMessage(msgCounter, bol_error, e.Message);
             }
@@ -337,10 +335,10 @@ namespace Work
                                             UpdateStatusMessage(l3DelEventDel.msgCounter, bol_error, "Позиция в накладной уже существует в БД MET2000.");
                                     }
                                 }
-                                if(l3DelEventDel.opCode==op_delete_bol)
-                                    if(ExistsBol(bolId,true))
+                                if (l3DelEventDel.opCode == op_delete_bol)
+                                    if (ExistsBol(bolId, true))
                                     {
-                                        if (IsUpdate(l3DelEventDel.msgCounter, bolId,bolPosition))
+                                        if (IsUpdate(l3DelEventDel.msgCounter, bolId, bolPosition))
                                             DeleteBol(l3DelEventDel.msgCounter, bolId, bolPosition);
                                         else
                                             UpdateStatusMessage(l3DelEventDel.msgCounter, bol_error, "Накладной нет в МЕТ 2000 или она уже наполнена.");
@@ -419,7 +417,7 @@ namespace Work
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
             DeliverySOHandSOL del = new DeliverySOHandSOL();
-            string str1="";
+            string str1 = "";
             string str = "SELECT LD.BOL_POSITION_ID  , " +
                 " nvl(LD.VEHICLE_ID,''-'') as VEHICLE_ID, " +
                 "LD.BOL_ID, " +
@@ -435,16 +433,16 @@ namespace Work
             odp.Add("MSG_COUNTER", msgCounter);
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                del=connection.QueryFirstOrDefault<DeliverySOHandSOL>(str, odp);
+                del = connection.QueryFirstOrDefault<DeliverySOHandSOL>(str, odp);
             }
-            if (del!=null)
+            if (del != null)
             {
-                if (del.vehicleId!="-")
+                if (del.vehicleId != "-")
                 {
                     odp = new OracleDynamicParameters();
                     str1 = "UPDATE EXT_BOL_HEADER SET VEHICLE_ID_SAP = :VEHICLE_ID_SAP WHERE BOL_ID = :BOL_ID ";
-                    odp.Add("VEHICLE_ID_SAP",del.vehicleId);
-                    odp.Add("BOL_ID",del.bolId);
+                    odp.Add("VEHICLE_ID_SAP", del.vehicleId);
+                    odp.Add("BOL_ID", del.bolId);
                     using (OracleConnection connection = BaseRepo.GetDBConnection())
                     {
                         connection.Execute(str, odp);
@@ -452,11 +450,11 @@ namespace Work
                 }
                 odp = new OracleDynamicParameters();
                 str1 = "UPDATE EXT_BOL_POSITION SET WEIGHT = :WEIGHT , SO_ID  = :SO_ID, SO_LINE_ID = :SO_LINE_ID , SO_ID_MET  = :SO_ID_MET, SO_LINE_ID_MET = :SO_LINE_ID_MET WHERE POS_NUM_ID = :POS_NUM_ID";
-                odp.Add("WEIGHT",del.entryQnt);
-                odp.Add("SO_ID",del.soId);
-                odp.Add("SO_LINE_ID",del.soLineId);
-                odp.Add("SO_ID_MET",del.soIdMet);
-                odp.Add("SO_LINE_ID_MET",del.soLineIdMet);
+                odp.Add("WEIGHT", del.entryQnt);
+                odp.Add("SO_ID", del.soId);
+                odp.Add("SO_LINE_ID", del.soLineId);
+                odp.Add("SO_ID_MET", del.soIdMet);
+                odp.Add("SO_LINE_ID_MET", del.soLineIdMet);
                 odp.Add("POS_NUM_ID", posNumId);
                 using (OracleConnection connection = BaseRepo.GetDBConnection())
                 {
@@ -494,5 +492,6 @@ namespace Work
                 connection.Execute(str, odp);
             }
         }
+
     }
 }

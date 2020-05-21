@@ -1,18 +1,17 @@
 ﻿using Shipping.Models;
 using Shipping.Repo;
-using Repository.Models;
+using Repository.WorkModels;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using Repository;
-using Logger;
-using System.Collections.Generic;
+using NLog;
 
 namespace Shipping.Infostraction
 {
     public class L4L3ShippingRepo : IL4L3Shipping
     {
-        private Log logger = LogFactory.GetLogger(nameof(L4L3Shipping));
+        private Logger logger = LogManager.GetLogger(nameof(Shipping));
         public L4L3Shipping GetData(TL4MsgInfo l4MsgInfo)
         {
             L4L3Shipping shipping = new L4L3Shipping();

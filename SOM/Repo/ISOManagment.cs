@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SOM.Models;
-using Repository.Models;
+using Repository.WorkModels;
 using System.Data;
 
 namespace SOM.Repo

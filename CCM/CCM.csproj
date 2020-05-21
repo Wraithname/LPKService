@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{96F27AC8-799D-4031-84E8-D2664412F29E}</ProjectGuid>
+    <ProjectGuid>{D3F3CA8C-6220-414D-845F-E1A2B0DE8561}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SOM</RootNamespace>
-    <AssemblyName>SOM</AssemblyName>
+    <RootNamespace>CCM</RootNamespace>
+    <AssemblyName>CCM</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -30,24 +30,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.35\lib\net461\Dapper.dll</HintPath>
@@ -62,10 +44,6 @@
       <HintPath>..\packages\Oracle.ManagedDataAccess.19.7.0\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
@@ -80,24 +58,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infostraction\L4L3SoHeaderRepo.cs" />
-    <Compile Include="Models\L4L3SoHeader.cs" />
-    <Compile Include="Models\L4L3SoLine.cs" />
-    <Compile Include="Models\LinesCom.cs" />
-    <Compile Include="Models\TSoHeader.cs" />
-    <Compile Include="Models\TSoLine.cs" />
-    <Compile Include="Infostraction\TSoHeaderRepo.cs" />
-    <Compile Include="Infostraction\TSoLineRepo.cs" />
-    <Compile Include="Repo\IL4L3SoHeader.cs" />
-    <Compile Include="Repo\ISOManagment.cs" />
-    <Compile Include="Repo\ITSoHeader.cs" />
-    <Compile Include="Repo\ITSoLine.cs" />
-    <Compile Include="SOManagment.cs" />
+    <Compile Include="CCManagement.cs" />
+    <Compile Include="ICCManagement.cs" />
+    <Compile Include="Infostaction\AddressEngine.cs" />
+    <Compile Include="Infostaction\CCatalEngine.cs" />
+    <Compile Include="Infostaction\CCreditEngine.cs" />
+    <Compile Include="Models\AddressCat.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\CustomerCat.cs" />
+    <Compile Include="Models\CustomerCatCredit.cs" />
+    <Compile Include="Models\ZipCatalogue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <Compile Include="Repo\IAddressCat.cs" />
+    <Compile Include="Repo\ICCatalEngine.cs" />
+    <Compile Include="Repo\ICCreditEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Repository\Repository.csproj">
@@ -106,5 +80,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,5 @@
-﻿using Repository;
-
-namespace SOM.Models
+﻿
+namespace Repository.WorkModels
 {
     public class L4L3Customer
     {

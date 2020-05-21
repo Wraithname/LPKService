@@ -1,7 +1,7 @@
 ﻿using System;
 using Repository;
 
-namespace SOM.Models
+namespace CCM.Models
 {
     public class CustomerCat
     {

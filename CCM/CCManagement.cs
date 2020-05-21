@@ -1,21 +1,19 @@
 ﻿using System;
-using SOM.Models;
-using SOM.Repo;
-using Repository.Models;
+using CCM.Models;
+using Repository.WorkModels;
 using Dapper.Oracle;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
 using Repository;
-using Logger;
-using SOM.Infostraction;
+using Repository.Infostraction;
+using NLog;
+using CCM.Infostraction;
 
-namespace SOM
+namespace CCM
 {
-    //Используется таблица L4_L3_CUSTOMER
-    //Файл CCManagment.pas
     public class CCManagement : ICCManagement
     {
-        private Log logger = LogFactory.GetLogger(nameof(CCManagement));
+        private Logger logger = LogManager.GetLogger(nameof(CCManagement));
         public string CheckClassificationType(string strClassification, OracleDynamicParameters odp = null)
         {
             string res = "";
@@ -45,13 +43,10 @@ namespace SOM
                 return false;
         }
 
-        public TCheckResult CustomerMng(TL4MsgInfo l4MsgInfo)
+        public TCheckResult CustomerMng(L4L3Customer customer,TL4MsgInfo l4MsgInfo)
         {
-            L4L3CustomerRepo customerRepo = new L4L3CustomerRepo();
-            L4L3Customer customer = customerRepo.GetData(l4MsgInfo);
             TCheckResult checkres = new TCheckResult();
-            TL4EngineInterfaceMngRepo engInterf = new TL4EngineInterfaceMngRepo();
-            engInterf.Create(customer, l4MsgInfo);
+            TL4EngineInterfaceMngRepo engInterf = new TL4EngineInterfaceMngRepo(customer,l4MsgInfo);
             AddressEngine addressEngine = new AddressEngine();
             CCatalEngine catalEngine = new CCatalEngine();
             CCreditEngine creditEngine = new CCreditEngine();

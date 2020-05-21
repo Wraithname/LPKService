@@ -4,17 +4,15 @@ using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using Repository;
-using Repository.Models;
-using Logger;
+using Repository.WorkModels;
+using NLog;
 using System.Collections.Generic;
 
 namespace SOM.Infostraction
 {
     public class L4L3SoHeaderRepo : IL4L3SoHeader
     {
-        private Log logger = LogFactory.GetLogger(nameof(L4L3SoHeader));
-
-        
+        private Logger logger = LogManager.GetLogger(nameof(SOM));
 
         public L4L3SoHeader GetData(TL4MsgInfo l4MsgInfo)
         {
