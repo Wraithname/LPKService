@@ -5,7 +5,7 @@ using Repository.WorkModels;
 using Repository.Repo;
 using Repository;
 
-namespace Repository.Infostraction
+namespace Repository.Infostaction
 {
     public class TL4MsgInfoLineRepo:ITL4MsgInfoLine
     {

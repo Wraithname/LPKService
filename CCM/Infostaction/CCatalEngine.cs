@@ -1,6 +1,6 @@
 ﻿using System;
 using CCM.Models;
-using CCM.Repo;
+using Repository.WorkModels;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
@@ -8,7 +8,7 @@ using Repository;
 
 namespace CCM.Infostraction
 {
-    public class CCatalEngine:ICCatalEngine
+    public class CCatalEngine
     {
         CustomerCat customerCat;
 
@@ -32,9 +32,9 @@ namespace CCM.Infostraction
             }
         }
         //Узнать про функцию
-        public bool ForceModUserDatetime(bool flag, string modUserId, string txt = "")
+        public void ForceModUserDatetime(string modUserId, string txt = "")
         {
-            throw new NotImplementedException();
+            customerCat.modUserId = Convert.ToInt32(modUserId);
         }
 
         public int GetAddressIdCatalog()
@@ -62,159 +62,83 @@ namespace CCM.Infostraction
             throw new NotImplementedException();
         }
         //Узнать про функцию
-        public bool SaveData(bool flag)
+        public bool SaveData()
         {
             throw new NotImplementedException();
         }
 
-        public bool SetAddressIdCatalog(string addressId)
+        public void SetAddressIdCatalog(string addressId)
         {
-            try
-            {
-                customerCat.addresId = Convert.ToInt32(addressId);
-                return true;
-            }
-            catch { return false; }
+            customerCat.addresId = Convert.ToInt32(addressId);
         }
 
-        public bool SetClassificationType(string customertype)
+        public void SetClassificationType(string customertype)
         {
-            try
-            {
-                customerCat.customerType = customertype;
-                return true;
-            }
-            catch { return false; }
+            customerCat.customerType = customertype;
         }
 
-        public bool SetCreationUserId(string customerId)
+        public void SetCreationUserId(string customerId)
         {
-            try
-            {
-                customerCat.creationUserId = Convert.ToInt32(customerId);
-                return true;
-            }
-            catch { return false; }
+            customerCat.creationUserId = Convert.ToInt32(customerId);
         }
 
-        public bool SetCustomerCurrencyCode(string customercode)
+        public void SetCustomerCurrencyCode(string customercode)
         {
-            try
-            {
                 customerCat.customerCurrencyCode = customercode;
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetCustomerDescrId(string l4CustimerId)
+        public void SetCustomerDescrId(string l4CustimerId)
         {
-            try
-            {
                 customerCat.customerDescrId = l4CustimerId;
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetCustomerShortName(string value)
+        public void SetCustomerShortName(string value)
         {
-            try
-            {
                 customerCat.customerShortName = value;
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetExpirationDate(DateTime date)
+        public void SetExpirationDate(DateTime date)
         {
-            try
-            {
                 customerCat.expirationDate = date;
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetInn(string inn)
+        public void SetInn(string inn)
         {
-           try
-            {
                 customerCat.inn = inn;
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetInquiryValidityDays(int number)
+        public void SetInquiryValidityDays(int number)
         {
-            try
-            {
                 customerCat.inquiryValidityDays = number;
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetInternalCustomerFlag(bool flag)
+        public void SetInternalCustomerFlag(bool flag)
         {
-            try
-            {
                 customerCat.internalCustomerFlag = BaseRepo.BoolToChar(flag);
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetKpp(string kpp)
+        public void SetKpp(string kpp)
         {
-            try
-            {
                 customerCat.kpp = kpp;
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetLevel4CustomerId(string customerIdforL4)
+        public void SetLevel4CustomerId(string customerIdforL4)
         {
-            try
-            {
                 customerCat.level4CustomerId = customerIdforL4;
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetRegion(string region)
+        public void SetRegion(string region)
         {
-            try
-            {
                 customerCat.region = region;
-                return true;
-            }
-            catch { return false; }
         }
 
-        public bool SetRwStationCode(string rwstcode)
+        public void SetRwStationCode(string rwstcode)
         {
-            try
-            {
-                customerCat.rwstationCode = rwstcode;
-                return true;
-            }
-            catch { return false; }
+            customerCat.rwstationCode = rwstcode;
         }
-
-        public bool SetWeightUnit(string value)
+        public void SetWeightUnit(string value)
         {
-            try
-            {
                 customerCat.customerWeightUnitId = value;
-                return true;
-            }
-            catch { return false; }
         }
     }
 }

@@ -40,7 +40,17 @@ namespace SOM
 
         public void BlockForProcess(TL4MsgInfo l4MsgInfo, bool serRSer)
         {
-            throw new NotImplementedException();
+            string sqlstr = "";
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            if (serRSer)
+                sqlstr = "Select UPDATE_BLOCK_ORDER(1,:msg_counter) FROM DUAL";
+            else
+                sqlstr = "Select UPDATE_BLOCK_ORDER(0,:msg_counter) FROM DUAL";
+            odp.Add("msg_counter", l4MsgInfo.msgCounter);
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                connection.Execute(sqlstr, odp);
+            }
         }
 
         public bool CheckInquiryLinesStatus(int iMsgCounter)
@@ -49,11 +59,6 @@ namespace SOM
         }
 
         public void CheckUpdateOPCODE(TL4MsgInfo l4MsgInfo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ClearMassNote()
         {
             throw new NotImplementedException();
         }
@@ -111,11 +116,6 @@ namespace SOM
         }
 
         public bool ExistCustomer(string m_iCustSoldDescrID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsBlocked(int msgCounter)
         {
             throw new NotImplementedException();
         }
@@ -187,31 +187,6 @@ namespace SOM
             throw new NotImplementedException();
         }
 
-        public void SaveInMassForLineNote(int pSoId, int pSoLineId, string pLineNote, string pSapUser)
-        {
-            line = new TLineNote();
-            line.soId = pSoId;
-            line.soLineId = pSoLineId;
-            line.lineNote = pLineNote;
-            line.sSAPUser = pSapUser;
-            lines.Add(line);
-            
-        }
-
-        public void SaveNote()
-        {
-            if(lines.Count>0)
-            {
-                foreach(TLineNote line in lines)
-                {
-                    if(line.lineNote!="")
-                    {
-                        
-                    }
-                }
-            }
-            throw new NotImplementedException();
-        }
 
         public void SetOEHeaderValues(TSoHeader order, TL4EngineInterfaceMng eimOrderEntry, bool bUpdatingOrder = false)
         {

@@ -5,7 +5,7 @@ using Dapper.Oracle;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
 using Repository;
-using Repository.Infostraction;
+using Repository.Infostaction;
 using NLog;
 using CCM.Infostraction;
 
@@ -43,16 +43,16 @@ namespace CCM
                 return false;
         }
 
-        public TCheckResult CustomerMng(L4L3Customer customer,TL4MsgInfo l4MsgInfo)
+        public TCheckResult CustomerMng(L4L3Customer customer, TL4MsgInfo l4MsgInfo)
         {
             TCheckResult checkres = new TCheckResult();
-            TL4EngineInterfaceMngRepo engInterf = new TL4EngineInterfaceMngRepo(customer,l4MsgInfo);
+            TL4EngineInterfaceMngRepo engInterf = new TL4EngineInterfaceMngRepo(customer, l4MsgInfo);
             AddressEngine addressEngine = new AddressEngine();
             CCatalEngine catalEngine = new CCatalEngine();
             CCreditEngine creditEngine = new CCreditEngine();
             bool res = true;
             float el4CustomerId;
-            string l4CustomerId="", customerIdForL4m = "", sAddressIdBillTo="",l4CreateUserId = "", l4ModUserId = "";
+            string l4CustomerId = "", customerIdForL4m = "", sAddressIdBillTo = "", l4CreateUserId = "", l4ModUserId = "";
             logger.Trace("Init 'CustomerMng' function");
             l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
             try
@@ -87,19 +87,19 @@ namespace CCM
                     }
                     if (res)
                     {
-                        if(catalEngine.LoadData(l4CustomerId)>0)
+                        if (catalEngine.LoadData(l4CustomerId) > 0)
                         {
-                            if(addressEngine.LoadData(catalEngine.GetAddressIdCatalog())!=1)
+                            if (addressEngine.LoadData(catalEngine.GetAddressIdCatalog()) != 1)
                             {
                                 engInterf.NotifyErrorMessage($"Ошибка при обработке заказчика - Фатальная ошибка - поле ADDRESS_ID={catalEngine.GetAddressIdCatalog().ToString() } не найдено");
                                 res = false;
                             }
                             if (res)
-                                res = catalEngine.SetCustomerDescrId(l4CustomerId);
+                                catalEngine.SetCustomerDescrId(l4CustomerId);
                         }
-                        if(creditEngine.LoadData(catalEngine.GetCustomerID())>0)
+                        if (creditEngine.LoadData(catalEngine.GetCustomerID()) > 0)
                         {
-                            if(addressEngine.LoadData(creditEngine.GetAddressIdBillTo())!=1)
+                            if (addressEngine.LoadData(creditEngine.GetAddressIdBillTo()) != 1)
                             {
                                 try
                                 {
@@ -118,73 +118,55 @@ namespace CCM
                     // ADDRESS_CATALOG
                     // =====================================================================
                     if (res)
-                        res = FillAddressEngine(customer,addressEngine, l4ModUserId);
+                        res = FillAddressEngine(customer, addressEngine, l4ModUserId);
                     logger.Trace("'CustomerMng - Load Customer Catalog data'");
                     // =====================================================================
                     // CUSTOMER_CATALOG
                     // =====================================================================
                     if (res)
-                        res = catalEngine.SetCustomerDescrId(l4CustomerId);
-                    if (res)
-                        res = catalEngine.SetAddressIdCatalog(addressEngine.GetAddressId());
-                    if (res)
-                        res = catalEngine.SetInternalCustomerFlag(Convert.ToBoolean(customer.internalCustomerFlag));
-                    if (res)
-                        res = catalEngine.SetInquiryValidityDays(30);
-                    if (res)
-                        res = catalEngine.SetCustomerCurrencyCode(customer.customerCurrencyCode);
-                    if (res)
-                        res = catalEngine.SetClassificationType(CheckClassificationType(customer.customerClassificationType));
-                    if (res)
-                        res = catalEngine.SetWeightUnit("<NULL>");
-                    if (res)
-                        res = catalEngine.SetCustomerShortName(customer.customerName.Substring(0, 80));
-                    if (res)
-                        res = catalEngine.SetCreationUserId(l4CreateUserId);
-                    if (res)
-                        res = catalEngine.SetInn(customer.inn.Substring(0, 40));
-                    if (res)
-                        res = catalEngine.SetKpp(customer.kpp.Substring(0, 40));
-                    if (res)
-                        res = catalEngine.SetRwStationCode(customer.rwstationCode.Substring(0, 40));
-                    if (res)
-                        res = catalEngine.SetRegion(customer.region.Substring(0, 40));
-                    if (res)
-                        res = catalEngine.SetLevel4CustomerId(customerIdForL4m);
-                    if(res)
                     {
+
+                        catalEngine.SetCustomerDescrId(l4CustomerId);
+                        catalEngine.SetAddressIdCatalog(addressEngine.GetAddressId());
+                        catalEngine.SetInternalCustomerFlag(Convert.ToBoolean(customer.internalCustomerFlag));
+                        catalEngine.SetInquiryValidityDays(30);
+                        catalEngine.SetCustomerCurrencyCode(customer.customerCurrencyCode);
+                        catalEngine.SetClassificationType(CheckClassificationType(customer.customerClassificationType));
+                        catalEngine.SetWeightUnit("<NULL>");
+                        catalEngine.SetCustomerShortName(customer.customerName.Substring(0, 80));
+                        catalEngine.SetCreationUserId(l4CreateUserId);
+                        catalEngine.SetInn(customer.inn.Substring(0, 40));
+                        catalEngine.SetKpp(customer.kpp.Substring(0, 40));
+                        catalEngine.SetRwStationCode(customer.rwstationCode.Substring(0, 40));
+                        catalEngine.SetRegion(customer.region.Substring(0, 40));
+                        catalEngine.SetLevel4CustomerId(customerIdForL4m);
                         DateTime date = new DateTime();
-                        if(customer.vailityFlag.ToString()=="Y")
+                        if (customer.vailityFlag.ToString() == "Y")
                         {
                             if (catalEngine.GetExpirationDate() != date)
-                                if (res)
-                                    res = catalEngine.SetExpirationDate(date);
+                                catalEngine.SetExpirationDate(date);
                         }
                         else
                         {
                             if (catalEngine.GetExpirationDate() == date)
-                                if (res)
-                                    res = catalEngine.SetExpirationDate(new DateTime());
+                                catalEngine.SetExpirationDate(new DateTime());
                         }
+
+                        catalEngine.ForceModUserDatetime(l4ModUserId);
+                        res = catalEngine.SaveData();
                     }
-                    if (res)
-                        res = catalEngine.SaveData(false);
-                    if (res)
-                        res = catalEngine.ForceModUserDatetime(false, l4ModUserId);
                     logger.Trace("'CustomerMng - Load Customer Catalog Credit Data'");
                     // =====================================================================
                     // CUSTOMER_CATALOG_CREDIT
                     // =====================================================================
                     if (res)
-                        res = creditEngine.SetCustomerID(GetCustIDFromDescr(l4CustomerId));
-                    if (res)
-                        res = creditEngine.SetAddressIdBillTo(Convert.ToInt32(addressEngine.GetAddressId()));
-                    if (res)
-                        res = creditEngine.SetCreditStatus(1);
-                    if (res)
-                        res = creditEngine.SaveData(false);
-                    if (res)
-                        res = creditEngine.ForceModUserDatetime(false, l4ModUserId);
+                    {
+                        creditEngine.SetCustomerID(GetCustIDFromDescr(l4CustomerId));
+                        creditEngine.SetAddressIdBillTo(Convert.ToInt32(addressEngine.GetAddressId()));
+                        creditEngine.SetCreditStatus(1);
+                        creditEngine.ForceModUserDatetime(l4ModUserId);
+                        res = creditEngine.SaveData();
+                    }
                     // =====================================================================
                     // final operations
                     // =====================================================================
@@ -206,14 +188,14 @@ namespace CCM
             }
             catch { return checkres; }
         }
-        
-        public bool FillAddressEngine(L4L3Customer customer,AddressEngine addressEngine, string pModUserId, OracleDynamicParameters odp = null)
+
+        public bool FillAddressEngine(L4L3Customer customer, AddressEngine addressEngine, string pModUserId, OracleDynamicParameters odp = null)
         {
             Country cnt = new Country();
             ZipCatalogue zip = new ZipCatalogue();
             logger.Trace("Init 'FillAddressEngine' function");
             bool result = true;
-            string str = "SELECT * FROM COUNTRY WHERE COUNTRY =  "+ customer.country;
+            string str = "SELECT * FROM COUNTRY WHERE COUNTRY =  " + customer.country;
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 cnt = connection.QueryFirstOrDefault<Country>(str, odp);
@@ -247,7 +229,7 @@ namespace CCM
             {
                 zip = connection.QueryFirstOrDefault<ZipCatalogue>(str, odp);
             }
-            if(zip==null)
+            if (zip == null)
             {
                 str = "INSERT INTO ZIP_CATALOGUE ( " +
                     "COUNTRY," +
@@ -271,34 +253,23 @@ namespace CCM
                 }
                 odp = null;
             }
-            if(result)
-            result=addressEngine.SetAddressFullName(customer.customerName);
             if (result)
-                result = addressEngine.SetZipCode(customer.zipCode);
-            if (result)
-                result = addressEngine.SetAddress1(customer.address1);
-            if (result)
-                result = addressEngine.SetAddress2(customer.address2);
-            if (result)
-                result = addressEngine.SetAddress3(customer.address3);
-            if (result)
-                result = addressEngine.SetCity(customer.city);
-            if (result)
-                result = addressEngine.SetState(customer.state);
-            if (result)
-                result = addressEngine.SetCountry(customer.country);
-            if (result)
-                result = addressEngine.SetContactName(customer.contactName);
-            if (result)
-                result = addressEngine.SetContactPhone1(customer.contactPhone);
-            if (result)
-                result = addressEngine.SetContactFax(customer.contactFax);
-            if (result)
-                result = addressEngine.SetContactMobile(customer.contactMobile);
-            if (result)
-                result = addressEngine.SetEmailAddress(customer.contactEmail);
-            if (result)
-                result = addressEngine.SaveData(false);
+            {
+                addressEngine.SetAddressFullName(customer.customerName);
+                addressEngine.SetZipCode(customer.zipCode);
+                addressEngine.SetAddress1(customer.address1);
+                addressEngine.SetAddress2(customer.address2);
+                addressEngine.SetAddress3(customer.address3);
+                addressEngine.SetCity(customer.city);
+                addressEngine.SetState(customer.state);
+                addressEngine.SetCountry(customer.country);
+                addressEngine.SetContactName(customer.contactName);
+                addressEngine.SetContactPhone1(customer.contactPhone);
+                addressEngine.SetContactFax(customer.contactFax);
+                addressEngine.SetContactMobile(customer.contactMobile);
+                addressEngine.SetEmailAddress(customer.contactEmail);
+                result = addressEngine.SaveData();
+            }
             return result;
         }
 

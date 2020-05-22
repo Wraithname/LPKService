@@ -3,11 +3,13 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Configuration;
 using System.Linq;
+using NLog;
 
 namespace Repository
 {
     public abstract class BaseRepo
     {
+        private Logger logger = LogManager.GetLogger(nameof(Repository));
         protected void SetTypeMap(Type model)
         {
             SqlMapper.SetTypeMap(

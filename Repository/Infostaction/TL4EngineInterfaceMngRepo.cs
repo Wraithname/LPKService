@@ -2,7 +2,7 @@
 using Repository.Repo;
 using Repository.WorkModels;
 
-namespace Repository.Infostraction
+namespace Repository.Infostaction
 {
     public class TL4EngineInterfaceMngRepo : ITL4EngineInterfaceMng
     {

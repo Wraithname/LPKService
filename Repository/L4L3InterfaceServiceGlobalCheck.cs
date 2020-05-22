@@ -3,7 +3,7 @@ using NLog;
 
 namespace Repository
 {
-    interface IGlobalCheck
+    public interface IGlobalCheck
     {
         TCheckResult InitResultWithFalse();
         void MngSuccesed(TL4MsgInfo l4MsgInfo, TCheckResult result);
@@ -12,6 +12,7 @@ namespace Repository
     public class L4L3InterfaceServiceGlobalCheck:IGlobalCheck
     {
         private Logger logger = LogManager.GetLogger(nameof(Repository));
+
         public TCheckResult InitResultWithFalse()
         {
             TCheckResult result = new TCheckResult();

@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using SOM.Infostraction;
-using Shipping.Infostraction;
+//using Shipping.Infostraction;
 using Repository.WorkModels;
 using Work.Infostraction;
-using Work.Models;
 
 namespace Work
 {
     public class ProcedureAction
     {
-        
+        List<Action<TL4MsgInfo>> actions;
         public List<Action<TL4MsgInfo>> GetActions()
         {
-            List<Action<TL4MsgInfo>> actions = new List<Action<TL4MsgInfo>>();
+            this.actions = new List<Action<TL4MsgInfo>>();
             Action<TL4MsgInfo> targets;
             //L4_L3_SALES_ORDER
             L4L3SoHeaderRepo soHeaderRepo = new L4L3SoHeaderRepo();
@@ -31,8 +30,10 @@ namespace Work
             //L4_L3_SHIPPING
             //Shipping.L4L3ServiceShipping shipp = new Shipping.L4L3ServiceShipping();
             //L4L3ShippingRepo shippingRepo = new L4L3ShippingRepo();
-            //targets = delegate (TL4MsgInfo l4MsgInfo) {
-            //    shipp.ShippingMng(l4MsgInfo); };
+            //targets = delegate (TL4MsgInfo l4MsgInfo)
+            //{
+            //    shipp.ShippingMng(l4MsgInfo);
+            //};
             //actions.Add(targets);
             return actions;
         }

@@ -9,16 +9,6 @@ namespace Repository
     {
         private Logger logger = LogManager.GetLogger(nameof(Repository));
         string[] coloursAttributes = { "PAINT_FIN_BOTTOM_COLOUR", "PAINT_FIN_TOP_COLOUR", "PAINT_PRIME_TOP_TYPE", "PAINT_PRIME_BOTTOM_TYPE" };
-        //Узнать что это и для чего
-        public void GlobalVarInit()
-        {
-
-        }
-        //Узнать что это и для чего
-        public void GlovalVarFinalize()
-        {
-
-        }
         public bool IsAColorAttribute(string SAttrbCode)
         {
             foreach (string attr in coloursAttributes)

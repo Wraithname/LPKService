@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CCM.Models;
-using CCM.Repo;
+using Repository.WorkModels;
 
 namespace CCM.Infostraction
 {
-    public class CCreditEngine:ICCreditEngine
+    public class CCreditEngine
     {
         CustomerCatCredit catCredit;
 
@@ -22,14 +18,9 @@ namespace CCM.Infostraction
             throw new NotImplementedException();
         }
         //Узнать про функцию
-        public bool ForceModUserDatetime(bool falg, string modUserId, string str = "")
+        public void ForceModUserDatetime(string modUserId, string str = "")
         {
-            try
-            {
-                catCredit.modUserId = Convert.ToInt32(modUserId);
-                return true;
-            }
-            catch { return false; }
+            catCredit.modUserId = Convert.ToInt32(modUserId);
         }
 
         public int GetAddressIdBillTo()
@@ -42,45 +33,24 @@ namespace CCM.Infostraction
             throw new NotImplementedException();
         }
         //Узнать про функцию
-        public bool SaveData(bool flag)
+        public bool SaveData()
         {
             throw new NotImplementedException();
         }
 
-        public bool SetAddressIdBillTo(int addressId)
+        public void SetAddressIdBillTo(int addressId)
         {
-            try
-            {
-                catCredit.addressId = addressId;
-                return true;
-            }
-            catch { return false; }
+            catCredit.addressId = addressId;
         }
 
-        public bool SetCreditStatus(int num)
+        public void SetCreditStatus(int num)
         {
-           try
-            {
-                catCredit.creditStatus = num;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            catCredit.creditStatus = num;
         }
 
-        public bool SetCustomerID(int custIdFromDscr)
+        public void SetCustomerID(int custIdFromDscr)
         {
-            try
-            {
-                catCredit.customerId = custIdFromDscr;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            catCredit.customerId = custIdFromDscr;
         }
     }
 }

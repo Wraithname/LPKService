@@ -59,10 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IServiceWork.cs" />
-    <Compile Include="IServiceWorker.cs" />
-    <Compile Include="ISerwWorkMeta.cs" />
-    <Compile Include="IWorkerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

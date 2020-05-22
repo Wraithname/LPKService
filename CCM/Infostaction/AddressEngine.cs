@@ -5,7 +5,7 @@ using Repository.WorkModels;
 
 namespace CCM.Infostraction
 {
-    public class AddressEngine : IAddressCat
+    public class AddressEngine
     {
         AddresCat adressCatalog;
 
@@ -29,139 +29,74 @@ namespace CCM.Infostraction
             throw new NotImplementedException();
         }
         //Узнать про функцию
-        public bool SaveData(bool action)
+        public bool SaveData()
         {
             throw new NotImplementedException();
         }
 
-        public bool SetAddress1(string address1)
+        public void SetAddress1(string address1)
         {
-            if (address1 != "")
-            {
-                adressCatalog.address1 = address1;
-                return true;
-            }
-            return false;
+            adressCatalog.address1 = address1;
         }
 
-        public bool SetAddress2(string address2)
+        public void SetAddress2(string address2)
         {
-            if (address2 != "")
-            {
-                adressCatalog.address2 = address2;
-                return true;
-            }
-            return false;
+            adressCatalog.address2 = address2;
         }
 
-        public bool SetAddress3(string address3)
+        public void SetAddress3(string address3)
         {
-            if (address3 != "")
-            {
-                adressCatalog.contactMobile = address3;
-                return true;
-            }
-            return false;
+            adressCatalog.contactMobile = address3;
         }
 
-        public bool SetAddressFullName(string custName)
+        public void SetAddressFullName(string custName)
         {
-            if (custName != "")
-            {
-                adressCatalog.addressFullName = custName;
-                return true;
-            }
-            return false;
+            adressCatalog.addressFullName = custName;
         }
 
-        public bool SetCity(string city)
+        public void SetCity(string city)
         {
-            if (city != "")
-            {
-                adressCatalog.city = city;
-                return true;
-            }
-            return false;
+            adressCatalog.city = city;
         }
 
-        public bool SetContactFax(string contactFax)
+        public void SetContactFax(string contactFax)
         {
-            if (contactFax != "")
-            {
-                adressCatalog.contactFax = contactFax;
-                return true;
-            }
-            return false;
+            adressCatalog.contactFax = contactFax;
         }
 
-        public bool SetContactMobile(string contactMobile)
+        public void SetContactMobile(string contactMobile)
         {
-            if (contactMobile != "")
-            {
-                adressCatalog.contactMobile = contactMobile;
-                return true;
-            }
-            return false;
+            adressCatalog.contactMobile = contactMobile;
         }
 
-        public bool SetContactName(string contactName)
+        public void SetContactName(string contactName)
         {
-            if (contactName != "")
-            {
-                adressCatalog.contactName = contactName;
-                return true;
-            }
-            return false;
+            adressCatalog.contactName = contactName;
         }
 
-        public bool SetContactPhone1(string contactPhone)
+        public void SetContactPhone1(string contactPhone)
         {
-            if (contactPhone != "")
-            {
-                adressCatalog.contactPhone1 = contactPhone;
-                return true;
-            }
-            return false;
+            adressCatalog.contactPhone1 = contactPhone;
         }
 
-        public bool SetCountry(string country)
+        public void SetCountry(string country)
         {
-            if (country != "")
-            {
-                adressCatalog.country = country;
-                return true;
-            }
-            return false;
+            adressCatalog.country = country;
         }
 
-        public bool SetEmailAddress(string contactEmail)
+        public void SetEmailAddress(string contactEmail)
         {
-            if (contactEmail != "")
-            {
-                adressCatalog.emailAddress = contactEmail;
-                return true;
-            }
-            return false;
+            adressCatalog.emailAddress = contactEmail;
         }
 
-        public bool SetState(string state)
+        public void SetState(string state)
         {
-            if (state != "")
-            {
-                adressCatalog.state = state;
-                return true;
-            }
-            return false;
+            adressCatalog.state = state;
         }
 
-        public bool SetZipCode(string zimCode)
+        public void SetZipCode(string zimCode)
         {
-            if (zimCode != "")
-            {
-                adressCatalog.zipCode = zimCode;
-                return true;
-            }
-            return false;
+            adressCatalog.zipCode = zimCode;
         }
     }
 }

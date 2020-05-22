@@ -1,13 +1,9 @@
-﻿using System;
-using System.ServiceProcess;
+﻿using System.ServiceProcess;
 using System.Timers;
 using System.Runtime.InteropServices;
 using System.Configuration;
+using System.Threading;
 using NLog;
-using Work;
-using Repository.WorkModels;
-using System.Collections.Generic;
-using LPKServiceSDK;
 
 namespace LPKService
 {
@@ -36,10 +32,13 @@ namespace LPKService
     {
         private Logger logger=LogManager.GetLogger(nameof(LPKService));
         private int timeout;
-        Timer timer = new Timer();
-        public LPKService()
+        Thread workthread;
+        System.Timers.Timer timer = new System.Timers.Timer();
+        private readonly Work.IServiceWork working;
+        public LPKService(Work.IServiceWork working)
         {
             InitializeComponent();
+            this.working = working;
             base.CanPauseAndContinue = true;
         }
         [DllImport("advapi32.dll", SetLastError = true)]
@@ -75,12 +74,16 @@ namespace LPKService
             // Update the service state to Running.
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-            timer.Start();
+            workthread = new Thread(new ThreadStart(PeriodExecuteStart)) {IsBackground=true };
         }
 
+        private void PeriodExecuteStart()
+        {
+            timer.Start();
+        }
         private void OnTimer(object sender, ElapsedEventArgs e)
         {
-            MngLoop();
+           working.MngLoop();
         }
 
         protected override void OnContinue()
@@ -88,6 +91,7 @@ namespace LPKService
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_CONTINUE_PENDING;
             serviceStatus.dwWaitHint = 20000;
+            timer.Start();
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             logger.Info("Возобновление обработки");
             base.OnContinue();
@@ -99,6 +103,9 @@ namespace LPKService
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
             serviceStatus.dwWaitHint = 20000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            workthread?.Join(20000);
+            timer.Stop();
+            timer.Close();
             logger.Info("Сервис остановлен");
             // Update the service state to Stopped.
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
@@ -111,6 +118,7 @@ namespace LPKService
             serviceStatus.dwWaitHint = 20000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             logger.Info("Приостановление обработки");
+            timer.Stop();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_PAUSED;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             base.OnPause();

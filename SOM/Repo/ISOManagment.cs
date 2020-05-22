@@ -40,11 +40,6 @@ namespace SOM.Repo
         void CheckUpdateOPCODE(TL4MsgInfo l4MsgInfo);
         TCheckResult AttributeCheck(DataSet qryData, TL4MsgInfo l4MsgInfo);
         void BlockForProcess(TL4MsgInfo l4MsgInfo, bool serRSer);
-        bool IsBlocked(int msgCounter);
-        void SaveInMassForLineNote(int pSoId, int pSoLineId, string pLineNote, string pSapUser);
-        void SaveInMassForHeaderNote(int pSoId, string pHeaderNote);
-        void SaveNote();
-        void ClearMassNote();
         TContractType DecodeContractType(string soid, string strCustomerId);
     }
 }
