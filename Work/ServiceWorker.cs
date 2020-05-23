@@ -7,6 +7,11 @@ using Dapper.Oracle;
 using Repository;
 using Work.Models;
 using NLog;
+using System.Threading.Tasks;
+using CCM;
+using SOM.Repo;
+using Shipping;
+
 namespace Work
 {
     class ServiceWorker : IServiceWork
@@ -22,6 +27,9 @@ namespace Work
         #endregion
         List<Action<TL4MsgInfo>> actions = new List<Action<TL4MsgInfo>>();
         IGlobalCheck check;
+        ICCManagement ccm;
+        ISOManagment som;
+        IL4L3SerShipping sship;
         private Logger logger = LogManager.GetLogger(nameof(ServiceWorker));
         public ServiceWorker()
         {
@@ -365,15 +373,23 @@ namespace Work
                                 switch (l4MsgInfo.msgId)
                                 {
                                     //Запуск задачи
-                                    //case L4L3InterfaceServiceConst.L4_L3_SALES_ORDER:
-                                    //    break;
+                                    case L4L3InterfaceServiceConst.L4_L3_SALES_ORDER:
+                                        var smt = Task<TCheckResult>.Run(() => som.SalesOrderMng(l4MsgInfo));
+                                        if (smt.Result.isOK == false)
+                                        {
+                                            logger.Error("");
+                                        }
+                                        else
+                                            logger.Info("");
+                                        break;
                                     //Запуск задачи
                                     case L4L3InterfaceServiceConst.L4_L3_CUSTOMER_CATALOG:
-
+                                        var cmt = Task<TCheckResult>.Run(()=> ccm.CustomerMng(l4MsgInfo));
                                         break;
-                                        //Запуск задачи
-                                        //case L4L3InterfaceServiceConst.L4_L3_SHIPPING:
-                                        //    break;
+                                    //Запуск задачи
+                                    case L4L3InterfaceServiceConst.L4_L3_SHIPPING:
+                                        var st = Task<TCheckResult>.Run(() => sship.ShippingMng(l4MsgInfo));
+                                        break;
                                 }
                                 if (l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_INSERT)
                                     UpdateMsgStatus(l4MsgInfo);

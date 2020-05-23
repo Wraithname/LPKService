@@ -14,6 +14,7 @@ namespace CCM
     public class CCManagement : ICCManagement
     {
         private Logger logger = LogManager.GetLogger(nameof(CCManagement));
+        private L4L3CustomerRepo customerRepo = new L4L3CustomerRepo();
         public string CheckClassificationType(string strClassification, OracleDynamicParameters odp = null)
         {
             string res = "";
@@ -43,9 +44,11 @@ namespace CCM
                 return false;
         }
 
-        public TCheckResult CustomerMng(L4L3Customer customer, TL4MsgInfo l4MsgInfo)
+        public TCheckResult CustomerMng(TL4MsgInfo l4MsgInfo)
         {
+            L4L3Customer customer = customerRepo.GetData(l4MsgInfo);
             TCheckResult checkres = new TCheckResult();
+            checkres.rejType = 0;
             TL4EngineInterfaceMngRepo engInterf = new TL4EngineInterfaceMngRepo(customer, l4MsgInfo);
             AddressEngine addressEngine = new AddressEngine();
             CCatalEngine catalEngine = new CCatalEngine();

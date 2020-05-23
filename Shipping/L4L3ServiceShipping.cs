@@ -12,7 +12,7 @@ namespace Shipping
 {
     //Используется таблица L4_L3_SHIPPING
     public enum TPieceAction { paAssign, paDeAssign }
-    interface IL4L3SerShipping
+    public interface IL4L3SerShipping
     {
         TCheckResult ShippingMng(TL4MsgInfo l4MsgInfo);
         void CreateBolIfNotEx(string strBolId);

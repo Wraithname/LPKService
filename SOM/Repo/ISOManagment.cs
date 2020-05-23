@@ -6,7 +6,7 @@ using System.Data;
 
 namespace SOM.Repo
 {
-    interface ISOManagment
+    public interface ISOManagment
     {
         bool CheckInquiryLinesStatus(int iMsgCounter);
         bool OrderExist(string sSoDescrID);

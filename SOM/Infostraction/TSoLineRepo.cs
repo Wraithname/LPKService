@@ -6,7 +6,7 @@ using Oracle.ManagedDataAccess.Client;
 using SOM.Models;
 using SOM.Infostraction;
 using Repository.WorkModels;
-using Repository.Infostraction;
+using Repository.Infostaction;
 using Repository;
 using NLog;
 
@@ -280,7 +280,7 @@ namespace SOM.Repo
         //Узнать про определение статуса
         public TLineStatus GetLineStatus(int linestatus)
         {
-            throw new NotImplementedException();
+            return TLineStatus.IsClosed;
         }
     }
 }

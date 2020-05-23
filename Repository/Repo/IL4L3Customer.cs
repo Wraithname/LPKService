@@ -1,6 +1,5 @@
-﻿using Work.Models;
-using Repository.WorkModels;
-namespace Work.Repo
+﻿using Repository.WorkModels;
+namespace Repository.Repo
 {
     interface IL4L3Customer
     {

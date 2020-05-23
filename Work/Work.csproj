@@ -81,7 +81,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infostraction\L4L3CustomerRepo.cs" />
     <Compile Include="IServiceWork.cs" />
     <Compile Include="Models\DeliveryESOHandSOL.cs" />
     <Compile Include="Models\DeliverySOHandSOL.cs" />
@@ -91,7 +90,6 @@
     <Compile Include="PartitionOrder.cs" />
     <Compile Include="ProcedureAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repo\IL4L3Customer.cs" />
     <Compile Include="ServiceWorker.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +118,9 @@
       <Name>SOM</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Infostraction\" />
+    <Folder Include="Repo\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

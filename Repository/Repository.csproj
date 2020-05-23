@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Attributes.cs" />
     <Compile Include="BaseRepo.cs" />
+    <Compile Include="Infostaction\L4L3CustomerRepo.cs" />
     <Compile Include="Infostaction\THeaderNoteRepo.cs" />
     <Compile Include="Infostaction\TL4EngineInterfaceMngRepo.cs" />
     <Compile Include="Infostaction\TL4MsgInfoLineRepo.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="L4L3InterfaceServiceGlobalCheck.cs" />
     <Compile Include="L4L3InterfaceUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repo\IL4L3Customer.cs" />
     <Compile Include="Repo\ITL4EngineInterfaceMng.cs" />
     <Compile Include="Repo\ITL4MsgInfoLine.cs" />
     <Compile Include="WorkModels\JoinedModel.cs" />

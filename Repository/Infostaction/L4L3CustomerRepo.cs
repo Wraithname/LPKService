@@ -1,5 +1,4 @@
-﻿using Work.Models;
-using Work.Repo;
+﻿using Repository.Repo;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
@@ -7,11 +6,11 @@ using Repository;
 using Repository.WorkModels;
 using NLog;
 
-namespace Work.Infostraction
+namespace Repository.Infostaction
 {
     public class L4L3CustomerRepo : IL4L3Customer
     {
-        private Logger logger = LogManager.GetLogger(nameof(Work));
+        private Logger logger = LogManager.GetLogger(nameof(Repository));
         public L4L3Customer GetData(TL4MsgInfo l4MsgInfo)
         {
             L4L3Customer customer = new L4L3Customer();

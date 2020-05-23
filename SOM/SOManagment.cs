@@ -4,6 +4,7 @@ using System.Data;
 using SOM.Models;
 using SOM.Repo;
 using SOM.Infostraction;
+using Repository.Infostaction;
 using Repository.WorkModels;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
