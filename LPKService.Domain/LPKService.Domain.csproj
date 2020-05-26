@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3E9D748E-1A4B-4E1E-AA17-DBBB1017CCB7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LPKService.Domain</RootNamespace>
+    <AssemblyName>LPKService.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Dapper.Oracle, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.Oracle.1.2.1\lib\net452\Dapper.Oracle.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interfaces\IAddressCat.cs" />
+    <Compile Include="Interfaces\ICCreditEngine.cs" />
+    <Compile Include="Interfaces\IL4L3Customer.cs" />
+    <Compile Include="Interfaces\IL4L3Shipping.cs" />
+    <Compile Include="Interfaces\IL4L3SoHeader.cs" />
+    <Compile Include="Interfaces\ISOManagment.cs" />
+    <Compile Include="Interfaces\ITL4EngineInterfaceMng.cs" />
+    <Compile Include="Interfaces\ITL4MsgInfoLine.cs" />
+    <Compile Include="Interfaces\ITSoHeader.cs" />
+    <Compile Include="Interfaces\ITSoLine.cs" />
+    <Compile Include="Models\AddressCat.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\CustomerCat.cs" />
+    <Compile Include="Models\CustomerCatCredit.cs" />
+    <Compile Include="Models\DeliveryESOHandSOL.cs" />
+    <Compile Include="Models\DeliverySOHandSOL.cs" />
+    <Compile Include="Models\JoinedModel.cs" />
+    <Compile Include="Models\L4L3Customer.cs" />
+    <Compile Include="Models\L4L3DelEventDel.cs" />
+    <Compile Include="Models\L4L3Delivery.cs" />
+    <Compile Include="Models\L4L3Event.cs" />
+    <Compile Include="Models\L4L3RmAndMatCat.cs" />
+    <Compile Include="Models\L4L3Shipping.cs" />
+    <Compile Include="Models\L4L3SoHeader.cs" />
+    <Compile Include="Models\L4L3SoLine.cs" />
+    <Compile Include="Models\LinesCom.cs" />
+    <Compile Include="Models\TCheckRelatedList.cs" />
+    <Compile Include="Models\TCheckResult.cs" />
+    <Compile Include="Models\TDeleteResponse.cs" />
+    <Compile Include="Models\THeaderNote.cs" />
+    <Compile Include="Models\TL4EngineInterfaceMng.cs" />
+    <Compile Include="Models\TL4MsgInfo.cs" />
+    <Compile Include="Models\TL4MsgInfoLine.cs" />
+    <Compile Include="Models\TLineNote.cs" />
+    <Compile Include="Models\TMessageResult.cs" />
+    <Compile Include="Models\TSoHeader.cs" />
+    <Compile Include="Models\TSoLine.cs" />
+    <Compile Include="Models\VecAuto.cs" />
+    <Compile Include="Models\ZipCatalogue.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LPKService.Repository\LPKService.Repository.csproj">
+      <Project>{81927878-6f57-464a-8aa2-3a6af276d061}</Project>
+      <Name>LPKService.Repository</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -81,14 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IServiceWork.cs" />
-    <Compile Include="Models\DeliveryESOHandSOL.cs" />
-    <Compile Include="Models\DeliverySOHandSOL.cs" />
-    <Compile Include="Models\L4L3Delivery.cs" />
-    <Compile Include="Models\L4L3Event.cs" />
-    <Compile Include="Models\VecAuto.cs" />
     <Compile Include="PartitionOrder.cs" />
-    <Compile Include="ProcedureAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceWorker.cs" />
   </ItemGroup>
@@ -97,30 +90,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CCM\CCM.csproj">
-      <Project>{d3f3ca8c-6220-414d-845f-e1a2b0de8561}</Project>
-      <Name>CCM</Name>
+    <ProjectReference Include="..\LPKService.Domain\LPKService.Domain.csproj">
+      <Project>{3e9d748e-1a4b-4e1e-aa17-dbbb1017ccb7}</Project>
+      <Name>LPKService.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LPKServiceSDK\LPKServiceSDK.csproj">
-      <Project>{27304222-679b-4e18-8b73-2f9707d35853}</Project>
-      <Name>LPKServiceSDK</Name>
+    <ProjectReference Include="..\LPKService.Infrastructure\LPKService.Infrastructure.csproj">
+      <Project>{A8D446B0-F73F-4048-B1DE-C39274313A3C}</Project>
+      <Name>LPKService.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Repository\Repository.csproj">
-      <Project>{87b4638a-8693-43a8-8e42-ddec8415c880}</Project>
-      <Name>Repository</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Shipping\Shipping.csproj">
-      <Project>{deae560d-cb0b-40df-92cb-621d5e321c72}</Project>
-      <Name>Shipping</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SOM\SOM.csproj">
-      <Project>{96f27ac8-799d-4031-84e8-d2664412f29e}</Project>
-      <Name>SOM</Name>
+    <ProjectReference Include="..\LPKService.Repository\LPKService.Repository.csproj">
+      <Project>{81927878-6f57-464a-8aa2-3a6af276d061}</Project>
+      <Name>LPKService.Repository</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Infostraction\" />
-    <Folder Include="Repo\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

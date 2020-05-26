@@ -47,16 +47,8 @@ namespace LPKService
         // Воспомогательный метод для отладки сервиса
         internal void ConsoleApp(string[] args)
         {
-            // Ожидание ctrl+c
-            //var exitEvent = new ManualResetEvent(false);
-            //Console.WriteLine("Press CTRL+C for exit");
-            //Console.CancelKeyPress += (sender, eventArgs) =>
-            //{
-            //    eventArgs.Cancel = true;
-            //    exitEvent.Set();
-            //};
             logger.Debug("Запуск как консольное приложение");
-
+            PeriodExecuteStart();
             logger.Debug("Завершение работы консольного приложения");
         }
 #endif

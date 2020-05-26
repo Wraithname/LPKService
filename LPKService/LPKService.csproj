@@ -132,10 +132,6 @@
       <Project>{27304222-679b-4e18-8b73-2f9707d35853}</Project>
       <Name>LPKServiceSDK</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Repository\Repository.csproj">
-      <Project>{87b4638a-8693-43a8-8e42-ddec8415c880}</Project>
-      <Name>Repository</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Work\Work.csproj">
       <Project>{882d4dd8-c734-4d0f-aac0-577da73202e6}</Project>
       <Name>Work</Name>

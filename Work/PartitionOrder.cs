@@ -1,11 +1,10 @@
 ﻿using Dapper;
 using Dapper.Oracle;
+using LPKService.Domain.Models;
+using LPKService.Repository;
 using Oracle.ManagedDataAccess.Client;
-using Repository;
 using System.Collections.Generic;
 using System.Text;
-using Work.Models;
-using SOM.Models;
 
 namespace Work
 {

@@ -1,19 +1,19 @@
 ﻿using System;
 using System.ServiceProcess;
-using Logger;
+using Work;
 
 namespace LPKService
 {
    public partial class Program
     {
-        
         static void Main(string[] args)
         {
+            IServiceWork working = new ServiceWorker();
 #if DEBUG
             //Запуск как консольное
             if (Environment.UserInteractive)
             {
-                LPKService service1 = new LPKService();
+                LPKService service1 = new LPKService(working);
                 service1.ConsoleApp(args);
             }
             else
@@ -23,7 +23,7 @@ namespace LPKService
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]
                 {
-                    new LPKService()
+                    new LPKService(working)
                 };
                 ServiceBase.Run(ServicesToRun);
 #if DEBUG

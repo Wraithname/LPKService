@@ -90,10 +90,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SOM\SOM.csproj">
-      <Project>{96f27ac8-799d-4031-84e8-d2664412f29e}</Project>
-      <Name>SOM</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Work\Work.csproj">
       <Project>{882d4dd8-c734-4d0f-aac0-577da73202e6}</Project>
       <Name>Work</Name>
