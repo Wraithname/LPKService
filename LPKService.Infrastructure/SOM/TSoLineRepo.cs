@@ -12,7 +12,6 @@ using LPKService.Repository;
 
 namespace LPKService.Infrastructure.SOM
 {
-    //public enum TLineStatus { IsClosed, IsOpened }
     public class TSoLineRepo : ITSoLine
     {
         TSoLine newData;

@@ -59,7 +59,9 @@
     <Compile Include="Interfaces\ITL4MsgInfoLine.cs" />
     <Compile Include="Interfaces\ITSoHeader.cs" />
     <Compile Include="Interfaces\ITSoLine.cs" />
+    <Compile Include="Models\ACEandSoLine.cs" />
     <Compile Include="Models\AddressCat.cs" />
+    <Compile Include="Models\AttrbContrExtLink.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\CustomerCat.cs" />
     <Compile Include="Models\CustomerCatCredit.cs" />

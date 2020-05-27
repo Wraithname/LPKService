@@ -17,11 +17,11 @@ namespace LPKService.Domain.Interfaces
         int ManageShipTo(TL4MsgInfo l4MsgInfo, TL4EngineInterfaceMng eimOrderEntry);
         TCheckResult SalesOrderMng(TL4MsgInfo l4MsgInfo);
         bool ExistCustomer(string m_iCustSoldDescrID);
-        void CreateNewOrder(DataSet QryData, TL4MsgInfo l4MsgInfo);
+        void CreateNewOrder(L4L3SoHeader QryData, TL4MsgInfo l4MsgInfo);
         bool AlreadyInsertInSuspended(int iSoID);
         TDeleteResponse DeleteOrder(int iOrderID);
         string ProductTypeCheck(string l4ProductType);
-        void UpdateOrder(DataSet QryData, TL4MsgInfo l4MsgInfo, bool bIsDeletion = false);
+        void UpdateOrder(L4L3SoHeader QryData, TL4MsgInfo l4MsgInfo, bool bIsDeletion = false);
         void LoadAttrb(TL4MsgInfoLine tL4MsgInfoLine, string strProductType, int iSoID, int iSoLineID, TCheckRelatedList attrbSO, List<string> strArrayOfAttributes);
         int RetrievePeriodNumID(DateTime dDeliveryDate, int iPeriodCode, string sPeriodID = "", DateTime dStopDate = new DateTime());
         int RetrieveShipToCode(int iCustomerId, int iShiptoId);
@@ -38,7 +38,7 @@ namespace LPKService.Domain.Interfaces
         bool CompareAttributes(TCheckRelatedList chlAttrbListFromSap, TCheckRelatedList chlAttrbListFromDB, List<string> strAttrbCodesFromSap, TL4EngineInterfaceMng eimOrderEntry, bool mandatory = true);
         bool IsCustomerInternal(int iCustomerId);
         void CheckUpdateOPCODE(TL4MsgInfo l4MsgInfo);
-        TCheckResult AttributeCheck(DataSet qryData, TL4MsgInfo l4MsgInfo);
+        TCheckResult AttributeCheck(L4L3SoHeader qryData, TL4MsgInfo l4MsgInfo);
         void BlockForProcess(TL4MsgInfo l4MsgInfo, bool serRSer);
         ContractType DecodeContractType(string soid, string strCustomerId);
     }

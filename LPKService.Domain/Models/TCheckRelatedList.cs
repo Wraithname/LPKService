@@ -1,8 +1,10 @@
-﻿namespace LPKService.Domain.Models
+﻿using System.Collections.Generic;
+
+namespace LPKService.Domain.Models
 {
     public class TCheckRelatedList
     {
-        public string attrb_code { get; set; }
-        public string codeType { get; set; }
+        public List<string> attrb_code { get; set; }
+        public List<string> codeType { get; set; }
     }
 }

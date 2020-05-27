@@ -119,7 +119,6 @@ namespace LPKService.Infrastructure.SOM
         }
         public TSoHeader Create(L4L3SoHeader l4l3soheader, TL4MsgInfo l4MsgInfo, TL4EngineInterfaceMng eimOrderEntry, int iShipToCode, bool bVerifyData, bool bisUpdate = false)
         {
-            //string strProva;
             TL4EngineInterfaceMngRepo mngRepo = new TL4EngineInterfaceMngRepo(l4MsgInfo);
             bool bIsValid = true;
             TDeleteResponse deleteResponse = new TDeleteResponse();
@@ -229,7 +228,7 @@ namespace LPKService.Infrastructure.SOM
                     }
                 }
             }
-            catch { }
+            catch (Exception e) { logger.Error($"Ошибка создания SoHeader: {e.Message}"); }
             return soHeader;
         }
         public string GetLineMsgStatus(TSoHeader ret)
