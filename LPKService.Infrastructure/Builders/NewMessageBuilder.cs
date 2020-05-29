@@ -1,16 +1,18 @@
-﻿using LPKService.Domain.Models;
+﻿using LPKService.Domain.Models.Work.Event;
 using LPKService.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LPKService.Infrastructure.Repository;
-using LPKService.Infrastructure.CCM;
 using LPKService.Infrastructure.Shipping;
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using NLog;
 using LPKService.Repository;
+using LPKService.Domain.Models.Work;
+using LPKService.Infrastructure.CCM;
+using LPKService.Infrastructure.SOM;
 
 namespace LPKService.Infrastructure.Builders
 {
@@ -22,10 +24,18 @@ namespace LPKService.Infrastructure.Builders
     public class NewMessageBuilder : INewMessageBuilder
     {
         private Logger logger = LogManager.GetLogger(nameof(NewMessageBuilder));
-        IGlobalCheck check;
-        ICCManagement ccm;
-        ISOManagment som;
-        IL4L3SerShipping sship;
+        private readonly IGlobalCheck check;
+        private readonly ICCManagement ccm ;
+        private readonly ISOManagment som ;
+        private readonly IL4L3SerShipping sship;
+
+        public NewMessageBuilder(IGlobalCheck check, ICCManagement ccm,ISOManagment som,IL4L3SerShipping sship)
+        {
+            this.check = check;
+            this.ccm = ccm;
+            this.som = som;
+            this.sship = sship;
+        }
 
         public void CloseOrder()
         {

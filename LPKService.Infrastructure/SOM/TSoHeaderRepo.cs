@@ -4,12 +4,13 @@ using System.Text;
 using Dapper;
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
-using LPKService.Domain.Models;
+using LPKService.Domain.Models.SOM;
 using LPKService.Domain.Interfaces;
 using LPKService.Infrastructure.Repository;
 using LPKService.Infrastructure.DB;
 using NLog;
 using LPKService.Repository;
+using LPKService.Domain.Models.Work;
 
 namespace LPKService.Infrastructure.SOM
 {

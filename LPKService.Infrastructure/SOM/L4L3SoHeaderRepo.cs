@@ -1,10 +1,11 @@
-﻿using LPKService.Domain.Models;
+﻿using LPKService.Domain.Models.Work;
 using LPKService.Domain.Interfaces;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using NLog;
 using LPKService.Repository;
+using LPKService.Domain.Models.SOM;
 
 namespace LPKService.Infrastructure.SOM
 {

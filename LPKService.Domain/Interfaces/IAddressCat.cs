@@ -1,4 +1,4 @@
-﻿using LPKService.Domain.Models;
+﻿using LPKService.Domain.Models.Work;
 
 namespace LPKService.Domain.Interfaces
 {

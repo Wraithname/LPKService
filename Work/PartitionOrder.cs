@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Dapper.Oracle;
-using LPKService.Domain.Models;
+using LPKService.Domain.Models.SOM;
+using LPKService.Domain.Models.Work.Event;
 using LPKService.Repository;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;

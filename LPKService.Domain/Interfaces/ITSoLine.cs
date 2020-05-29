@@ -1,5 +1,5 @@
-﻿using LPKService.Domain.Models;
-
+﻿using LPKService.Domain.Models.Work;
+using LPKService.Domain.Models.SOM;
 
 namespace LPKService.Domain.Interfaces
 {

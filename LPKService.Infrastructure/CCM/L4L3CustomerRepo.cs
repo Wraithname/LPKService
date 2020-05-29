@@ -1,10 +1,11 @@
 ﻿using LPKService.Domain.Interfaces;
-using LPKService.Domain.Models;
+using LPKService.Domain.Models.Work;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using NLog;
 using LPKService.Repository;
+using LPKService.Domain.Models.CCM;
 
 namespace LPKService.Infrastructure.CCM
 {

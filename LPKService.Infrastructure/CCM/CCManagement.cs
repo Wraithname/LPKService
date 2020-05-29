@@ -7,6 +7,9 @@ using NLog;
 using LPKService.Infrastructure.DB;
 using LPKService.Infrastructure.Repository;
 using LPKService.Repository;
+using LPKService.Domain.Interfaces;
+using LPKService.Domain.Models.CCM;
+using LPKService.Domain.Models.Work;
 
 namespace LPKService.Infrastructure.CCM
 {
@@ -191,7 +194,7 @@ namespace LPKService.Infrastructure.CCM
             catch { return checkres; }
         }
 
-        public bool FillAddressEngine(L4L3Customer customer, AddressEngine addressEngine, string pModUserId, OracleDynamicParameters odp = null)
+        public bool FillAddressEngine(L4L3Customer customer, IAddressEngine addressEngine, string pModUserId, OracleDynamicParameters odp = null)
         {
             Country cnt = new Country();
             ZipCatalogue zip = new ZipCatalogue();

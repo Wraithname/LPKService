@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using LPKService.Domain.Models;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using LPKService.Repository;
+using LPKService.Domain.Models.SOM;
 
 namespace LPKService.Infrastructure.DB
 {

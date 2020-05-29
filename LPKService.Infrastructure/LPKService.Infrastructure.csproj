@@ -64,7 +64,6 @@
     <Compile Include="CCM\CCatalEngine.cs" />
     <Compile Include="CCM\CCManagement.cs" />
     <Compile Include="CCM\CCreditEngine.cs" />
-    <Compile Include="CCM\ICCManagement.cs" />
     <Compile Include="CCM\L4L3CustomerRepo.cs" />
     <Compile Include="DB\TCheckRealtedListRepo.cs" />
     <Compile Include="Repository\L4L3InterfaceServiceConst.cs" />
@@ -96,6 +95,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

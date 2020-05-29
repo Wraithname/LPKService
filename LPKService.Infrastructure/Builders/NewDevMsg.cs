@@ -5,6 +5,8 @@ using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using LPKService.Repository;
+using LPKService.Domain.Models.Work.Delivery;
+
 namespace LPKService.Infrastructure.Builders
 {
     public interface INewDevMsg

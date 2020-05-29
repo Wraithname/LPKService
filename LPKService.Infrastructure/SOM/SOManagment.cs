@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using LPKService.Domain.Models;
+using LPKService.Domain.Models.Work;
 using LPKService.Domain.Interfaces;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
@@ -10,6 +10,7 @@ using NLog;
 using LPKService.Infrastructure.Repository;
 using LPKService.Repository;
 using LPKService.Infrastructure.DB;
+using LPKService.Domain.Models.SOM;
 
 namespace LPKService.Infrastructure.SOM
 {

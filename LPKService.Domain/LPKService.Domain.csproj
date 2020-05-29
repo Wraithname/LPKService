@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IAddressCat.cs" />
+    <Compile Include="Interfaces\IAddressEngine.cs" />
+    <Compile Include="Interfaces\ICCManagement.cs" />
     <Compile Include="Interfaces\ICCreditEngine.cs" />
     <Compile Include="Interfaces\IL4L3Customer.cs" />
     <Compile Include="Interfaces\IL4L3Shipping.cs" />
@@ -59,40 +61,41 @@
     <Compile Include="Interfaces\ITL4MsgInfoLine.cs" />
     <Compile Include="Interfaces\ITSoHeader.cs" />
     <Compile Include="Interfaces\ITSoLine.cs" />
-    <Compile Include="Models\ACEandSoLine.cs" />
-    <Compile Include="Models\AddressCat.cs" />
-    <Compile Include="Models\AttrbContrExtLink.cs" />
-    <Compile Include="Models\Country.cs" />
-    <Compile Include="Models\CustomerCat.cs" />
-    <Compile Include="Models\CustomerCatCredit.cs" />
-    <Compile Include="Models\DeliveryESOHandSOL.cs" />
-    <Compile Include="Models\DeliverySOHandSOL.cs" />
-    <Compile Include="Models\JoinedModel.cs" />
-    <Compile Include="Models\L4L3Customer.cs" />
-    <Compile Include="Models\L4L3DelEventDel.cs" />
-    <Compile Include="Models\L4L3Delivery.cs" />
-    <Compile Include="Models\L4L3Event.cs" />
-    <Compile Include="Models\L4L3RmAndMatCat.cs" />
-    <Compile Include="Models\L4L3Shipping.cs" />
-    <Compile Include="Models\L4L3SoHeader.cs" />
-    <Compile Include="Models\L4L3SoLine.cs" />
-    <Compile Include="Models\LinesCom.cs" />
-    <Compile Include="Models\TCheckRelatedList.cs" />
-    <Compile Include="Models\TCheckResult.cs" />
-    <Compile Include="Models\TDeleteResponse.cs" />
-    <Compile Include="Models\THeaderNote.cs" />
-    <Compile Include="Models\TL4EngineInterfaceMng.cs" />
-    <Compile Include="Models\TL4MsgInfo.cs" />
-    <Compile Include="Models\TL4MsgInfoLine.cs" />
-    <Compile Include="Models\TLineNote.cs" />
-    <Compile Include="Models\TMessageResult.cs" />
-    <Compile Include="Models\TSoHeader.cs" />
-    <Compile Include="Models\TSoLine.cs" />
-    <Compile Include="Models\VecAuto.cs" />
-    <Compile Include="Models\ZipCatalogue.cs" />
+    <Compile Include="Models\SOM\ACEandSoLine.cs" />
+    <Compile Include="Models\CCM\AddressCat.cs" />
+    <Compile Include="Models\SOM\AttrbContrExtLink.cs" />
+    <Compile Include="Models\CCM\Country.cs" />
+    <Compile Include="Models\CCM\CustomerCat.cs" />
+    <Compile Include="Models\CCM\CustomerCatCredit.cs" />
+    <Compile Include="Models\Work\Delivery\DeliveryESOHandSOL.cs" />
+    <Compile Include="Models\Work\Delivery\DeliverySOHandSOL.cs" />
+    <Compile Include="Models\Work\Delivery\JoinedModel.cs" />
+    <Compile Include="Models\CCM\L4L3Customer.cs" />
+    <Compile Include="Models\Work\Delivery\L4L3DelEventDel.cs" />
+    <Compile Include="Models\Work\Delivery\L4L3Delivery.cs" />
+    <Compile Include="Models\Work\Event\L4L3Event.cs" />
+    <Compile Include="Models\Material\L4L3RmAndMatCat.cs" />
+    <Compile Include="Models\Shipping\L4L3Shipping.cs" />
+    <Compile Include="Models\SOM\L4L3SoHeader.cs" />
+    <Compile Include="Models\SOM\L4L3SoLine.cs" />
+    <Compile Include="Models\SOM\LinesCom.cs" />
+    <Compile Include="Models\Work\TCheckRelatedList.cs" />
+    <Compile Include="Models\Work\TCheckResult.cs" />
+    <Compile Include="Models\Work\TDeleteResponse.cs" />
+    <Compile Include="Models\SOM\THeaderNote.cs" />
+    <Compile Include="Models\Work\TL4EngineInterfaceMng.cs" />
+    <Compile Include="Models\Work\TL4MsgInfo.cs" />
+    <Compile Include="Models\Work\TL4MsgInfoLine.cs" />
+    <Compile Include="Models\SOM\TLineNote.cs" />
+    <Compile Include="Models\Work\TMessageResult.cs" />
+    <Compile Include="Models\SOM\TSoHeader.cs" />
+    <Compile Include="Models\SOM\TSoLine.cs" />
+    <Compile Include="Models\Work\VecAuto.cs" />
+    <Compile Include="Models\CCM\ZipCatalogue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -101,5 +104,6 @@
       <Name>LPKService.Repository</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

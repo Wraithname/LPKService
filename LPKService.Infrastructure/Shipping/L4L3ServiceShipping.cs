@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
-using LPKService.Domain.Models;
+using LPKService.Domain.Models.Work;
 using NLog;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using LPKService.Infrastructure.Repository;
 using LPKService.Repository;
+using LPKService.Domain.Models.Shipping;
+using LPKService.Domain.Models.Material;
 
 namespace LPKService.Infrastructure.Shipping
 {

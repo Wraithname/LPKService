@@ -1,9 +1,9 @@
 ﻿using Dapper;
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
-using LPKService.Domain.Models;
 using LPKService.Domain.Interfaces;
 using LPKService.Repository;
+using LPKService.Domain.Models.Work;
 
 namespace LPKService.Infrastructure.DB
 {

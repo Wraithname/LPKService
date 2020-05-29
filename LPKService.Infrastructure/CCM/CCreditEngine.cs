@@ -1,5 +1,6 @@
 ﻿using System;
-using LPKService.Domain.Models;
+using LPKService.Domain.Models.CCM;
+using LPKService.Domain.Models.Work;
 
 namespace LPKService.Infrastructure.CCM
 {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using LPKService.Domain.Models;
-using System.Data;
-using static LPKService.Domain.Models.TSoHeader;
+using LPKService.Domain.Models.SOM;
+using LPKService.Domain.Models.Work;
+using static LPKService.Domain.Models.SOM.TSoHeader;
 
 namespace LPKService.Domain.Interfaces
 {
