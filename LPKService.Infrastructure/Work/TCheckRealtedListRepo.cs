@@ -1,5 +1,5 @@
 ﻿using LPKService.Domain.Models.Work;
-namespace LPKService.Infrastructure.DB
+namespace LPKService.Infrastructure.Work
 {
     public class TCheckRealtedListRepo
     {

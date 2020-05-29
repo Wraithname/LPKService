@@ -5,7 +5,7 @@ using LPKService.Domain.Interfaces;
 using LPKService.Repository;
 using LPKService.Domain.Models.Work;
 
-namespace LPKService.Infrastructure.DB
+namespace LPKService.Infrastructure.Work
 {
     public class TL4MsgInfoLineRepo:ITL4MsgInfoLine
     {

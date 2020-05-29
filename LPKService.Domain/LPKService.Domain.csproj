@@ -67,6 +67,7 @@
     <Compile Include="Models\CCM\Country.cs" />
     <Compile Include="Models\CCM\CustomerCat.cs" />
     <Compile Include="Models\CCM\CustomerCatCredit.cs" />
+    <Compile Include="Models\Work\AutoCloseOrder\AutoClose.cs" />
     <Compile Include="Models\Work\Delivery\DeliveryESOHandSOL.cs" />
     <Compile Include="Models\Work\Delivery\DeliverySOHandSOL.cs" />
     <Compile Include="Models\Work\Delivery\JoinedModel.cs" />

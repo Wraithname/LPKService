@@ -5,7 +5,7 @@ using Oracle.ManagedDataAccess.Client;
 using LPKService.Domain.Models.SOM;
 using LPKService.Repository;
 
-namespace LPKService.Infrastructure.DB
+namespace LPKService.Infrastructure.Work
 {
     public class THeaderNoteRepo
     {

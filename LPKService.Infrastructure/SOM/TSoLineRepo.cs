@@ -6,7 +6,7 @@ using Oracle.ManagedDataAccess.Client;
 using LPKService.Domain.Models.SOM;
 using LPKService.Domain.Interfaces;
 using NLog;
-using LPKService.Infrastructure.DB;
+using LPKService.Infrastructure.Work;
 using LPKService.Infrastructure.Repository;
 using LPKService.Repository;
 using LPKService.Domain.Models.Work;

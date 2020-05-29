@@ -5,7 +5,7 @@ using Dapper.Oracle;
 using LPKService.Repository;
 using LPKService.Domain.Models.SOM;
 
-namespace LPKService.Infrastructure.DB
+namespace LPKService.Infrastructure.Work
 {
     public class TLineNoteRepo 
     {

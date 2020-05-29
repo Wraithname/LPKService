@@ -11,8 +11,7 @@ using Dapper;
 using NLog;
 using LPKService.Repository;
 using LPKService.Domain.Models.Work;
-using LPKService.Infrastructure.CCM;
-using LPKService.Infrastructure.SOM;
+using LPKService.Domain.Models.Work.AutoCloseOrder;
 
 namespace LPKService.Infrastructure.Builders
 {
@@ -40,18 +39,14 @@ namespace LPKService.Infrastructure.Builders
         public void CloseOrder()
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
+            TL4MsgInfo l4MsgInfo = new TL4MsgInfo();
+            List<AutoClose> close = new List<AutoClose>();
             string str1 = "UPDATE  SALES_ORDER_LINE " +
                 "SET SO_LINE_STATUS = 4 " +
                 " , MOD_DATETIME = sysdate" +
                 ", MANUAL_CLOSE_ORDER = 'Y' " +
                 "WHERE SO_ID = :P_SO_ID " +
                 "AND   SO_LINE_ID = :P_SO_LINE_ID";
-            odp.Add("P_SO_ID");
-            odp.Add("P_SO_LINE_ID");
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
-            {
-                connection.Execute(str1, odp);
-            }
             try
             {
                 string str2 = "SELECT l2.*, " +
@@ -67,10 +62,44 @@ namespace LPKService.Infrastructure.Builders
                     "AND   l.msg_id = 4301 ) l2 join SALES_ORDER_LINE sol on sol.SO_DESCR_ID = l2.so_id or sol.SO_DESCR_ID = l2.so_id||''_''||to_number(l2.so_line_id)/10 " +
                     "WHERE sol.SO_LINE_STATUS = 3 " +
                     "AND    l2.MSG_DATETIME > SYSDATE - 7";
+                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                {
+                    close=connection.Query<AutoClose>(str2, null).AsList();
+                }
+                if(close!=null)
+                {
+                    foreach (AutoClose auto in close)
+                    {
+                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        {
+                            using (var transaction = connection.BeginTransaction())
+                            {
+                                try
+                                {
+                                    odp.Add("P_SO_ID",auto.metSoId);
+                                    odp.Add("P_SO_LINE_ID",auto.metSoLineId);
+                                    connection.Execute(str1, odp);
+                                    l4MsgInfo.msgCounter = auto.msgCounter;
+                                    l4MsgInfo.msgReport.status = 2;
+                                    l4MsgInfo.msgReport.remark = $"Заказ {auto.soId}/{auto.soLineId} Закрыт автоматически";
+                                    UpdateMsgStatus(l4MsgInfo);
+                                }
+                                catch (Exception e)
+                                {
+                                    transaction.Rollback();
+                                    l4MsgInfo.msgCounter = auto.msgCounter;
+                                    l4MsgInfo.msgReport.status = -1;
+                                    l4MsgInfo.msgReport.remark = $"Заказ {auto.soId}/{auto.soLineId} {e.Message}";
+                                    UpdateMsgStatus(l4MsgInfo);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             catch
             {
-
+                logger.Error("Ошибка выполнения автоматического закрытия заказа");
             }
             throw new NotImplementedException();
         }

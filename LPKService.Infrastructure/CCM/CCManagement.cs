@@ -4,7 +4,7 @@ using Dapper.Oracle;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
 using NLog;
-using LPKService.Infrastructure.DB;
+using LPKService.Infrastructure.Work;
 using LPKService.Infrastructure.Repository;
 using LPKService.Repository;
 using LPKService.Domain.Interfaces;
