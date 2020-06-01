@@ -82,7 +82,6 @@
     <Compile Include="Models\SOM\LinesCom.cs" />
     <Compile Include="Models\Work\TCheckRelatedList.cs" />
     <Compile Include="Models\Work\TCheckResult.cs" />
-    <Compile Include="Models\Work\TDeleteResponse.cs" />
     <Compile Include="Models\SOM\THeaderNote.cs" />
     <Compile Include="Models\Work\TL4EngineInterfaceMng.cs" />
     <Compile Include="Models\Work\TL4MsgInfo.cs" />

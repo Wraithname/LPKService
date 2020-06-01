@@ -32,6 +32,7 @@ namespace LPKService.Infrastructure.SOM
         string m_strSO_Line_Id_Params = "";
         string m_strSO_Line_Id_MET = "";
         string m_strSo_Lines_For_Where = "";
+        IGlobalCheck check;
         public void AddVsw_detailsToOrder(TL4MsgInfo l4MsgInfo)
         {
             string vsw_detail, soDescID, soIdv;
@@ -121,12 +122,41 @@ namespace LPKService.Infrastructure.SOM
 
         public bool AlreadyInsertInSuspended(int iSoID)
         {
-            throw new NotImplementedException();
+            int res = -1;
+            string sqlstr = $"SELECT COUNT(*) AS N FROM SALES_ORDER_LINE WHERE SO_ID = {iSoID} AND SO_LINE_STATUS = 5";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                res = connection.ExecuteScalar<int>(sqlstr, null);
+            }
+            if (res > 0)
+                return true;
+            return false;
         }
 
         public TCheckResult AttributeCheck(L4L3SoHeader qryData, TL4MsgInfo l4MsgInfo)
         {
-            throw new NotImplementedException();
+            TCheckResult result = new TCheckResult();
+            result.isOK = false;
+            L4L3SoLine l4L3SoLine;
+            string sqlstr = $"SELECT * FROM L4_L3_SO_LINE WHERE MSG_COUNTER = {qryData.msgCounter}";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                l4L3SoLine = connection.QueryFirstOrDefault<L4L3SoLine>(sqlstr, null);
+            }
+            if (l4L3SoLine == null)
+            {
+                result.isOK = false;
+                result.data = "Заказ не имеет записей в таблице L4_L3_SO_LINE";
+                l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_ERROR;
+                l4MsgInfo.msgReport.remark = result.data;
+            }
+            else
+                result.isOK = true;
+            if (!result.isOK)
+                check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+            else
+                check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS, result.data);
+            return result;
         }
 
         public void BlockForProcess(TL4MsgInfo l4MsgInfo, bool serRSer)
@@ -146,35 +176,74 @@ namespace LPKService.Infrastructure.SOM
 
         public bool CheckInquiryLinesStatus(int iMsgCounter)
         {
-            throw new NotImplementedException();
+            int iCounterSale, iCounterLine;
+            bool result = false;
+            string sqlstr = $"select count(*) as counter from sales_order_line where  so_id = (select inquiry_id from   L4_L3_SO_HEADER where  msg_counter = {iMsgCounter} ) " +
+                $"and so_line_id in (select (so_line_id / 10) from   L4_L3_SO_LINE where  msg_counter = {iMsgCounter} ) and so_line_status  = 8";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                iCounterSale = connection.ExecuteScalar<int>(sqlstr, null);
+            }
+            sqlstr = $"select count(*) as counter from   L4_L3_SO_LINE where  msg_counter = {iMsgCounter}";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                iCounterLine = connection.ExecuteScalar<int>(sqlstr, null);
+            }
+            if (iCounterLine != 0 && iCounterSale != 0)
+                if (iCounterLine == iCounterSale)
+                    result = true;
+            return result;
         }
 
-        public void CheckUpdateOPCODE(TL4MsgInfo l4MsgInfo)
+        public TL4MsgInfo CheckUpdateOPCODE(TL4MsgInfo l4MsgInfo)
         {
-            throw new NotImplementedException();
+            TL4MsgInfo tl4 = l4MsgInfo;
+            int count;
+            string sqlstr = $"select count(*) as counters " +
+                $"from   l4_l3_event lle_actual, " +
+                $"l4_l3_event lle_before, " +
+                $"l4_l3_so_header llsh_actual, " +
+                $"l4_l3_so_header llsh_before, " +
+                $"(select lle_actual.msg_counter, " +
+                $"count(*) as counters " +
+                $"from l4_l3_event lle_actual, " +
+                $"l4_l3_event lle_before, " +
+                $"l4_l3_so_header llsh_actual, " +
+                $"l4_l3_so_header llsh_before " +
+                $"where lle_actual.msg_counter = llsh_actual.msg_counter " +
+                $"and lle_before.msg_counter = llsh_before.msg_counter " +
+                $"and llsh_before.SO_ID = llsh_actual.so_id " +
+                $"and lle_before.op_code = 1 " +
+                $"and lle_actual.op_code = 2 " +
+                $"and lle_before.msg_status = 2 " +
+                $"and lle_actual.msg_counter = {tl4.msgCounter} " +
+                $"group by lle_actual.msg_counter) yetinserted " +
+                $"where  lle_actual.msg_counter = llsh_actual.msg_counter " +
+                $"and lle_before.msg_counter = llsh_before.msg_counter " +
+                $"and llsh_before.SO_ID = llsh_actual.so_id " +
+                $"and lle_before.op_code = 1 " +
+                $"and lle_actual.op_code = 2 " +
+                $"and lle_before.msg_status = -1 " +
+                $"and    lle_actual.msg_counter = {tl4.msgCounter} " +
+                $"and    yetinserted.msg_counter = lle_actual.msg_counter " +
+                $"and	   yetinserted.counters = 0 ";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                count = connection.ExecuteScalar<int>(sqlstr, null);
+            }
+            if (count > 0)
+            {
+                sqlstr = $"update  l4_l3_event set	op_code = 1 where msg_counter = {tl4.msgCounter}";
+                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                {
+                    connection.Execute(sqlstr, null);
+                }
+                tl4.opCode = 1;
+            }
+            return tl4;
         }
 
         public void CloseLine(int iSoId, int iSoLineId, int iSoTypeCode)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool CompareAttributes(TCheckRelatedList chlAttrbListFromSap, TCheckRelatedList chlAttrbListFromDB, List<string> strAttrbCodesFromSap, TL4EngineInterfaceMng eimOrderEntry, bool mandatory = true)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool CompareHeaderValues(TSoHeader objsoHeader, TL4EngineInterfaceMng eimOrderEntry)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool CompareLines(TSoHeader objsoHeader, int iNumOfLine, TL4EngineInterfaceMng eimOrderEntry)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool CompareLineValues(int iLineId, TL4EngineInterfaceMng eimOrderEntry)
         {
             throw new NotImplementedException();
         }
@@ -199,26 +268,6 @@ namespace LPKService.Infrastructure.SOM
             if (flag == 'Y' || soid.Substring(0, 3) == "OMK")
                 return TContractType.coInternal;
             return TContractType.coContract;
-        }
-
-        public TDeleteResponse DeleteOrder(int iOrderID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ExistCustomer(string m_iCustSoldDescrID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsCustomerInternal(int iCustomerId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool LineIsSalesApproval(int iSoID, int iSoLineID)
-        {
-            throw new NotImplementedException();
         }
 
         public void LoadAttrb(TL4MsgInfoLine tL4MsgInfoLine, string strProductType, int iSoID, int iSoLineID, TCheckRelatedList attrbSO = null, List<string> strArrayOfAttributes = null)
@@ -342,44 +391,46 @@ namespace LPKService.Infrastructure.SOM
             }
         }
 
-        public int ManageShipTo(TL4MsgInfo l4MsgInfo, TL4EngineInterfaceMng eimOrderEntry)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool OrderCanBeProcess(string sSoDescrID, int iOpCode, string sErrMsg)
         {
-            throw new NotImplementedException();
+            bool bexistorder = OrderExist(sSoDescrID);
+            bool res = true;
+            switch (iOpCode)
+            {
+                case L4L3InterfaceServiceConst.OP_CODE_NEW:
+                    if (bexistorder)
+                    {
+                        logger.Error("Заказ уже существует в БД МЕТ2000");
+                        res = false;
+                    }
+                    break;
+                case L4L3InterfaceServiceConst.OP_CODE_DEL:
+                    if (!bexistorder)
+                    {
+                        logger.Error("Заказ не существует в БД МЕТ2000");
+                        res = false;
+                    }
+                    break;
+                case L4L3InterfaceServiceConst.OP_CODE_UPD:
+                    if (!bexistorder)
+                    {
+                        logger.Error("Заказ не существует в БД МЕТ2000");
+                        res = false;
+                    }
+                    break;
+            }
+            return res;
         }
 
         public bool OrderExist(string sSoDescrID)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool OrderExistLike(string sSoDescrID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string ProductTypeCheck(string l4ProductType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ReadyForClosing(int iSoID, int iSoLineID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int RetrievePeriodNumID(DateTime dDeliveryDate, int iPeriodCode, string sPeriodID = "", DateTime dStopDate = new DateTime())
-        {
-            throw new NotImplementedException();
-        }
-
-        public int RetrieveShipToCode(int iCustomerId, int iShiptoId)
-        {
-            throw new NotImplementedException();
+            int count;
+            string sqlstr = $"SELECT COUNT(*) AS HOWMANY FROM SALES_ORDER_HEADER WHERE SO_DESCR_ID = {sSoDescrID}";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                count = connection.ExecuteScalar<int>(sqlstr, null);
+            }
+            return count > 0;
         }
 
         public TCheckResult SalesOrderMng(TL4MsgInfo l4MsgInfo)
@@ -408,21 +459,21 @@ namespace LPKService.Infrastructure.SOM
                     sqlstr += $"AND L4SOL.SO_LINE_ID IN {m_strSo_Lines_For_Where}";
                 sqlstr += "ORDER BY L4SOL.SO_LINE_ID";
                 OracleDynamicParameters odp = new OracleDynamicParameters();
-                odp.Add("MSG_COUNTER",l4MsgInfo.msgCounter);
+                odp.Add("MSG_COUNTER", l4MsgInfo.msgCounter);
                 using (OracleConnection connection = BaseRepo.GetDBConnection())
                 {
                     l4s = connection.Query<l4sol>(sqlstr, null).AsList();
                 }
-                if(l4s!=null)
+                if (l4s != null)
                 {
-                    foreach(l4sol kSol in l4s)
+                    foreach (l4sol kSol in l4s)
                     {
                         if (!OrderCanBeProcess(soHeader.soID, l4MsgInfo.opCode, ""))
                         {
                             l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_ERROR;
                             l4MsgInfo.msgReport.remark = "";
                         }
-                        else if(!OrderCanBeProcess($"{soHeader.soID}_{kSol.metSoLineId}",l4MsgInfo.opCode,""))
+                        else if (!OrderCanBeProcess($"{soHeader.soID}_{kSol.metSoLineId}", l4MsgInfo.opCode, ""))
                         {
                             l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_ERROR;
                             l4MsgInfo.msgReport.remark = "";
@@ -434,8 +485,8 @@ namespace LPKService.Infrastructure.SOM
                             l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
                             l4MsgInfo.msgReport.remark = "";
 
-                            CheckUpdateOPCODE(l4MsgInfo);
-                            switch(l4MsgInfo.opCode)
+                            l4MsgInfo = CheckUpdateOPCODE(l4MsgInfo);
+                            switch (l4MsgInfo.opCode)
                             {
                                 case L4L3InterfaceServiceConst.OP_CODE_NEW:
                                     CreateNewOrder(soHeader, l4MsgInfo);
@@ -459,20 +510,20 @@ namespace LPKService.Infrastructure.SOM
             }
             else
             {
-                if(!OrderCanBeProcess(soHeader.soID,l4MsgInfo.opCode,""))
+                if (!OrderCanBeProcess(soHeader.soID, l4MsgInfo.opCode, ""))
                 {
                     l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_ERROR;
                     l4MsgInfo.msgReport.remark = "Заказ уже принимался по схеме с разбиением на несколько заказов.";
                     return checkResult;
                 }
                 CheckUpdateOPCODE(l4MsgInfo);
-                switch(l4MsgInfo.opCode)
+                switch (l4MsgInfo.opCode)
                 {
                     case L4L3InterfaceServiceConst.OP_CODE_NEW:
                         CreateNewOrder(soHeader, l4MsgInfo);
                         break;
                     case L4L3InterfaceServiceConst.OP_CODE_DEL:
-                        UpdateOrder(soHeader, l4MsgInfo,true);
+                        UpdateOrder(soHeader, l4MsgInfo, true);
                         break;
                     case L4L3InterfaceServiceConst.OP_CODE_UPD:
                         UpdateOrder(soHeader, l4MsgInfo);
@@ -488,44 +539,10 @@ namespace LPKService.Infrastructure.SOM
             }
         }
 
-        public void SaveInMassForHeaderNote(int pSoId, string pHeaderNote)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetOEHeaderValues(TSoHeader order, TL4EngineInterfaceMng eimOrderEntry, bool bUpdatingOrder = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetOELinesValues(TSoLine order, bool bReordered = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateCreditStatus(TSoHeader objsoHeader, int iLineId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateHeaderFields(TSoHeader objsoHeader)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateLineFields(TSoHeader objsoHeader)
-        {
-            throw new NotImplementedException();
-        }
-
         public void UpdateOrder(L4L3SoHeader QryData, TL4MsgInfo l4MsgInfo, bool bIsDeletion = false)
         {
             throw new NotImplementedException();
         }
-
-        TSoHeader.ContractType ISOManagment.DecodeContractType(string soid, string strCustomerId)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

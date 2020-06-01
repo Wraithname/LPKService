@@ -6,6 +6,7 @@ using Dapper.Oracle;
 using NLog;
 using LPKService.Repository;
 using LPKService.Domain.Models.Shipping;
+using System.Collections.Generic;
 
 namespace LPKService.Infrastructure.Shipping
 {
@@ -27,6 +28,22 @@ namespace LPKService.Infrastructure.Shipping
                 logger.Error($"Нет данных в таблице L4_L3_SHIPPING, для Msg_Counter: {l4MsgInfo.msgCounter}");
             }
             return shipping;
+        }
+        public List<L4L3Shipping> GetListData(TL4MsgInfo l4MsgInfo)
+        {
+            List<L4L3Shipping> lship;
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            string str = "SELECT * FROM L4_L3_SHIPPING WHERE MSG_COUNTER = :P_MSG_COUNTER";
+            odp.Add("P_MSG_COUNTER", l4MsgInfo.msgCounter);
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                lship = connection.Query<L4L3Shipping>(str, odp).AsList();
+            }
+            if (lship == null)
+            {
+                logger.Error($"Нет данных в таблице L4_L3_SHIPPING, для Msg_Counter: {l4MsgInfo.msgCounter}");
+            }
+            return lship;
         }
     }
 }

@@ -79,6 +79,7 @@ namespace LPKService.Infrastructure.Builders
                                     odp.Add("P_SO_ID",auto.metSoId);
                                     odp.Add("P_SO_LINE_ID",auto.metSoLineId);
                                     connection.Execute(str1, odp);
+                                    transaction.Commit();
                                     l4MsgInfo.msgCounter = auto.msgCounter;
                                     l4MsgInfo.msgReport.status = 2;
                                     l4MsgInfo.msgReport.remark = $"Заказ {auto.soId}/{auto.soLineId} Закрыт автоматически";
@@ -115,7 +116,7 @@ namespace LPKService.Infrastructure.Builders
                 "WHERE CONSTANT_ID='ACCEPT_ORDER_IN_SRV'";
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                acceptOrderConsts = connection.QueryFirstOrDefault<string>(sqlstr, odp);
+                acceptOrderConsts = connection.ExecuteScalar<string>(sqlstr, odp);
             }
             if (acceptOrderConsts == "")
                 acceptOrderConsts = "N";
@@ -198,7 +199,11 @@ namespace LPKService.Infrastructure.Builders
                                         break;
                                     //Запуск задачи SHIPPING
                                     case L4L3InterfaceServiceConst.L4_L3_SHIPPING:
-                                        Task.Run(() => sship.ShippingMng(l4MsgInfo));
+                                        //Task.Run(() => sship.ShippingMng(l4MsgInfo));
+                                        break;
+                                    //Запуск задачи MATERIAL
+                                    case L4L3InterfaceServiceConst.L4_L3_RAW_MATERIAL:
+                                        //Task.Run(() => sship.L4L3MaterialMovement(l4MsgInfo));
                                         break;
                                 }
                                 if (l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_INSERT)
@@ -258,7 +263,7 @@ namespace LPKService.Infrastructure.Builders
             odp.Add("P_MSG_COUNTER", msgCounter);
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                res = connection.QueryFirstOrDefault<int>(sqlstr, odp);
+                res = connection.ExecuteScalar<int>(sqlstr, odp);
             }
             if (res == 0)
                 return false;

@@ -154,8 +154,8 @@ namespace LPKService.Infrastructure.Shipping
             L4L3InterfaceServiceGlobalCheck global = new L4L3InterfaceServiceGlobalCheck();
             logger.Error($"ShippingMng - STARTED -> MsgId: {l4MsgInfo.msgCounter}");
             L4L3ShippingRepo shippingRepo = new L4L3ShippingRepo();
-            L4L3Shipping ship = shippingRepo.GetData(l4MsgInfo);
-            if(ship==null)
+            List<L4L3Shipping> ship = shippingRepo.GetListData(l4MsgInfo);
+            if(ship == null)
             {
                 result.isOK = false;
                 result.data = $"В таблице {l4l3unterfacetable} поле {l4MsgInfo.msgCounter} запись не найдена";
