@@ -397,7 +397,7 @@ namespace LPKService.Infrastructure.Builders
                     odp.Add("BOL_ID", del.bolId);
                     using (OracleConnection connection = BaseRepo.GetDBConnection())
                     {
-                        connection.Execute(str, odp);
+                        connection.Execute(str1, odp);
                     }
                 }
                 odp = new OracleDynamicParameters();
@@ -410,7 +410,7 @@ namespace LPKService.Infrastructure.Builders
                 odp.Add("POS_NUM_ID", posNumId);
                 using (OracleConnection connection = BaseRepo.GetDBConnection())
                 {
-                    connection.Execute(str, odp);
+                    connection.Execute(str1, odp);
                 }
                 UpdateStatusMessage(msgCounter, bol_created, "");
             }

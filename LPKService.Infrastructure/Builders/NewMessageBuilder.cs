@@ -27,13 +27,15 @@ namespace LPKService.Infrastructure.Builders
         private readonly ICCManagement ccm ;
         private readonly ISOManagment som ;
         private readonly IL4L3SerShipping sship;
+        private readonly IMaterial mat;
 
-        public NewMessageBuilder(IGlobalCheck check, ICCManagement ccm,ISOManagment som,IL4L3SerShipping sship)
+        public NewMessageBuilder(IGlobalCheck check, ICCManagement ccm,ISOManagment som,IL4L3SerShipping sship,IMaterial mat)
         {
             this.check = check;
             this.ccm = ccm;
             this.som = som;
             this.sship = sship;
+            this.mat = mat;
         }
 
         public void CloseOrder()
@@ -199,11 +201,11 @@ namespace LPKService.Infrastructure.Builders
                                         break;
                                     //Запуск задачи SHIPPING
                                     case L4L3InterfaceServiceConst.L4_L3_SHIPPING:
-                                        //Task.Run(() => sship.ShippingMng(l4MsgInfo));
+                                        Task.Run(() => sship.ShippingMng(l4MsgInfo));
                                         break;
                                     //Запуск задачи MATERIAL
                                     case L4L3InterfaceServiceConst.L4_L3_RAW_MATERIAL:
-                                        //Task.Run(() => sship.L4L3MaterialMovement(l4MsgInfo));
+                                        Task.Run(() => mat.L4L3MaterialMovement(l4MsgInfo));
                                         break;
                                 }
                                 if (l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_INSERT)

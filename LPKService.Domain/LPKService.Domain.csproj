@@ -56,6 +56,7 @@
     <Compile Include="Interfaces\IL4L3Customer.cs" />
     <Compile Include="Interfaces\IL4L3Shipping.cs" />
     <Compile Include="Interfaces\IL4L3SoHeader.cs" />
+    <Compile Include="Interfaces\IMaterial.cs" />
     <Compile Include="Interfaces\ISOManagment.cs" />
     <Compile Include="Interfaces\ITL4EngineInterfaceMng.cs" />
     <Compile Include="Interfaces\ITL4MsgInfoLine.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Models\CCM\Country.cs" />
     <Compile Include="Models\CCM\CustomerCat.cs" />
     <Compile Include="Models\CCM\CustomerCatCredit.cs" />
+    <Compile Include="Models\SOM\Period.cs" />
     <Compile Include="Models\Work\AutoCloseOrder\AutoClose.cs" />
     <Compile Include="Models\Work\Delivery\DeliveryESOHandSOL.cs" />
     <Compile Include="Models\Work\Delivery\DeliverySOHandSOL.cs" />

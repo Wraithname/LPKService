@@ -26,8 +26,7 @@ namespace LPKService.Infrastructure.SOM
     public class SOManagment : ISOManagment
     {
         private Logger logger = LogManager.GetLogger(nameof(SOM));
-        List<TLineNote> lines = new List<TLineNote>();
-        TLineNote line;
+        private List<TLineNote> lines = new List<TLineNote>();
         string onetoSeveralirderFromSap = "";
         string m_strSO_Line_Id_Params = "";
         string m_strSO_Line_Id_MET = "";
@@ -172,6 +171,21 @@ namespace LPKService.Infrastructure.SOM
             {
                 connection.Execute(sqlstr, odp);
             }
+        }
+
+        internal bool IsCustomerInternal(int m_iCustSoldDescrID)
+        {
+            bool result = false;
+            string res;
+            string sqlstr = $"select internal_customer_flag as internal_cust from customer_catalog " +
+                $"where  internal_customer_flag = 'Y' and   customer_id = {m_iCustSoldDescrID}";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                res = connection.ExecuteScalar<string>(sqlstr, null);
+            }
+            if (res == "Y")
+                result = true;
+            return result;
         }
 
         public bool CheckInquiryLinesStatus(int iMsgCounter)
@@ -543,6 +557,40 @@ namespace LPKService.Infrastructure.SOM
         {
             throw new NotImplementedException();
         }
-        
+
+        public int RetrievePeriodNumID(DateTime date, int num)
+        {
+            int result = -1;
+            Period priod;
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            string sqlstr = $"select period_num_id as period, " +
+                $"PERIOD_ID, STOP_DATE " +
+                $"from   period p " +
+                $"where  p.period_code = :P_Period" +
+                $"and P_date between p.start_date and  p.stop_date";
+            odp.Add("P_Period",num);
+            odp.Add("P_date", date);
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                priod = connection.ExecuteScalar<Period>(sqlstr, odp);
+            }
+            if (priod != null)
+                result = priod.period;
+            return result;
+        }
+
+        public string ProductTypeCheck(string product)
+        {
+            string type;
+            string sqlstr = $"select product_type from   product_type_catalogue where  sap_code = {product}";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                type = connection.ExecuteScalar<string>(sqlstr, null);
+            }
+            if (type != null)
+                return type;
+            else
+                return product;
+        }
     }
 }

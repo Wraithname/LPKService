@@ -17,10 +17,10 @@ namespace LPKService.Infrastructure.Shipping
     interface L4L3ServCheckShip
     {
         bool CheckPiece(string pieceId, string soId, string soLineId);
-        bool L4L3ShipPieceSOCheck(List<L4L3Shipping> ship);
+        bool L4L3ShipPieceSOCheck(L4L3Shipping ship);
         bool CheckBolExistNotShip(string strBolId);
         bool CheckBolExistIsShip(string strBolId);
-        bool ShippingIsPieceAssignedToBOL(List<L4L3Shipping> ship, TForShipping forShipping);
+        bool ShippingIsPieceAssignedToBOL(L4L3Shipping ship, TForShipping forShipping);
         bool CheckIfPieceRelatedToBOL(string strBolId, TForShipping forShipping);
         TCheckResult ShippingCheck(List<L4L3Shipping> ship, TL4MsgInfo l4MsgInfo);
         TCheckResult ShippingGeneralCheck(List<L4L3Shipping> ship, TL4MsgInfo l4MsgInfo);
@@ -67,9 +67,9 @@ namespace LPKService.Infrastructure.Shipping
             throw new NotImplementedException();
         }
 
-        public bool L4L3ShipPieceSOCheck(List<L4L3Shipping> ship)
+        public bool L4L3ShipPieceSOCheck(L4L3Shipping ship)
         {
-            return CheckPiece(ship[0].pieceId, ship[0].soId, ship[0].soLineId);
+            return CheckPiece(ship.pieceId, ship.soId, ship.soLineId);
         }
 
         public TCheckResult ShippingCheck(List<L4L3Shipping> ship,TL4MsgInfo l4MsgInfo)
@@ -79,73 +79,76 @@ namespace LPKService.Infrastructure.Shipping
             {
                 return result;
             }
-            if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_NEW && ship[0].bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
+            foreach (L4L3Shipping sinship in ship)
             {
-                if (!L4L3ShipPieceSOCheck(ship))
+                if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_NEW && sinship.bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
                 {
-                    result.isOK = false;
-                    result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} одна из заготовок не может быть назначена в накладную BOL: {ship.bolId}";
-                    check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    if (!L4L3ShipPieceSOCheck(sinship))
+                    {
+                        result.isOK = false;
+                        result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} одна из заготовок не может быть назначена в накладную BOL: {sinship.bolId}";
+                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    }
                 }
-            }
-            else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_UPD && ship[0].bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
-            {
-                if (!CheckBolExistNotShip(ship[0].bolId))
+                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_UPD && sinship.bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
                 {
-                    result.isOK = false;
-                    result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} Накладная: {ship[0].bolId} не существует или отгружена";
-                    check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    if (!CheckBolExistNotShip(sinship.bolId))
+                    {
+                        result.isOK = false;
+                        result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} Накладная: {sinship.bolId} не существует или отгружена";
+                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    }
+                    if (!ShippingIsPieceAssignedToBOL(sinship, TForShipping.NOShipped))
+                    {
+                        result.isOK = false;
+                        result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} как минимум одна из заготовок не может быть назначена в накладную BOL: {sinship.bolId}";
+                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    }
                 }
-                if (!ShippingIsPieceAssignedToBOL(ship, TForShipping.NOShipped))
+                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_UPD && sinship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
                 {
-                    result.isOK = false;
-                    result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} как минимум одна из заготовок не может быть назначена в накладную BOL: {ship[0].bolId}";
-                    check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    if (!CheckBolExistIsShip(sinship.bolId))
+                    {
+                        result.isOK = false;
+                        result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} Накладная: {sinship.bolId} не существует или отгружена";
+                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    }
+                    if (!ShippingIsPieceAssignedToBOL(sinship, TForShipping.YESShipped))
+                    {
+                        result.isOK = false;
+                        result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} как минимум одна из заготовок не может быть назначена в накладную BOL: {sinship.bolId}";
+                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    }
                 }
-            }
-            else if(l4MsgInfo.opCode==L4L3InterfaceServiceConst.OP_CODE_UPD&& ship[0].bolStatus==L4L3InterfaceServiceConst.BOL_SENT)
-            {
-                if(!CheckBolExistIsShip(ship[0].bolId))
+                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_NEW && sinship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
                 {
-                    result.isOK = false;
-                    result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} Накладная: {ship[0].bolId} не существует или отгружена";
-                    check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    if (!CheckBolExistIsShip(sinship.bolId))
+                    {
+                        result.isOK = false;
+                        result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} Накладная: {sinship.bolId} не существует или отгружена";
+                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    }
+                    if (!L4L3ShipPieceSOCheck(sinship))
+                    {
+                        result.isOK = false;
+                        result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} как минимум одна из заготовок не может быть назначена в накладную BOL: {sinship.bolId}";
+                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    }
                 }
-                if(!ShippingIsPieceAssignedToBOL(ship,TForShipping.YESShipped))
+                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_DEL && sinship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
                 {
-                    result.isOK = false;
-                    result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} как минимум одна из заготовок не может быть назначена в накладную BOL: {ship[0].bolId}";
-                    check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
-                }
-            }
-            else if(l4MsgInfo.opCode==L4L3InterfaceServiceConst.OP_CODE_NEW&& ship[0].bolStatus==L4L3InterfaceServiceConst.BOL_SENT)
-            {
-                if(!CheckBolExistIsShip(ship[0].bolId))
-                {
-                    result.isOK = false;
-                    result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} Накладная: {ship[0].bolId} не существует или отгружена";
-                    check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
-                }
-                if(!L4L3ShipPieceSOCheck(ship))
-                {
-                    result.isOK = false;
-                    result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} как минимум одна из заготовок не может быть назначена в накладную BOL: {ship[0].bolId}";
-                    check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
-                }
-            }
-            else if(l4MsgInfo.opCode==L4L3InterfaceServiceConst.OP_CODE_DEL&& ship[0].bolStatus==L4L3InterfaceServiceConst.BOL_SENT)
-            {
-                if(!CheckBolExistNotShip(ship[0].bolId))
-                {
-                    result.isOK = false;
-                    result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} Накладная: {ship[0].bolId} не существует или отгружена";
-                    check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
-                }
-                if(L4L3ShipPieceSOCheck(ship))
-                {
-                    result.isOK = false;
-                    result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} как минимум одна из заготовок не может быть назначена в накладную BOL: {ship[0].bolId}";
-                    check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    if (!CheckBolExistNotShip(sinship.bolId))
+                    {
+                        result.isOK = false;
+                        result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} Накладная: {sinship.bolId} не существует или отгружена";
+                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    }
+                    if (L4L3ShipPieceSOCheck(sinship))
+                    {
+                        result.isOK = false;
+                        result.data = $"Таблица L4_L3_SHIPPING MSG_COUNTER {l4MsgInfo.msgCounter} как минимум одна из заготовок не может быть назначена в накладную BOL: {sinship.bolId}";
+                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, result.data);
+                    }
                 }
             }
             return result;
@@ -161,9 +164,10 @@ namespace LPKService.Infrastructure.Shipping
                 check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, $"Запись не найдена Msg_counter={l4MsgInfo.msgCounter}");
                 return result;
             }
+            return result;
         }
 
-        public bool ShippingIsPieceAssignedToBOL(List<L4L3Shipping> ship, TForShipping forShipping)
+        public bool ShippingIsPieceAssignedToBOL(L4L3Shipping ship, TForShipping forShipping)
         {
             
             throw new NotImplementedException();

@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using Oracle.ManagedDataAccess.Client;
-using Dapper;
-using Dapper.Oracle;
-using System.Threading.Tasks;
 using LPKService.Infrastructure.Builders;
 using LPKService.Infrastructure.Repository;
 using LPKService.Infrastructure.SOM;
 using LPKService.Infrastructure.CCM;
 using LPKService.Infrastructure.Shipping;
+using LPKService.Infrastructure.Material;
 
 namespace Work
 {
@@ -21,7 +17,7 @@ namespace Work
         private Action getDevMsg,getMsg,closeOrd;
         public ServiceWorker()
         {
-            INewMessageBuilder newMessageBuilder = new NewMessageBuilder(new L4L3InterfaceServiceGlobalCheck(),new CCManagement(), new SOManagment(),new L4L3ServiceShipping());
+            INewMessageBuilder newMessageBuilder = new NewMessageBuilder(new L4L3InterfaceServiceGlobalCheck(),new CCManagement(), new SOManagment(),new L4L3ServiceShipping(),new Material());
             INewDevMsg newDevMsg = new NewDevMsg();
             getDevMsg = delegate
             {

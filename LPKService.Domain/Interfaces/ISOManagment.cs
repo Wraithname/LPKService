@@ -20,5 +20,7 @@ namespace LPKService.Domain.Interfaces
         TL4MsgInfo CheckUpdateOPCODE(TL4MsgInfo l4MsgInfo);
         TCheckResult AttributeCheck(L4L3SoHeader qryData, TL4MsgInfo l4MsgInfo);
         void BlockForProcess(TL4MsgInfo l4MsgInfo, bool serRSer);
+        int RetrievePeriodNumID(DateTime date, int num);
+        string ProductTypeCheck(string product);
     }
 }

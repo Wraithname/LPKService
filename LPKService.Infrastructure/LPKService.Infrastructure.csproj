@@ -65,6 +65,7 @@
     <Compile Include="CCM\CCManagement.cs" />
     <Compile Include="CCM\CCreditEngine.cs" />
     <Compile Include="CCM\L4L3CustomerRepo.cs" />
+    <Compile Include="Material\Material.cs" />
     <Compile Include="Work\TCheckRealtedListRepo.cs" />
     <Compile Include="Repository\L4L3InterfaceServiceConst.cs" />
     <Compile Include="Repository\L4L3InterfaceServiceGlobalCheck.cs" />

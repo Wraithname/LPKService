@@ -122,7 +122,6 @@ namespace LPKService.Infrastructure.SOM
         {
             TL4EngineInterfaceMngRepo mngRepo = new TL4EngineInterfaceMngRepo(l4MsgInfo);
             bool bIsValid = true;
-            TDeleteResponse deleteResponse = new TDeleteResponse();
             try
             {
                 soHeader.m_iLinesCount = 0;

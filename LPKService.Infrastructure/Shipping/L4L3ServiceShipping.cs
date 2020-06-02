@@ -18,7 +18,6 @@ namespace LPKService.Infrastructure.Shipping
         TCheckResult ShippingMng(TL4MsgInfo l4MsgInfo);
         void CreateBolIfNotEx(string strBolId);
         TCheckResult LocalSetPiece(TL4MsgInfo l4MsgInfo, L4L3Shipping ship, TPieceAction action, TForShipping forShipping);
-        TCheckResult L4L3MaterialMovement(TL4MsgInfo l4MsgInfo);
     }
     public class L4L3ServiceShipping : IL4L3SerShipping
     {
@@ -54,48 +53,6 @@ namespace LPKService.Infrastructure.Shipping
             }
         }
 
-        public TCheckResult L4L3MaterialMovement(TL4MsgInfo l4MsgInfo)
-        {
-            L4L3InterfaceServiceGlobalCheck global = new L4L3InterfaceServiceGlobalCheck();
-            TCheckResult checkResult = global.InitResultWithFalse();
-            List<L4L3RmAndMatCat> l4L3Rms = new List<L4L3RmAndMatCat>();
-            OracleDynamicParameters odp = new OracleDynamicParameters();
-            string str = "select  l4.material_id as sap_code, " +
-                "M.MATERIAL_CODE," +
-                "m.material_name," +
-                "m.actual_qty l3_qty," +
-                "l4.material_amount*1000 as material_amount," +
-                "case" +
-                "when (m.actual_qty < l4.material_amount*1000) then" +
-                "(-1)*(m.actual_qty - l4.material_amount*1000)" +
-                "else" +
-                "(m.actual_qty - l4.material_amount*10000)" +
-                "end as movement_qty" +
-                "l4.movement_datetime" +
-                "from    L4_L3_RAW_MATERIAL l4," +
-                "mat_catalog m " +
-                "where trim(L4.MATERIAL_ID) = trim(M.MATERIAL_CODE_L4) " +
-                "and l4.msg_counter = :Counter";
-            odp.Add("Counter", l4MsgInfo.msgCounter);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
-            {
-                l4L3Rms = connection.Query<L4L3RmAndMatCat>(str, odp).AsList();
-            }
-            if (l4L3Rms.Count == 0)
-            {
-                l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_ERROR;
-                l4MsgInfo.msgReport.remark = "Код материала не найдена в БД МЕТ2000";
-            }
-            else
-            {
-                foreach(L4L3RmAndMatCat l4L3Rm in l4L3Rms)
-                {
-                    //Условие с InsertNewMovement
-                }
-            }
-            return checkResult;
-        }
-
         public TCheckResult LocalSetPiece(TL4MsgInfo l4MsgInfo, L4L3Shipping ship, TPieceAction action, TForShipping forShipping)
         {
             TCheckResult checkResult = new TCheckResult();
@@ -106,21 +63,21 @@ namespace LPKService.Infrastructure.Shipping
             if (forShipping == TForShipping.NOShipped)
             {
                 str += "AND READY_TO_SHIP = :READY_TO_SHIP ";
-                //odp.Add("PIECE_ID",); //Сделать модель таблицы piece
+                odp.Add("PIECE_ID",ship.pieceId);
                 //odp.Add("STATUS",);// Узнать код PIECE_STATUS_EXIST
                 //odp.Add("READY_TO_SHIP",)//Узнать код PIECE_READY_TO_SHIP
             }
             else if (action == TPieceAction.paAssign && forShipping == TForShipping.YESShipped)
             {
                 str += "AND READY_TO_SHIP= :READY_TO_SHIP";
-                //odp.Add("PIECE_ID",); //Сделать модель таблицы piece
+                odp.Add("PIECE_ID", ship.pieceId);
                 //odp.Add("STATUS",);// Узнать код PIECE_STATUS_EXIST
                 //odp.Add("READY_TO_SHIP",)//Узнать код PIECE_READY_TO_SHIP
             }
             else if (action == TPieceAction.paDeAssign && forShipping == TForShipping.YESShipped)
             {
                 str += "AND PIECE_EXIT_TYPE= :PIECE_EXIT_TYPE";
-                //odp.Add("PIECE_ID",); //Сделать модель таблицы piece
+                odp.Add("PIECE_ID", ship.pieceId);
                 //odp.Add("STATUS",);// Узнать код PIECE_STATUS_EXIST
                 //odp.Add("PIECE_EXIT_TYPE",)//Узнать код PIECE_EXIT_TYPE
             }
@@ -164,22 +121,25 @@ namespace LPKService.Infrastructure.Shipping
             }
             L4L3ServiceCheckShipping checkship = new L4L3ServiceCheckShipping();
             result = checkship.ShippingCheck(ship, l4MsgInfo);
-            if(result.isOK)
+            foreach (L4L3Shipping sship in ship)
             {
-                if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_NEW && ship.bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
+                if (result.isOK)
                 {
-                    CreateBolIfNotEx(ship.bolId);
-                    forShipping = TForShipping.NOShipped;
+                    if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_NEW && sship.bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
+                    {
+                        CreateBolIfNotEx(sship.bolId);
+                        forShipping = TForShipping.NOShipped;
+                    }
+                    else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_UPD && sship.bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
+                        forShipping = TForShipping.NOShipped;
+                    else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_UPD && sship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
+                        forShipping = TForShipping.YESShipped;
+                    else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_NEW && sship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
+                        forShipping = TForShipping.YESShipped;
+                    else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_DEL && sship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
+                        forShipping = TForShipping.YESShipped;
+                    result = LocalSetPiece(l4MsgInfo, sship, TPieceAction.paAssign, forShipping);
                 }
-                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_UPD && ship.bolStatus == L4L3InterfaceServiceConst.BOL_NOT_SENT)
-                    forShipping = TForShipping.NOShipped;
-                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_UPD && ship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
-                    forShipping = TForShipping.YESShipped;
-                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_NEW && ship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
-                    forShipping = TForShipping.YESShipped;
-                else if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_DEL && ship.bolStatus == L4L3InterfaceServiceConst.BOL_SENT)
-                    forShipping = TForShipping.YESShipped;
-                result = LocalSetPiece(l4MsgInfo,ship ,TPieceAction.paAssign, forShipping);
             }
             if (!result.isOK)
             {
