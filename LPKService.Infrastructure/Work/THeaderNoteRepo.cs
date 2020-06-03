@@ -10,16 +10,25 @@ namespace LPKService.Infrastructure.Work
     public class THeaderNoteRepo
     {
         List<THeaderNote> headernote;
+        /// <summary>
+        /// Создание листа примечаний
+        /// </summary>
         public THeaderNoteRepo()
         {
             this.headernote = new List<THeaderNote>();
         }
-
+        /// <summary>
+        /// Очищение листа примечаний
+        /// </summary>
         public void ClearMassNote()
         {
             headernote.Clear();
         }
-
+        /// <summary>
+        /// Добавление в лист примечаний
+        /// </summary>
+        /// <param name="soId">ИД заказа</param>
+        /// <param name="headerNote">Примечание к заказу</param>
         public void SaveInMassForHeaderNote(int soId, string headerNote)
         {
             THeaderNote header = new THeaderNote();
@@ -27,7 +36,9 @@ namespace LPKService.Infrastructure.Work
             header.headerNote = headerNote;
             headernote.Add(header);
         }
-
+        /// <summary>
+        /// Сохранение листа примечаний
+        /// </summary>
         public void SaveNote()
         {
             if (headernote.Count > 0)

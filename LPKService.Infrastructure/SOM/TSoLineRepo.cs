@@ -15,19 +15,26 @@ namespace LPKService.Infrastructure.SOM
 {
     public class TSoLineRepo : ITSoLine
     {
-        TSoLine newData;
-        SOManagment som;
-        TL4MsgInfoLineRepo msgInfoLine = new TL4MsgInfoLineRepo();
-        TCheckRelatedList attributesOfLine = new TCheckRelatedList();
-        List<string> slArrayofAttributes = new List<string>();
+        private TSoLine newData;
+        private SOManagment som;
+        private TL4MsgInfoLineRepo msgInfoLine = new TL4MsgInfoLineRepo();
+        private TCheckRelatedList attributesOfLine = new TCheckRelatedList();
+        private List<string> slArrayofAttributes = new List<string>();
         private Logger logger = LogManager.GetLogger(nameof(SOM));
-
+        /// <summary>
+        /// Конструктор создания таблицы SO_LINE и передача функций для выполнения из SOManagement
+        /// </summary>
         public TSoLineRepo()
         {
             this.newData = new TSoLine();
             this.som = new SOManagment();
         }
-
+        /// <summary>
+        /// Получение значения типа кода
+        /// </summary>
+        /// <param name="bisValid"></param>
+        /// <param name="l4MsgInfo">Обработчик сообщений по линиям заказа</param>
+        /// <returns>Значение кода</returns>
         public int CheckValueType(bool bisValid, TL4MsgInfoLine l4MsgInfo)
         {
             bisValid = false;
@@ -80,7 +87,12 @@ namespace LPKService.Infrastructure.SOM
                 logger.Error($"Value L4_L3_SO_LINE.SO_TYPE_CODE is not valid");
             return res;
         }
-
+        /// <summary>
+        /// Получение значения типа продукта
+        /// </summary>
+        /// <param name="bisValid"></param>
+        /// <param name="l4MsgInfo">Обработчик сообщений по линиям заказа</param>
+        /// <returns>Значение типа продукта</returns>
         public int CheckValueProductType(bool bisValid, TL4MsgInfoLine l4MsgInfo)
         {
             bisValid = false;
@@ -134,7 +146,12 @@ namespace LPKService.Infrastructure.SOM
                 logger.Error($"Value L4_L3_SO_LINE.SO_TYPE_CODE is not valid");
             return res;
         }
-
+        /// <summary>
+        /// Статус строки заказа
+        /// </summary>
+        /// <param name="bisValid"></param>
+        /// <param name="l4MsgInfo">Обработчик сообщений по линиям заказа</param>
+        /// <returns>Статус</returns>
         public int CheckValueCredit(bool bisValid, TL4MsgInfoLine l4MsgInfo)
         {
             bisValid = false;
@@ -187,7 +204,15 @@ namespace LPKService.Infrastructure.SOM
                 logger.Error($"Value L4_L3_SO_LINE.SO_TYPE_CODE is not valid");
             return res;
         }
-
+        /// <summary>
+        /// Создание и заполнение таблицы SO_LINE
+        /// </summary>
+        /// <param name="line">Модель таблицы</param>
+        /// <param name="l4MsgInfo">Модель таблицы событий для обработки сообщения </param>
+        /// <param name="iCustomerID">ИД заказчика</param>
+        /// <param name="iShipToCode">Код разгрузки</param>
+        /// <param name="lbIsUpdate">Пометка об обновлении</param>
+        /// <returns>Заполненая модель SO_LINE</returns>
         public TSoLine Create(LinesCom line, TL4MsgInfo l4MsgInfo, int iCustomerID, int iShipToCode, bool lbIsUpdate)
         {
             L4L3InterfaceUtility inter = new L4L3InterfaceUtility();
@@ -270,19 +295,32 @@ namespace LPKService.Infrastructure.SOM
                 return newData;
             }
         }
-
+        /// <summary>
+        /// Получение метки по обработке лании заказа
+        /// </summary>
+        /// <returns>Метка заказа</returns>
         public string GetMsgStatus()
         {
             return newData.m_L4MsgInfoLine.tL4MsgInfo.msgReport.remark;
         }
+        /// <summary>
+        /// Обновление статуса сообщения на обработку
+        /// </summary>
         public void UpdateMsgStatus()
         {
             msgInfoLine.UpdateMsgStatus(newData.m_L4MsgInfoLine.tL4MsgInfo);
         }
-        //Узнать про определение статуса
+        /// <summary>
+        /// Функция получения статуса линии заказа (Открыт,Закрыт)
+        /// </summary>
+        /// <param name="linestatus">Значение статуса заказа</param>
+        /// <returns>Значение (Открыт или закрыт)</returns>
         public TLineStatus GetLineStatus(int linestatus)
         {
-            return TLineStatus.IsClosed;
+            if (linestatus == 1)
+                return TLineStatus.IsClosed;
+            else
+                return TLineStatus.IsOpened;
         }
     }
 }

@@ -14,11 +14,27 @@ namespace LPKService.Infrastructure.Material
     public class Material : IMaterial
     {
         IGlobalCheck check;
+        /// <summary>
+        /// Добавление новомого перемещения (требуется дальнейшая реализация)
+        /// </summary>
+        /// <param name="matcode">Код материала</param>
+        /// <param name="mt_reconciliation"></param>
+        /// <param name="movement_datetime">Дата перемещения</param>
+        /// <param name="movement_qty">Количество</param>
+        /// <param name="userID">ИД пользователя</param>
+        /// <param name="num">Число</param>
+        /// <param name="title">Заголовок</param>
+        /// <param name="mes">Сообщение</param>
+        /// <returns>Пометка о выполнении</returns>
         public bool InsertNewMovement(string matcode, string mt_reconciliation, DateTime movement_datetime, float movement_qty, int userID, int num, string title, string mes = "")
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Обработчик кода перемещения материала
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель L4L3Event для обработки кода</param>
+        /// <returns>Результат обработки</returns>
         public TCheckResult L4L3MaterialMovement(TL4MsgInfo l4MsgInfo)
         {
             L4L3InterfaceServiceGlobalCheck global = new L4L3InterfaceServiceGlobalCheck();

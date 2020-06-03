@@ -10,7 +10,7 @@ namespace LPKService.Domain.Interfaces
         string GetCustIDFromL4CustID(int l4CustID, OracleDynamicParameters odp = null);
         bool ExistCustomer(string m_iCustSoldDescrID, OracleDynamicParameters odp = null);
         void Add(TSoLine lines);
-        TSoHeader Create(L4L3SoHeader l4l3soheader,TL4MsgInfo l4MsgInfo, TL4EngineInterfaceMng eimOrderEntry, int iShipToCode,bool bVerifyData, bool bisUpdate = false);
+        TSoHeader Create(L4L3SoHeader l4l3soheader,TL4MsgInfo l4MsgInfo, int iShipToCode,bool bVerifyData, bool bisUpdate = false);
         string GetLineMsgStatus(TSoHeader ret);
         void LinesUpdateMsgStatus(TSoHeader ret);
         bool CheckLineNumeration(int iCounter, OracleDynamicParameters odp = null);

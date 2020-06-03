@@ -24,6 +24,9 @@ namespace LPKService.Infrastructure.Builders
         const int op_update_bol = 2;
         const int op_delete_bol = 3;
         #endregion
+        /// <summary>
+        /// Предварительная обработка событий
+        /// </summary>
         public void GetNewMessageDelivery()
         {
             string bolId = "";
@@ -44,7 +47,7 @@ namespace LPKService.Infrastructure.Builders
             {
                 using (OracleConnection conn = BaseRepo.GetDBConnection())
                 {
-                    using (var transaction = conn.BeginTransaction())
+                    using (OracleTransaction transaction = conn.BeginTransaction())
                     {
                         try
                         {
@@ -57,13 +60,13 @@ namespace LPKService.Infrastructure.Builders
                                 if (l3DelEventDel.opCode == op_new_bol)
                                 {
                                     if (!ExistsBol(bolId, false))
-                                        CreateBol(l3DelEventDel.msgCounter, bolId, true);
+                                        CreateBol(l3DelEventDel.msgCounter, bolId, true, transaction);
                                     else
                                     {
                                         if (!ExistBolPosition(bolId, l3DelEventDel.bolPositionId.ToString()))
                                         {
                                             if (!IsUpdate(l3DelEventDel.msgCounter, bolId, bolPosition))
-                                                CreateBol(l3DelEventDel.msgCounter, bolId, true);
+                                                CreateBol(l3DelEventDel.msgCounter, bolId, true,transaction);
                                             else
                                                 UpdateStatusMessage(l3DelEventDel.msgCounter, bol_error, "Позиция заморожена для автоматического изменения.");
                                         }
@@ -75,13 +78,13 @@ namespace LPKService.Infrastructure.Builders
                                     if (ExistsBol(bolId, true))
                                     {
                                         if (IsUpdate(l3DelEventDel.msgCounter, bolId, bolPosition))
-                                            DeleteBol(l3DelEventDel.msgCounter, bolId, bolPosition);
+                                            DeleteBol(l3DelEventDel.msgCounter, bolId, bolPosition, transaction);
                                         else
                                             UpdateStatusMessage(l3DelEventDel.msgCounter, bol_error, "Накладной нет в МЕТ 2000 или она уже наполнена.");
                                     }
                                 if (l3DelEventDel.opCode == op_update_bol)
                                     if (IsUpdate(l3DelEventDel.msgCounter, bolId, bolPosition))
-                                        UpdateBolPosition(l3DelEventDel.msgCounter, bolPosition);
+                                        UpdateBolPosition(l3DelEventDel.msgCounter, bolPosition, transaction);
                                     else
                                         UpdateStatusMessage(l3DelEventDel.msgCounter, bol_error, "Позиция заморожена для автоматического изменения.");
                             }
@@ -96,8 +99,14 @@ namespace LPKService.Infrastructure.Builders
                 }
             }
         }
-
-        private void CreateBol(int msgCounter, string bolId, bool allBol)
+        /// <summary>
+        /// Создание накладной
+        /// </summary>
+        /// <param name="msgCounter">Счетчик сообщений</param>
+        /// <param name="bolId">Номер накладной</param>
+        /// <param name="allBol"></param>
+        /// <param name="transaction">Транзакция БД</param>
+        private void CreateBol(int msgCounter, string bolId, bool allBol, OracleTransaction transaction)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
             DeliveryESOHandSOL deliveryev = new DeliveryESOHandSOL();
@@ -137,7 +146,7 @@ namespace LPKService.Infrastructure.Builders
                         odp.Add("SO_LINE_ID_MET", deliveryev.soLineIdMet);
                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                         {
-                            connection.Execute(str, odp);
+                            connection.Execute(str, odp,transaction);
                         }
                         UpdateStatusMessage(deliveryev.msgCounter, bol_created, "");
                     }
@@ -163,7 +172,7 @@ namespace LPKService.Infrastructure.Builders
                         odp.Add("ON_AUTO_SHIPPING", autoFlag);
                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                         {
-                            connection.Execute(str, odp);
+                            connection.Execute(str, odp,transaction);
                         }
                         odp = null;
                         List<DeliveryESOHandSOL> deliv = new List<DeliveryESOHandSOL>();
@@ -211,7 +220,7 @@ namespace LPKService.Infrastructure.Builders
                                         odp.Add("SO_LINE_ID_MET");
                                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                                         {
-                                            connection.Execute(str, odp);
+                                            connection.Execute(str, odp, transaction);
                                         }
                                         UpdateStatusMessage(del.msgCounter, bol_created, "");
                                     }
@@ -231,8 +240,14 @@ namespace LPKService.Infrastructure.Builders
                 UpdateStatusMessage(msgCounter, bol_error, e.Message);
             }
         }
-
-        private void DeleteBol(int msgCounter, string bolId, int posNumId)
+        /// <summary>
+        /// Удаление накладной
+        /// </summary>
+        /// <param name="msgCounter">Счетчик сообщений</param>
+        /// <param name="bolId">Номер накладной</param>
+        /// <param name="posNumId">Позиция в накладной</param>
+        /// <param name="transaction">Транзакция БД</param>
+        private void DeleteBol(int msgCounter, string bolId, int posNumId, OracleTransaction transaction)
         {
             if (bolId != "" && posNumId > 0)
             {
@@ -241,7 +256,7 @@ namespace LPKService.Infrastructure.Builders
                 odp.Add("POS_NUM_ID", posNumId);
                 using (OracleConnection connection = BaseRepo.GetDBConnection())
                 {
-                    connection.Execute(str, odp);
+                    connection.Execute(str, odp, transaction);
                 }
                 OracleDynamicParameters odp1 = new OracleDynamicParameters();
                 str = "SELECT count(1) as cnt FROM EXT_BOL_POSITION WHERE BOL_ID = :BOL_ID";
@@ -249,7 +264,7 @@ namespace LPKService.Infrastructure.Builders
                 int res;
                 using (OracleConnection connection = BaseRepo.GetDBConnection())
                 {
-                    res = connection.QueryFirstOrDefault<int>(str, odp);
+                    res = connection.QueryFirstOrDefault<int>(str, odp, transaction);
                 }
                 if (res == 0)
                 {
@@ -257,7 +272,7 @@ namespace LPKService.Infrastructure.Builders
                     str = "DELETE FROM EXT_BOL_HEADER WHERE BOL_ID = :BOL_ID ";
                     using (OracleConnection connection = BaseRepo.GetDBConnection())
                     {
-                        connection.Execute(str, odp);
+                        connection.Execute(str, odp, transaction);
                     }
                 }
                 UpdateStatusMessage(msgCounter, bol_created, "");
@@ -265,7 +280,15 @@ namespace LPKService.Infrastructure.Builders
             else
                 UpdateStatusMessage(msgCounter, bol_error, "bolId или posNumId равны null");
         }
-
+        /// <summary>
+        /// Проверка существования позиции накладной
+        /// </summary>
+        /// <param name="bolId">Номер накладной</param>
+        /// <param name="posId">Позиция в накладной</param>
+        /// <returns>
+        /// true - существует
+        /// false - не существует
+        /// </returns>
         private bool ExistBolPosition(string bolId, string posId)
         {
             string result = "";
@@ -284,7 +307,15 @@ namespace LPKService.Infrastructure.Builders
             }
             return true;
         }
-
+        /// <summary>
+        /// Проверка существования накладной
+        /// </summary>
+        /// <param name="bolId">Номер накладной</param>
+        /// <param name="selChild"></param>
+        /// <returns>
+        /// true - существует
+        /// false - не существует
+        /// </returns>
         private bool ExistsBol(string bolId, bool selChild)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
@@ -304,7 +335,11 @@ namespace LPKService.Infrastructure.Builders
             }
             return true;
         }
-
+        /// <summary>
+        /// Получение ИД накладной
+        /// </summary>
+        /// <param name="msgCounter">Счетчик сообщений</param>
+        /// <returns>ИД накладной, если она есть</returns>
         private string GetBolId(int msgCounter)
         {
             string res = "";
@@ -319,7 +354,13 @@ namespace LPKService.Infrastructure.Builders
                 return res;
             return "-";
         }
-
+        /// <summary>
+        /// Проверка статуса на обновление
+        /// </summary>
+        /// <param name="msgCounter">Счетчик сообщений</param>
+        /// <param name="bolId">Номер накладной</param>
+        /// <param name="bolPosNumId">Позиция в накладной</param>
+        /// <returns></returns>
         private bool IsUpdate(int msgCounter, string bolId, int bolPosNumId)
         {
             int status = -2;
@@ -364,8 +405,13 @@ namespace LPKService.Infrastructure.Builders
             }
             catch { return false; }
         }
-
-        private void UpdateBolPosition(int msgCounter, int posNumId)
+        /// <summary>
+        /// Обновление позиции накладной
+        /// </summary>
+        /// <param name="msgCounter">Счетчик сообщений</param>
+        /// <param name="posNumId">Позиция в накладной</param>
+        /// <param name="transaction">Транзакция БД</param>
+        private void UpdateBolPosition(int msgCounter, int posNumId, OracleTransaction transaction)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
             DeliverySOHandSOL del = new DeliverySOHandSOL();
@@ -397,7 +443,7 @@ namespace LPKService.Infrastructure.Builders
                     odp.Add("BOL_ID", del.bolId);
                     using (OracleConnection connection = BaseRepo.GetDBConnection())
                     {
-                        connection.Execute(str1, odp);
+                        connection.Execute(str1, odp, transaction);
                     }
                 }
                 odp = new OracleDynamicParameters();
@@ -410,14 +456,19 @@ namespace LPKService.Infrastructure.Builders
                 odp.Add("POS_NUM_ID", posNumId);
                 using (OracleConnection connection = BaseRepo.GetDBConnection())
                 {
-                    connection.Execute(str1, odp);
+                    connection.Execute(str1, odp, transaction);
                 }
                 UpdateStatusMessage(msgCounter, bol_created, "");
             }
             else
                 UpdateStatusMessage(msgCounter, bol_error, "BOL_POSITION_ID is null");
         }
-
+        /// <summary>
+        /// Обновление статуса сообщения
+        /// </summary>
+        /// <param name="msgCounter">Счетчик сообщений</param>
+        /// <param name="status">Статус сообщения</param>
+        /// <param name="remark">Примечание</param>
         private void UpdateStatusMessage(int msgCounter, int status, string remark)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();

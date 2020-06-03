@@ -17,6 +17,12 @@ namespace LPKService.Infrastructure.CCM
     {
         private Logger logger = LogManager.GetLogger(nameof(CCManagement));
         private L4L3CustomerRepo customerRepo = new L4L3CustomerRepo();
+        /// <summary>
+        /// Проверка классификации
+        /// </summary>
+        /// <param name="strClassification">Классификация</param>
+        /// <param name="odp"></param>
+        /// <returns>Тип классификации, если есть</returns>
         public string CheckClassificationType(string strClassification, OracleDynamicParameters odp = null)
         {
             string res = "";
@@ -31,7 +37,15 @@ namespace LPKService.Infrastructure.CCM
                 return "N/A";
 
         }
-
+        /// <summary>
+        /// Проверка существования заказчика в каталоге
+        /// </summary>
+        /// <param name="strCustomerDescrId">ИД заказчика</param>
+        /// <param name="odp"></param>
+        /// <returns>
+        /// true - существует
+        /// false - не существует
+        /// </returns>
         public bool CheckCustomerExists(string strCustomerDescrId, OracleDynamicParameters odp = null)
         {
             int RecordCount = 0;
@@ -45,7 +59,11 @@ namespace LPKService.Infrastructure.CCM
             else
                 return false;
         }
-
+        /// <summary>
+        /// Обработчик события для кода заказчиков
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <returns>Результат обработки</returns>
         public TCheckResult CustomerMng(TL4MsgInfo l4MsgInfo)
         {
             L4L3Customer customer = customerRepo.GetData(l4MsgInfo);
@@ -193,7 +211,14 @@ namespace LPKService.Infrastructure.CCM
             }
             catch { return checkres; }
         }
-
+        /// <summary>
+        /// Заполнение каталога адресов с зависимостями
+        /// </summary>
+        /// <param name="customer">Модель таблицы L4_L3_Customer</param>
+        /// <param name="addressEngine">Интерфейс для каталога адресов</param>
+        /// <param name="pModUserId">ИД пользователя</param>
+        /// <param name="odp"></param>
+        /// <returns>Результат обработки</returns>
         public bool FillAddressEngine(L4L3Customer customer, IAddressEngine addressEngine, string pModUserId, OracleDynamicParameters odp = null)
         {
             Country cnt = new Country();
@@ -277,7 +302,14 @@ namespace LPKService.Infrastructure.CCM
             }
             return result;
         }
-
+        /// <summary>
+        /// Получение ИД заказчика
+        /// </summary>
+        /// <param name="sCustomerDescrId">ИД описания клиента</param>
+        /// <param name="odp"></param>
+        /// <returns>
+        /// Возвращает ИД заказчика, если существует
+        /// </returns>
         public int GetCustIDFromDescr(string sCustomerDescrId, OracleDynamicParameters odp = null)
         {
             int res = 0;

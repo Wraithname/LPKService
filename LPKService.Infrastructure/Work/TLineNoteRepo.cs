@@ -10,17 +10,27 @@ namespace LPKService.Infrastructure.Work
     public class TLineNoteRepo 
     {
         List<TLineNote> linenote;
-
+        /// <summary>
+        /// Создание листа примечаний для строк заказов
+        /// </summary>
         public TLineNoteRepo()
         {
             this.linenote = new List<TLineNote>();
         }
-
+        /// <summary>
+        /// Очищение листа примечаний для строк заказов
+        /// </summary>
         public void ClearNote()
         {
             linenote.Clear();
         }
-
+        /// <summary>
+        /// Добавление в лист новых примечаний для строк заказов
+        /// </summary>
+        /// <param name="soId">ИД заказа</param>
+        /// <param name="soLineId">ИД линии</param>
+        /// <param name="lineNote">Примечание</param>
+        /// <param name="sapUser">Пользователь</param>
         public void SaveInMassForLineNote(int soId, int soLineId, string lineNote, string sapUser)
         {
             TLineNote line = new TLineNote();
@@ -30,7 +40,9 @@ namespace LPKService.Infrastructure.Work
             line.sSAPUser = sapUser;
             linenote.Add(line);
         }
-
+        /// <summary>
+        /// Сохранение листа примечаний
+        /// </summary>
         public void SaveNote()
         {
             if (linenote.Count > 0)

@@ -17,37 +17,57 @@ namespace LPKService.Infrastructure.SOM
     public class TSoHeaderRepo : ITSoHeader
     {
         private Logger logger = LogManager.GetLogger(nameof(SOM));
-        public char oneToSeveralOrderFromSap = 'Y';
-        public string m_strSO_Line_Id_MET = "";
-        public string m_strSO_Line_Id_Params = "";
-        SOManagment som = new SOManagment();
-        TSoHeader soHeader;
-        TSoLine templine;
-        TSoLineRepo lineRepo = new TSoLineRepo();
+        private char oneToSeveralOrderFromSap = 'Y';
+        private string m_strSO_Line_Id_MET = "";
+        private string m_strSO_Line_Id_Params = "";
+        private SOManagment som = new SOManagment();
+        private TSoHeader soHeader;
+        private TSoLine templine;
+        private TSoLineRepo lineRepo = new TSoLineRepo();
+        /// <summary>
+        /// Конструктор создания моделей двух таблиц SO_HEADER и SO_LINE
+        /// </summary>
         public TSoHeaderRepo()
         {
             this.soHeader = new TSoHeader();
             this.templine = new TSoLine();
         }
+        /// <summary>
+        /// Получение линии заказа
+        /// </summary>
+        /// <param name="iIndex">Индекс</param>
+        /// <returns>Линия заказа</returns>
         public TSoLine GetLine(int iIndex)
         {
             TSoLine line = new TSoLine();
             line = soHeader.m_Lines[iIndex];
             return line;
         }
+        /// <summary>
+        /// Получение ИД заказчика
+        /// </summary>
+        /// <param name="l4CustID">ИД из таблицы на обработку</param>
+        /// <param name="odp"></param>
+        /// <returns></returns>
         public string GetCustIDFromL4CustID(int l4CustID, OracleDynamicParameters odp = null)
         {
             string cust;
             StringBuilder stm = new StringBuilder(@"SELECT CUSTOMER_DESCR_ID FROM CUSTOMER_CATALOG WHERE CUSTOMER_ID =" + l4CustID + "");
             using (OracleConnection conn = BaseRepo.GetDBConnection())
             {
-                cust = conn.QueryFirstOrDefault<string>(stm.ToString(), odp);
+                cust = conn.ExecuteScalar<string>(stm.ToString(), odp);
             }
             if (cust != null)
                 return cust;
             else
                 return (-1).ToString();
         }
+        /// <summary>
+        /// Проверка существования заказчика в таблице
+        /// </summary>
+        /// <param name="m_iCustSoldDescrID">ИД заказчика</param>
+        /// <param name="odp"></param>
+        /// <returns>Существует/Не существует</returns>
         public bool ExistCustomer(string m_iCustSoldDescrID, OracleDynamicParameters odp = null)
         {
             string cust;
@@ -66,6 +86,12 @@ namespace LPKService.Infrastructure.SOM
             else
                 return false;
         }
+        /// <summary>
+        /// Получение ИД заказчика
+        /// </summary>
+        /// <param name="bisValid"></param>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки содержимого</param>
+        /// <returns>ИД заказчика</returns>
         public int CheckValue(bool bisValid, TL4MsgInfo l4MsgInfo)
         {
             bisValid = false;
@@ -113,12 +139,25 @@ namespace LPKService.Infrastructure.SOM
                 logger.Error($"Value L4_L3_SO_HEADER.CUSTOMER_ID is not valid");
             return res;
         }
+        /// <summary>
+        /// Добавление линии заказа в модель таблицы SO_HEADER
+        /// </summary>
+        /// <param name="lines"></param>
         public void Add(TSoLine lines)
         {
             soHeader.m_iLinesCount++;
             soHeader.m_Lines.Add(lines);
         }
-        public TSoHeader Create(L4L3SoHeader l4l3soheader, TL4MsgInfo l4MsgInfo, TL4EngineInterfaceMng eimOrderEntry, int iShipToCode, bool bVerifyData, bool bisUpdate = false)
+        /// <summary>
+        /// Создание и заполнение модели таблицы SO_HEADER
+        /// </summary>
+        /// <param name="l4l3soheader">Модель таблицы L4L3SoHeader для обработки</param>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки содержимого кода</param>
+        /// <param name="iShipToCode">Код отгрузки</param>
+        /// <param name="bVerifyData">Пометка об актуальности данных</param>
+        /// <param name="bisUpdate">Пометка об обновлении данных</param>
+        /// <returns></returns>
+        public TSoHeader Create(L4L3SoHeader l4l3soheader, TL4MsgInfo l4MsgInfo, int iShipToCode, bool bVerifyData, bool bisUpdate = false)
         {
             TL4EngineInterfaceMngRepo mngRepo = new TL4EngineInterfaceMngRepo(l4MsgInfo);
             bool bIsValid = true;
@@ -231,6 +270,11 @@ namespace LPKService.Infrastructure.SOM
             catch (Exception e) { logger.Error($"Ошибка создания SoHeader: {e.Message}"); }
             return soHeader;
         }
+        /// <summary>
+        /// Получение сообщения по линии заказа
+        /// </summary>
+        /// <param name="ret">Модель таблицы SO_HEADER</param>
+        /// <returns>Сообщение о статусе линии заказа</returns>
         public string GetLineMsgStatus(TSoHeader ret)
         {
             TSoLineRepo func = new TSoLineRepo();
@@ -243,6 +287,10 @@ namespace LPKService.Infrastructure.SOM
             }
             return strMessages;
         }
+        /// <summary>
+        /// Обновление статуса линии заказа
+        /// </summary>
+        /// <param name="ret">Модель таблицы SO_HEADER</param>
         public void LinesUpdateMsgStatus(TSoHeader ret)
         {
             TSoLineRepo func = new TSoLineRepo();
@@ -251,21 +299,32 @@ namespace LPKService.Infrastructure.SOM
                 func.UpdateMsgStatus();
             }
         }
+        /// <summary>
+        /// Проверка нумерации строк заказов
+        /// </summary>
+        /// <param name="iCounter">Код обработки</param>
+        /// <param name="odp"></param>
+        /// <returns>Нумерация нарушена/Нумерация не нарушена</returns>
         public bool CheckLineNumeration(int iCounter, OracleDynamicParameters odp = null)
         {
-            string solineid;
+            List<string> solineid;
+            bool res=true;
             string stm = @"SELECT SO_LINE_ID / 10 AS SO_LINE_ID FROM L4_L3_SO_LINE WHERE  MSG_COUNTER = " + iCounter.ToString() + " ORDER BY SO_LINE_ID ";
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                solineid = connection.QueryFirstOrDefault<string>(stm, odp);
+                solineid = connection.Query<string>(stm, odp).AsList();
             }
             int i = 1;
-            while (true)
+            foreach(string line in solineid)
             {
-                if (i != Convert.ToInt32(solineid))
-                    return false;
+                if (i != Convert.ToInt32(line))
+                {
+                    res = false;
+                    break;
+                }
                 i++;
             }
+            return res;
         }
     }
 }

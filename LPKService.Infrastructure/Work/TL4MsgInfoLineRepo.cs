@@ -9,6 +9,10 @@ namespace LPKService.Infrastructure.Work
 {
     public class TL4MsgInfoLineRepo:ITL4MsgInfoLine
     {
+        /// <summary>
+        /// Обновление статуса сообщения
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработка кода</param>
         public void UpdateMsgStatus(TL4MsgInfo l4MsgInfo)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters { BindByName = true };

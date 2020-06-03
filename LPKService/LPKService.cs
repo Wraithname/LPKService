@@ -32,8 +32,8 @@ namespace LPKService
     {
         private Logger logger=LogManager.GetLogger(nameof(LPKService));
         private int timeout;
-        Thread workthread;
-        System.Timers.Timer timer = new System.Timers.Timer();
+        private Thread workthread;
+        private System.Timers.Timer timer = new System.Timers.Timer();
         private readonly Work.IServiceWork working;
         public LPKService(Work.IServiceWork working)
         {
@@ -52,6 +52,10 @@ namespace LPKService
             logger.Debug("Завершение работы консольного приложения");
         }
 #endif
+        /// <summary>
+        /// Запуск сервиса
+        /// </summary>
+        /// <param name="args"></param>
         protected override void OnStart(string[] args)
         {
             logger.Info("Запуск сервиса");
@@ -68,16 +72,25 @@ namespace LPKService
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             workthread = new Thread(new ThreadStart(PeriodExecuteStart)) {IsBackground=true };
         }
-
+        /// <summary>
+        /// Функция для периодического запуска
+        /// </summary>
         private void PeriodExecuteStart()
         {
             timer.Start();
         }
+        /// <summary>
+        /// Действие по таймеру
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnTimer(object sender, ElapsedEventArgs e)
         {
            working.MngLoop();
         }
-
+        /// <summary>
+        /// Продолжение работы сервиса
+        /// </summary>
         protected override void OnContinue()
         {
             ServiceStatus serviceStatus = new ServiceStatus();
@@ -88,6 +101,9 @@ namespace LPKService
             logger.Info("Возобновление обработки");
             base.OnContinue();
         }
+        /// <summary>
+        /// Остановка работы сервиса
+        /// </summary>
         protected override void OnStop()
         {
             // Update the service state to Stop Pending.
@@ -103,6 +119,9 @@ namespace LPKService
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
         }
+        /// <summary>
+        /// Приостановка работы сервиса
+        /// </summary>
         protected override void OnPause()
         {
             ServiceStatus serviceStatus = new ServiceStatus();

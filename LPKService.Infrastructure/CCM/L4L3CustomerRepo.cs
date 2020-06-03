@@ -12,6 +12,11 @@ namespace LPKService.Infrastructure.CCM
     public class L4L3CustomerRepo : IL4L3Customer
     {
         private Logger logger = LogManager.GetLogger(nameof(Repository));
+        /// <summary>
+        /// Получение таблицы на обработку
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <returns>Модель таблицы L4L3Customer</returns>
         public L4L3Customer GetData(TL4MsgInfo l4MsgInfo)
         {
             L4L3Customer customer = new L4L3Customer();

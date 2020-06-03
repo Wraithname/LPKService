@@ -28,7 +28,14 @@ namespace LPKService.Infrastructure.Builders
         private readonly ISOManagment som ;
         private readonly IL4L3SerShipping sship;
         private readonly IMaterial mat;
-
+        /// <summary>
+        /// Конструктор для осуществления работы с необходимыми обработчиками
+        /// </summary>
+        /// <param name="check"></param>
+        /// <param name="ccm"></param>
+        /// <param name="som"></param>
+        /// <param name="sship"></param>
+        /// <param name="mat"></param>
         public NewMessageBuilder(IGlobalCheck check, ICCManagement ccm,ISOManagment som,IL4L3SerShipping sship,IMaterial mat)
         {
             this.check = check;
@@ -37,7 +44,9 @@ namespace LPKService.Infrastructure.Builders
             this.sship = sship;
             this.mat = mat;
         }
-
+        /// <summary>
+        /// Автозакрытие заказа
+        /// </summary>
         public void CloseOrder()
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
@@ -61,7 +70,7 @@ namespace LPKService.Infrastructure.Builders
                     "WHERE sl.ORDER_STATUS =40 " +
                     "GROUP BY sh.SO_ID , sl.so_line_id, sl.ORDER_STATUS, sl.SO_TYPE_CODE) shm ) sh5 on sh5.MSG_COUNTER=l.MSG_COUNTER " +
                     " WHERE l.MSG_STATUS = 1 " +
-                    "AND   l.msg_id = 4301 ) l2 join SALES_ORDER_LINE sol on sol.SO_DESCR_ID = l2.so_id or sol.SO_DESCR_ID = l2.so_id||''_''||to_number(l2.so_line_id)/10 " +
+                    "AND   l.msg_id = 4301 ) l2 join SALES_ORDER_LINE sol on sol.SO_DESCR_ID = l2.so_id or sol.SO_DESCR_ID = l2.so_id||'_'||to_number(l2.so_line_id)/10 " +
                     "WHERE sol.SO_LINE_STATUS = 3 " +
                     "AND    l2.MSG_DATETIME > SYSDATE - 7";
                 using (OracleConnection connection = BaseRepo.GetDBConnection())
@@ -80,7 +89,7 @@ namespace LPKService.Infrastructure.Builders
                                 {
                                     odp.Add("P_SO_ID",auto.metSoId);
                                     odp.Add("P_SO_LINE_ID",auto.metSoLineId);
-                                    connection.Execute(str1, odp);
+                                    connection.Execute(str1, odp, transaction);
                                     transaction.Commit();
                                     l4MsgInfo.msgCounter = auto.msgCounter;
                                     l4MsgInfo.msgReport.status = 2;
@@ -106,7 +115,9 @@ namespace LPKService.Infrastructure.Builders
             }
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Распределение работы по обработчикам
+        /// </summary>
         public void NewMessage()
         {
             TL4MsgInfo l4MsgInfo = new TL4MsgInfo();
@@ -242,7 +253,10 @@ namespace LPKService.Infrastructure.Builders
                 }
             }
         }
-
+        /// <summary>
+        /// Обновление статуса сообщения
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
         private void UpdateMsgStatus(TL4MsgInfo l4MsgInfo)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
@@ -255,6 +269,14 @@ namespace LPKService.Infrastructure.Builders
                 connection.Execute(str, odp);
             }
         }
+        /// <summary>
+        /// Проверка блокировки на выполнение
+        /// </summary>
+        /// <param name="msgCounter"></param>
+        /// <returns>
+        /// true - заблокирован
+        /// false - разблокирован
+        /// </returns>
         private bool IsBlocked(int msgCounter)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
@@ -273,6 +295,11 @@ namespace LPKService.Infrastructure.Builders
                 return true;
             return false;
         }
+        /// <summary>
+        /// Блокировка на выполнение
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <param name="serRSer"></param>
         private void BlockForProcess(TL4MsgInfo l4MsgInfo, bool serRSer)
         {
             string sqlstr = "";

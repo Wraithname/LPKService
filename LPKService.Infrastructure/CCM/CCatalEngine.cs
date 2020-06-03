@@ -32,7 +32,6 @@ namespace LPKService.Infrastructure.CCM
                 connection.Execute(str, odp);
             }
         }
-        //Узнать про функцию
         public void ForceModUserDatetime(string modUserId, string txt = "")
         {
             customerCat.modUserId = Convert.ToInt32(modUserId);

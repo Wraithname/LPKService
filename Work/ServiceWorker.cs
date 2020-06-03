@@ -15,6 +15,9 @@ namespace Work
     public class ServiceWorker : IServiceWork
     {  
         private Action getDevMsg,getMsg,closeOrd;
+        /// <summary>
+        /// Конструктор создания Action делегатов для обработки событий
+        /// </summary>
         public ServiceWorker()
         {
             INewMessageBuilder newMessageBuilder = new NewMessageBuilder(new L4L3InterfaceServiceGlobalCheck(),new CCManagement(), new SOManagment(),new L4L3ServiceShipping(),new Material());
@@ -31,12 +34,14 @@ namespace Work
                 newMessageBuilder.CloseOrder();
             };
         }
+        /// <summary>
+        /// Обработчики
+        /// </summary>
         public void MngLoop()
         {
             getDevMsg();
             getMsg();
             closeOrd();
-
         }
 
     }

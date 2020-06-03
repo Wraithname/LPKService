@@ -44,7 +44,7 @@ namespace Work
                             {
                                 suffixSoId++;
                                 string str = "select L4_L3_SRV_MSG.NEXTVAL as val from dual";
-                                newMessageCounter = conn.QueryFirst<int>(str, null,transaction);
+                                newMessageCounter = conn.ExecuteScalar<int>(str, null,transaction);
                                 L4L3SoLine l4L3SerSo = new L4L3SoLine();
                                 //*******L4_L3_SERVICE_SO_LINE************
                                 OracleDynamicParameters odpr = new OracleDynamicParameters();

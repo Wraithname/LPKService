@@ -14,8 +14,6 @@ using LPKService.Domain.Models.SOM;
 
 namespace LPKService.Infrastructure.SOM
 {
-    //Используется таблица L4_L3_SO_HEADER
-    //Файл SOManagment.pas
     public enum TContractType { coInternal, coContract }
     public enum TShiptoType { Shipto, Billto };
     struct l4sol
@@ -27,10 +25,10 @@ namespace LPKService.Infrastructure.SOM
     {
         private Logger logger = LogManager.GetLogger(nameof(SOM));
         private List<TLineNote> lines = new List<TLineNote>();
-        string onetoSeveralirderFromSap = "";
-        string m_strSO_Line_Id_Params = "";
-        string m_strSO_Line_Id_MET = "";
-        string m_strSo_Lines_For_Where = "";
+        private string onetoSeveralirderFromSap = "";
+        private string m_strSO_Line_Id_Params = "";
+        private string m_strSO_Line_Id_MET = "";
+        private string m_strSo_Lines_For_Where = "";
         IGlobalCheck check;
         public void AddVsw_detailsToOrder(TL4MsgInfo l4MsgInfo)
         {

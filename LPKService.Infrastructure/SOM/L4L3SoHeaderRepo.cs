@@ -12,7 +12,11 @@ namespace LPKService.Infrastructure.SOM
     public class L4L3SoHeaderRepo : IL4L3SoHeader
     {
         private Logger logger = LogManager.GetLogger(nameof(SOM));
-
+        /// <summary>
+        /// Получение данных из таблицы L4_L3_SO_HEADER для обработки
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы</param>
+        /// <returns>Модель таблицы L4_L3_SO_HEADER</returns>
         public L4L3SoHeader GetData(TL4MsgInfo l4MsgInfo)
         {
             L4L3SoHeader soHeader = new L4L3SoHeader();

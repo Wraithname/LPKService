@@ -17,7 +17,6 @@ namespace LPKService.Infrastructure.CCM
         {
             throw new NotImplementedException();
         }
-        //Узнать про функцию
         public void ForceModUserDatetime(string modUserId, string str = "")
         {
             catCredit.modUserId = Convert.ToInt32(modUserId);

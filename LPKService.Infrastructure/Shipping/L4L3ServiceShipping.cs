@@ -7,11 +7,9 @@ using Dapper.Oracle;
 using LPKService.Infrastructure.Repository;
 using LPKService.Repository;
 using LPKService.Domain.Models.Shipping;
-using LPKService.Domain.Models.Material;
 
 namespace LPKService.Infrastructure.Shipping
 {
-    //Используется таблица L4_L3_SHIPPING
     public enum TPieceAction { paAssign, paDeAssign }
     public interface IL4L3SerShipping
     {
@@ -27,6 +25,10 @@ namespace LPKService.Infrastructure.Shipping
         const int soLineAcceptedClosed = 4;
         #endregion
         private Logger logger = LogManager.GetLogger(nameof(Shipping));
+        /// <summary>
+        /// Создание позиции если не существует
+        /// </summary>
+        /// <param name="strBolId">ИД позиции</param>
         public void CreateBolIfNotEx(string strBolId)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
@@ -52,7 +54,14 @@ namespace LPKService.Infrastructure.Shipping
                 }
             }
         }
-
+        /// <summary>
+        /// Получение детали (Требуется доработка)
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <param name="ship">Модель таблицы L4L3Shipping</param>
+        /// <param name="action">Тип перечисления действий</param>
+        /// <param name="forShipping">Тип перечисления отгрузки</param>
+        /// <returns>Результат обработки</returns>
         public TCheckResult LocalSetPiece(TL4MsgInfo l4MsgInfo, L4L3Shipping ship, TPieceAction action, TForShipping forShipping)
         {
             TCheckResult checkResult = new TCheckResult();
@@ -103,7 +112,11 @@ namespace LPKService.Infrastructure.Shipping
             checkResult.data = $"В таблице {l4l3unterfacetable} поле MSG_COUNTER:{l4MsgInfo.msgCounter} Ошибок нет.";
             return checkResult;
         }
-        //Сделать модель Piece
+        /// <summary>
+        /// Обработчик события кода на погрузку
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <returns>Результат обработки</returns>
         public TCheckResult ShippingMng(TL4MsgInfo l4MsgInfo)
         {
             TCheckResult result = new TCheckResult();
