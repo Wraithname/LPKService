@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace LPKService.Infrastructure.Shipping
 {
-    public class L4L3ShippingRepo : IL4L3Shipping
+    public class L4L3ShippingRepo : ShippRepoBase,IL4L3Shipping
     {
         private Logger logger = LogManager.GetLogger(nameof(Shipping));
         /// <summary>
@@ -24,7 +24,7 @@ namespace LPKService.Infrastructure.Shipping
             OracleDynamicParameters odp = new OracleDynamicParameters();
             string str = "SELECT * FROM L4_L3_SHIPPING WHERE MSG_COUNTER = :P_MSG_COUNTER";
             odp.Add("P_MSG_COUNTER", l4MsgInfo.msgCounter);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 lship = connection.Query<L4L3Shipping>(str, odp).AsList();
             }

@@ -21,7 +21,7 @@ namespace LPKService.Infrastructure.SOM
         public string soLineId { get; set; }
         public string metSoLineId { get; set; }
     }
-    public class SOManagment : ISOManagment
+    public class SOManagment : SOMRepoBase,ISOManagment
     {
         private Logger logger = LogManager.GetLogger(nameof(SOM));
         private List<TLineNote> lines = new List<TLineNote>();
@@ -29,7 +29,12 @@ namespace LPKService.Infrastructure.SOM
         private string m_strSO_Line_Id_Params = "";
         private string m_strSO_Line_Id_MET = "";
         private string m_strSo_Lines_For_Where = "";
-        IGlobalCheck check;
+        private IAuxConstant auxConstant = new AuxConstantRepo();
+        private IGlobalCheck check;
+        /// <summary>
+        /// Добавление деталей к заказу
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
         public void AddVsw_detailsToOrder(TL4MsgInfo l4MsgInfo)
         {
             string vsw_detail, soDescID, soIdv;
@@ -116,7 +121,11 @@ namespace LPKService.Infrastructure.SOM
             catch (Exception e) { logger.Error($"Ошибка при обработке vsw_detail {e.Message}"); }
 
         }
-
+        /// <summary>
+        /// Проверка на добавление заказа
+        /// </summary>
+        /// <param name="iSoID">ИД заказа</param>
+        /// <returns></returns>
         public bool AlreadyInsertInSuspended(int iSoID)
         {
             int res = -1;
@@ -129,14 +138,19 @@ namespace LPKService.Infrastructure.SOM
                 return true;
             return false;
         }
-
+        /// <summary>
+        /// Получение аттрибутов из L4_L3_SO_LINE
+        /// </summary>
+        /// <param name="qryData">Модель таблицы L4L3SoHeader</param>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <returns>Результат обработки</returns>
         public TCheckResult AttributeCheck(L4L3SoHeader qryData, TL4MsgInfo l4MsgInfo)
         {
             TCheckResult result = new TCheckResult();
             result.isOK = false;
             L4L3SoLine l4L3SoLine;
             string sqlstr = $"SELECT * FROM L4_L3_SO_LINE WHERE MSG_COUNTER = {qryData.msgCounter}";
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 l4L3SoLine = connection.QueryFirstOrDefault<L4L3SoLine>(sqlstr, null);
             }
@@ -155,7 +169,11 @@ namespace LPKService.Infrastructure.SOM
                 check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS, result.data);
             return result;
         }
-
+        /// <summary>
+        /// Блокировка процесса обработки
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <param name="serRSer">Блокироват/Разблокировать</param>
         public void BlockForProcess(TL4MsgInfo l4MsgInfo, bool serRSer)
         {
             string sqlstr = "";
@@ -170,7 +188,14 @@ namespace LPKService.Infrastructure.SOM
                 connection.Execute(sqlstr, odp);
             }
         }
-
+        /// <summary>
+        /// Проверка флага заказчика
+        /// </summary>
+        /// <param name="m_iCustSoldDescrID">ИД заказчика</param>
+        /// <returns>
+        /// true - если заказчик "внутренний"
+        /// false - если заказчик "внешний"
+        /// </returns>
         internal bool IsCustomerInternal(int m_iCustSoldDescrID)
         {
             bool result = false;
@@ -185,7 +210,14 @@ namespace LPKService.Infrastructure.SOM
                 result = true;
             return result;
         }
-
+        /// <summary>
+        /// Проверка статуса вложенных линий заказа
+        /// </summary>
+        /// <param name="iMsgCounter">Счетчик сообщений</param>
+        /// <returns>
+        /// true - есть вложенные линии заказа
+        /// false - вложенные линии заказа отсутствуют
+        /// </returns>
         public bool CheckInquiryLinesStatus(int iMsgCounter)
         {
             int iCounterSale, iCounterLine;
@@ -206,7 +238,13 @@ namespace LPKService.Infrastructure.SOM
                     result = true;
             return result;
         }
-
+        /// <summary>
+        /// Обновление кода операции
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <returns>
+        /// Измененное сообщение для дальнейшей обработки
+        /// </returns>
         public TL4MsgInfo CheckUpdateOPCODE(TL4MsgInfo l4MsgInfo)
         {
             TL4MsgInfo tl4 = l4MsgInfo;
@@ -254,17 +292,39 @@ namespace LPKService.Infrastructure.SOM
             }
             return tl4;
         }
-
-        public void CloseLine(int iSoId, int iSoLineId, int iSoTypeCode)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Создание нового заказа (Требуется дальнейшая реализация)
+        /// </summary>
+        /// <param name="QryData">Модель таблицы L4_L3_SO_HEADER для обработки</param>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
         public void CreateNewOrder(L4L3SoHeader QryData, TL4MsgInfo l4MsgInfo)
         {
-            throw new NotImplementedException();
+            TSoHeader soHeader=new TSoHeader();
+            ITSoHeader tSo = new TSoHeaderRepo();
+            string sNumeration = auxConstant.GetStringAuxConstant("SO_NUMERATION");
+            TL4EngineInterfaceMngRepo eimOrderEntry = new TL4EngineInterfaceMngRepo(QryData, l4MsgInfo);
+            try
+            {
+                Int32.TryParse(eimOrderEntry.GetCreateUserId(), out int iUserId);
+            }
+            catch
+            {
+                eimOrderEntry.NotifyErrorMessage("Ошибка при возвращении ID пользователя");
+            }
+            int iShipToCode = ManageShipTo(l4MsgInfo, eimOrderEntry);
+            if(iShipToCode>=0)
+            {
+                soHeader = tSo.Create(QryData, l4MsgInfo, iShipToCode, true);
+                if(l4MsgInfo.msgReport.status==L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
+                    throw new NotImplementedException();
+            }
         }
-
+        /// <summary>
+        /// Получение типа контракта
+        /// </summary>
+        /// <param name="soid">ИД заказа</param>
+        /// <param name="strCustomerId">ИД заказчика</param>
+        /// <returns>Тип контракта</returns>
         public TContractType DecodeContractType(string soid, string strCustomerId)
         {
             OracleDynamicParameters odp = null;
@@ -281,7 +341,15 @@ namespace LPKService.Infrastructure.SOM
                 return TContractType.coInternal;
             return TContractType.coContract;
         }
-
+        /// <summary>
+        /// Получение аттрибутов
+        /// </summary>
+        /// <param name="tL4MsgInfoLine">Расширенная модель для обработки кода в линиях заказа</param>
+        /// <param name="strProductType">Тип продукта</param>
+        /// <param name="iSoID">ИД заказа</param>
+        /// <param name="iSoLineID">ИД линии заказа</param>
+        /// <param name="attrbSO">Сформированный лист аттрибутов заказа</param>
+        /// <param name="strArrayOfAttributes">Лист аттрибутов</param>
         public void LoadAttrb(TL4MsgInfoLine tL4MsgInfoLine, string strProductType, int iSoID, int iSoLineID, TCheckRelatedList attrbSO = null, List<string> strArrayOfAttributes = null)
         {
             bool bTollerances = false;
@@ -301,7 +369,7 @@ namespace LPKService.Infrastructure.SOM
                 "FROM USER_TAB_COLS " +
                 "WHERE TABLE_NAME = 'L4_L3_SO_LINE')";
             List<AttrbContrExtLink> extLink;
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 extLink = connection.Query<AttrbContrExtLink>(sqlstr, null).AsList();
             }
@@ -310,7 +378,7 @@ namespace LPKService.Infrastructure.SOM
                 "where  PARAMETER = 'NLS_NUMERIC_CHARACTERS'";
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                strDecSep = connection.QueryFirstOrDefault<string>(sqlstr, null);
+                strDecSep = connection.ExecuteScalar<string>(sqlstr, null);
             }
             foreach (AttrbContrExtLink attrb in extLink)
             {
@@ -359,7 +427,7 @@ namespace LPKService.Infrastructure.SOM
                     $"and  (TTL4.SO_LINE_ID/10)  = {tL4MsgInfoLine.iSOLineID}" +
                     $"and  TTL4.{sTmpAttrCodeL4} <> '-9999' " +
                     $"and  TTL4.MSG_COUNTER  = {tL4MsgInfoLine.tL4MsgInfo.msgCounter} )";
-                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                using (OracleConnection connection = GetConnection())
                 {
                     aceandSo = connection.QueryFirstOrDefault<ACEandSoLine>(sqlstr, null);
                 }
@@ -396,13 +464,22 @@ namespace LPKService.Infrastructure.SOM
                     {
                         //switch(AttrFor)
                         //{
-
+                        throw new NotImplementedException();
                         //}
                     }
                 }
             }
         }
-
+        /// <summary>
+        /// Проверка на обработку заказа
+        /// </summary>
+        /// <param name="sSoDescrID">ИД заказа</param>
+        /// <param name="iOpCode">Код операции</param>
+        /// <param name="sErrMsg">Ошибка</param>
+        /// <returns>
+        /// true - заказ можно обработать
+        /// false - обработка заказа невозможна
+        /// </returns>
         public bool OrderCanBeProcess(string sSoDescrID, int iOpCode, string sErrMsg)
         {
             bool bexistorder = OrderExist(sSoDescrID);
@@ -433,7 +510,14 @@ namespace LPKService.Infrastructure.SOM
             }
             return res;
         }
-
+        /// <summary>
+        /// Проверка существования заказа
+        /// </summary>
+        /// <param name="sSoDescrID">ИД заказа</param>
+        /// <returns>
+        /// true - Заказ существует
+        /// false - Заказ не существует
+        /// </returns>
         public bool OrderExist(string sSoDescrID)
         {
             int count;
@@ -444,7 +528,29 @@ namespace LPKService.Infrastructure.SOM
             }
             return count > 0;
         }
-
+        /// <summary>
+        /// Проверка существования заказа через LIKE
+        /// </summary>
+        /// <param name="sSodesrID">ИД заказа</param>
+        /// <returns>
+        /// true - Заказ существует
+        /// false - Заказ не существует
+        /// </returns>
+        public bool OrderExistLike(string sSodesrID)
+        {
+            int res;
+            string sqlstr = $"SELECT COUNT(*) AS HOWMANY FROM SALES_ORDER_HEADER WHERE SO_DESCR_ID LIKE '{sSodesrID}_%'";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                res = connection.ExecuteScalar<int>(sqlstr, null);
+            }
+            return res > 0;
+        }
+        /// <summary>
+        /// Обработчик заказа
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <returns>Результат обработки</returns>
         public TCheckResult SalesOrderMng(TL4MsgInfo l4MsgInfo)
         {
             TCheckResult checkResult = new TCheckResult();
@@ -550,12 +656,22 @@ namespace LPKService.Infrastructure.SOM
                 return checkResult;
             }
         }
-
+        /// <summary>
+        /// Обновление заказа
+        /// </summary>
+        /// <param name="QryData">Модель таблицы L4_L3_SO_HEADER для обработки</param>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <param name="bIsDeletion"></param>
         public void UpdateOrder(L4L3SoHeader QryData, TL4MsgInfo l4MsgInfo, bool bIsDeletion = false)
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Получение номера периода
+        /// </summary>
+        /// <param name="date">Дата</param>
+        /// <param name="num">Код периода</param>
+        /// <returns>Нормер периода, если существует</returns>
         public int RetrievePeriodNumID(DateTime date, int num)
         {
             int result = -1;
@@ -565,10 +681,10 @@ namespace LPKService.Infrastructure.SOM
                 $"PERIOD_ID, STOP_DATE " +
                 $"from   period p " +
                 $"where  p.period_code = :P_Period" +
-                $"and P_date between p.start_date and  p.stop_date";
+                $"and :P_date between p.start_date and  p.stop_date";
             odp.Add("P_Period",num);
             odp.Add("P_date", date);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 priod = connection.ExecuteScalar<Period>(sqlstr, odp);
             }
@@ -576,19 +692,37 @@ namespace LPKService.Infrastructure.SOM
                 result = priod.period;
             return result;
         }
-
-        public string ProductTypeCheck(string product)
+        /// <summary>
+        /// Требуется дальнейшая реализация
+        /// </summary>
+        /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
+        /// <param name="tL4Engine"></param>
+        /// <returns></returns>
+        public int ManageShipTo(TL4MsgInfo l4MsgInfo,TL4EngineInterfaceMngRepo tL4Engine)
         {
-            string type;
-            string sqlstr = $"select product_type from   product_type_catalogue where  sap_code = {product}";
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// Обновление полей линии заказа
+        /// </summary>
+        /// <param name="soHeader">Модель таблицы SO_HEADER</param>
+        public void UpdateLineFields(TSoHeader soHeader)
+        {
+            foreach (TSoLine line in soHeader.m_Lines)
             {
-                type = connection.ExecuteScalar<string>(sqlstr, null);
+                OracleDynamicParameters odp = new OracleDynamicParameters();
+                string sqlstr = "UPDATE SALES_ORDER_LINE" +
+                    "SET DUE_DELIVERY_DATE =:P_DUE_DELIVERY_DATE" +
+                    "WHERE SO_ID=:P_SO_ID" +
+                    "AND SO_LINE_ID=:P_SO_LINE_ID";
+                odp.Add("P_DUE_DELIVERY_DATE",line.m_dDueDelivery);
+                odp.Add("P_DUE_DELIVERY_DATE",soHeader.m_iSoID);
+                odp.Add("P_DUE_DELIVERY_DATE",line.m_iSoLineID);
+                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                {
+                   connection.Execute(sqlstr, odp);
+                }
             }
-            if (type != null)
-                return type;
-            else
-                return product;
         }
     }
 }

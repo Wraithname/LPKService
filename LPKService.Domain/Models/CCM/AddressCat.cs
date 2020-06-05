@@ -3,7 +3,10 @@ using LPKService.Repository;
 
 namespace LPKService.Domain.Models.CCM
 {
-    public class AddresCat
+    /// <summary>
+    /// Модель таблицы ADDRESS_CATALOG
+    /// </summary>
+    public class AddresCat:BaseModel
     {
         [Column("ADDRESS_ID", "Идентификатор адреса")]
         public int addressId { get; set; }

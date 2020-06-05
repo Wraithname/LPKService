@@ -129,6 +129,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LPKService.Repository\LPKService.Repository.csproj">
+      <Project>{81927878-6f57-464a-8aa2-3a6af276d061}</Project>
+      <Name>LPKService.Repository</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Work\Work.csproj">
       <Project>{882d4dd8-c734-4d0f-aac0-577da73202e6}</Project>
       <Name>Work</Name>

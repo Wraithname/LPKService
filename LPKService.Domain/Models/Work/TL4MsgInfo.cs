@@ -2,6 +2,9 @@
 
 namespace LPKService.Domain.Models.Work
 {
+    /// <summary>
+    /// Программная модель таблицы L4_L3_EVENT
+    /// </summary>
     public class TL4MsgInfo
     {
         public int msgCounter { get; set; }

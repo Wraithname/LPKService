@@ -4,6 +4,9 @@ using LPKService.Domain.Models.CCM;
 
 namespace LPKService.Domain.Interfaces
 {
+    /// <summary>
+    /// Интерфейс класса CCManagement
+    /// </summary>
     public interface ICCManagement
     {
         TCheckResult CustomerMng(TL4MsgInfo l4MsgInfo);

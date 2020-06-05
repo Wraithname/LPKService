@@ -14,7 +14,7 @@ using LPKService.Domain.Models.Work;
 
 namespace LPKService.Infrastructure.SOM
 {
-    public class TSoHeaderRepo : ITSoHeader
+    public class TSoHeaderRepo : SOMRepoBase,ITSoHeader
     {
         private Logger logger = LogManager.GetLogger(nameof(SOM));
         private char oneToSeveralOrderFromSap = 'Y';
@@ -74,7 +74,7 @@ namespace LPKService.Infrastructure.SOM
             StringBuilder stm = new StringBuilder(@"SELECT EXPIRATION_DATE FROM CUSTOMER_CATALOG WHERE  CUSTOMER_DESCR_ID = " + m_iCustSoldDescrID + "");
             using (OracleConnection conn = BaseRepo.GetDBConnection())
             {
-                cust = conn.QueryFirstOrDefault<string>(stm.ToString(), odp);
+                cust = conn.ExecuteScalar<string>(stm.ToString(), odp);
             }
             if (cust != null)
             {
@@ -120,7 +120,7 @@ namespace LPKService.Infrastructure.SOM
                         odp.Add("CUSTOMER_DESCR_ID", val);
                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                         {
-                            count = connection.QueryFirstOrDefault<int>(str, odp);
+                            count = connection.ExecuteScalar<int>(str, odp);
                         }
                         if (count > 0)
                         {
@@ -248,7 +248,7 @@ namespace LPKService.Infrastructure.SOM
                     if (oneToSeveralOrderFromSap == 'Y')
                         str += $"AND  L4SOL.SO_LINE_ID = '{m_strSO_Line_Id_Params}'";
                     str += "ORDER BY L4SOL.SO_LINE_ID ";
-                    using (OracleConnection connection = BaseRepo.GetDBConnection())
+                    using (OracleConnection connection = GetConnection())
                     {
                         lines = connection.Query<LinesCom>(str, null).AsList();
                     }

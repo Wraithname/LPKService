@@ -2,9 +2,11 @@
 
 namespace LPKService.Domain.Interfaces
 {
+    /// <summary>
+    /// Интерфейс класса AddressEngine
+    /// </summary>
     public interface IAddressEngine
     {
-        void Create(TL4EngineInterfaceMng interfaceMng);
         string GetAddressId();
         int LoadData(int addressId);
         bool SaveData();

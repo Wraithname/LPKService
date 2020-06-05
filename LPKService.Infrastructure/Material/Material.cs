@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace LPKService.Infrastructure.Material
 {
-    public class Material : IMaterial
+    public class Material : MatRepoBase,IMaterial
     {
         IGlobalCheck check;
         /// <summary>
@@ -58,7 +58,7 @@ namespace LPKService.Infrastructure.Material
                 "where trim(L4.MATERIAL_ID) = trim(M.MATERIAL_CODE_L4) " +
                 "and l4.msg_counter = :Counter";
             odp.Add("Counter", l4MsgInfo.msgCounter);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 l4L3Rms = connection.Query<L4L3RmAndMatCat>(str, odp).AsList();
             }

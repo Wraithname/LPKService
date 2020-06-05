@@ -48,7 +48,7 @@ namespace LPKService.Infrastructure.Shipping
             string str = $"SELECT BOL_ID FROM EXT_BOL_HEADER WHERE STATUS='{L4L3InterfaceServiceConst.BOL_NOT_SENT.ToString()}' AND BOL_ID='{strBolId}'";
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                bolId = connection.QueryFirstOrDefault<string>(str, odp);
+                bolId = connection.ExecuteScalar<string>(str, odp);
             }
             if (bolId != "")
                 return true;

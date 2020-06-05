@@ -13,14 +13,9 @@ namespace LPKService.Infrastructure.CCM
     {
         CustomerCat customerCat;
 
-        public CCatalEngine()
+        public CCatalEngine(TL4EngineInterfaceMng interfaceMng)
         {
             this.customerCat = new CustomerCat();
-        }
-        //Узнать про функцию
-        public void Create(TL4EngineInterfaceMng interfaceMng)
-        {
-            throw new NotImplementedException();
         }
 
         public void DeleteCustomer(int customID)
@@ -51,17 +46,14 @@ namespace LPKService.Infrastructure.CCM
         {
             return customerCat.expirationDate;
         }
-        //Узнать про функцию
         public bool IsCustomerDeletable(int customID)
         {
             return true;
         }
-        //Узнать про функцию
         public int LoadData(string id)
         {
             throw new NotImplementedException();
         }
-        //Узнать про функцию
         public bool SaveData()
         {
             throw new NotImplementedException();

@@ -3,7 +3,10 @@ using LPKService.Repository;
 
 namespace LPKService.Domain.Models.Material
 {
-    public class L4L3RmAndMatCat
+    /// <summary>
+    /// Модель таблицы L4L3RowMaterial union MaterialCatalog
+    /// </summary>
+    public class L4L3RmAndMatCat:BaseModel
     {
         [Column("MATERIAL_ID", "ИД материала")]
         public string materialId { get; set; }

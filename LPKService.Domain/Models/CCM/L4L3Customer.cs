@@ -1,7 +1,10 @@
 ﻿using LPKService.Repository;
 namespace LPKService.Domain.Models.CCM
 {
-    public class L4L3Customer
+    /// <summary>
+    /// Модель таблицы L4_L3_CUSTOMER
+    /// </summary>
+    public class L4L3Customer:BaseModel
     {
         [Column("MSG_COUNTER", "Счетчик сообщений")]
         public int msgCounter { get; set; }

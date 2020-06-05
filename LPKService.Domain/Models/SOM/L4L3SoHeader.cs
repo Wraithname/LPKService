@@ -5,8 +5,6 @@ namespace LPKService.Domain.Models.SOM
 {
     public class L4L3SoHeader
     {
-        [Column("KEY_MSG_COUNTER", "Счетчик сообщений")]
-        public int keyMsgCounter { get; set; }
         [Column("MSG_COUNTER", "Счетчик сообщений")]
         public int msgCounter { get; set; }
         [Column("SO_ID", "ИД заказа")]

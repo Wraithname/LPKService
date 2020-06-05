@@ -2,6 +2,9 @@
 
 namespace LPKService.Domain.Interfaces
 {
+    /// <summary>
+    /// Интерфейс класса TL4EngineInterfaceMng
+    /// </summary>
     public interface ITL4EngineInterfaceMng
     {
         string DecodeUserToUserId(string pL4UserName);

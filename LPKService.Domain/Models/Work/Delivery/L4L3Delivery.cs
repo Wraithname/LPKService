@@ -3,7 +3,10 @@ using LPKService.Repository;
 
 namespace LPKService.Domain.Models.Work.Delivery
 {
-    public class L4L3Delivery
+    /// <summary>
+    /// Модель таблицы L4_L3_DELIVERY
+    /// </summary>
+    public class L4L3Delivery:BaseModel
     {
         [Column("MSG_COUNTER", "Счетчик сообщений")]
         public int msgCounter { get; set; }

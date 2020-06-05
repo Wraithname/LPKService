@@ -58,14 +58,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\BuildersRepoBase.cs" />
     <Compile Include="Builders\NewDevMsg.cs" />
     <Compile Include="Builders\NewMessageBuilder.cs" />
     <Compile Include="CCM\AddressEngine.cs" />
     <Compile Include="CCM\CCatalEngine.cs" />
     <Compile Include="CCM\CCManagement.cs" />
+    <Compile Include="CCM\CCMRepoBase.cs" />
     <Compile Include="CCM\CCreditEngine.cs" />
     <Compile Include="CCM\L4L3CustomerRepo.cs" />
     <Compile Include="Material\Material.cs" />
+    <Compile Include="Material\MatRepoBase.cs" />
+    <Compile Include="Shipping\ShippRepoBase.cs" />
+    <Compile Include="SOM\AuxConstantRepo.cs" />
+    <Compile Include="SOM\PartitionOrder.cs" />
+    <Compile Include="SOM\SOMRepoBase.cs" />
     <Compile Include="Work\TCheckRealtedListRepo.cs" />
     <Compile Include="Repository\L4L3InterfaceServiceConst.cs" />
     <Compile Include="Repository\L4L3InterfaceServiceGlobalCheck.cs" />

@@ -1,7 +1,10 @@
 ﻿using LPKService.Repository;
 namespace LPKService.Domain.Models.Work.Delivery
 {
-    public class JoinedModel
+    /// <summary>
+    /// Модель объединенных таблиц
+    /// </summary>
+    public class JoinedModel:BaseModel
     {
         [Column("COUNT(POS_NUM_ID)", "Количество позиций")]
         public int count { get; set; }

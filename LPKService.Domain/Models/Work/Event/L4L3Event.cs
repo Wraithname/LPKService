@@ -3,7 +3,10 @@ using LPKService.Repository;
 
 namespace LPKService.Domain.Models.Work.Event
 {
-    public class L4L3Event
+    /// <summary>
+    /// Модель таблицы L4_L3_EVENT
+    /// </summary>
+    public class L4L3Event:BaseModel
     {
         [Column("KEY_MSG_COUNTER", "Счетчик сообщений")]
         public int keyMsgCounter { get; set; }

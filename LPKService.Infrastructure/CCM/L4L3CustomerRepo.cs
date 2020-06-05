@@ -4,12 +4,11 @@ using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
 using NLog;
-using LPKService.Repository;
 using LPKService.Domain.Models.CCM;
 
 namespace LPKService.Infrastructure.CCM
 {
-    public class L4L3CustomerRepo : IL4L3Customer
+    public class L4L3CustomerRepo : CCMRepoBase,IL4L3Customer
     {
         private Logger logger = LogManager.GetLogger(nameof(Repository));
         /// <summary>
@@ -23,7 +22,7 @@ namespace LPKService.Infrastructure.CCM
             OracleDynamicParameters odp = new OracleDynamicParameters();
             string str = "SELECT * FROM L4_L3_CUSTOMER WHERE MSG_COUNTER = :P_MSG_COUNTER";
             odp.Add("P_MSG_COUNTER", l4MsgInfo.msgCounter);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 customer = connection.QueryFirstOrDefault<L4L3Customer>(str, odp);
             }

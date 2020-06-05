@@ -4,6 +4,9 @@ using LPKService.Domain.Models.SOM;
 
 namespace LPKService.Domain.Interfaces
 {
+    /// <summary>
+    /// Интерфейс класса TSoHeaderRepo
+    /// </summary>
     public interface ITSoHeader
     {
         TSoLine GetLine(int iIndex);

@@ -3,7 +3,10 @@ using LPKService.Repository;
 
 namespace LPKService.Domain.Models.CCM
 {
-    public class ZipCatalogue
+    /// <summary>
+    /// Модель таблицы ZIP_CATALOGUE
+    /// </summary>
+    public class ZipCatalogue:BaseModel
     {
         [Column("ZIP_CODE", "Индекс")]
         string zipCode { set; get; }

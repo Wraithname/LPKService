@@ -20,7 +20,7 @@ namespace LPKService.Infrastructure.Builders
         void CloseOrder();
         void NewMessage(); 
     }
-    public class NewMessageBuilder : INewMessageBuilder
+    public class NewMessageBuilder : BuildersRepoBase,INewMessageBuilder
     {
         private Logger logger = LogManager.GetLogger(nameof(NewMessageBuilder));
         private readonly IGlobalCheck check;
@@ -73,7 +73,7 @@ namespace LPKService.Infrastructure.Builders
                     "AND   l.msg_id = 4301 ) l2 join SALES_ORDER_LINE sol on sol.SO_DESCR_ID = l2.so_id or sol.SO_DESCR_ID = l2.so_id||'_'||to_number(l2.so_line_id)/10 " +
                     "WHERE sol.SO_LINE_STATUS = 3 " +
                     "AND    l2.MSG_DATETIME > SYSDATE - 7";
-                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                using (OracleConnection connection = GetConnection())
                 {
                     close=connection.Query<AutoClose>(str2, null).AsList();
                 }
@@ -81,7 +81,7 @@ namespace LPKService.Infrastructure.Builders
                 {
                     foreach (AutoClose auto in close)
                     {
-                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        using (OracleConnection connection = GetConnection())
                         {
                             using (var transaction = connection.BeginTransaction())
                             {
@@ -94,7 +94,7 @@ namespace LPKService.Infrastructure.Builders
                                     l4MsgInfo.msgCounter = auto.msgCounter;
                                     l4MsgInfo.msgReport.status = 2;
                                     l4MsgInfo.msgReport.remark = $"Заказ {auto.soId}/{auto.soLineId} Закрыт автоматически";
-                                    UpdateMsgStatus(l4MsgInfo);
+                                    UpdateMsgStatus(l4MsgInfo,transaction);
                                 }
                                 catch (Exception e)
                                 {
@@ -102,7 +102,7 @@ namespace LPKService.Infrastructure.Builders
                                     l4MsgInfo.msgCounter = auto.msgCounter;
                                     l4MsgInfo.msgReport.status = -1;
                                     l4MsgInfo.msgReport.remark = $"Заказ {auto.soId}/{auto.soLineId} {e.Message}";
-                                    UpdateMsgStatus(l4MsgInfo);
+                                    UpdateMsgStatus(l4MsgInfo,transaction);
                                 }
                             }
                         }
@@ -127,7 +127,7 @@ namespace LPKService.Infrastructure.Builders
             string sqlstr = "SELECT CHAR_VALUE " +
                 "FROM AUX_CONSTANT " +
                 "WHERE CONSTANT_ID='ACCEPT_ORDER_IN_SRV'";
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 acceptOrderConsts = connection.ExecuteScalar<string>(sqlstr, odp);
             }
@@ -147,7 +147,7 @@ namespace LPKService.Infrastructure.Builders
                 "SELECT st.* FROM L4_L3_EVENT st WHERE MSG_STATUS = 1 " +
                 "AND msg_id IN (4311,4312,4313,4314,4315)" +
                 ") ORDER BY MSG_COUNTER ";
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 events = connection.Query<L4L3Event>(sqlstr, odp).AsList();
             }
@@ -169,7 +169,7 @@ namespace LPKService.Infrastructure.Builders
                 l4MsgInfo.msgReport.status = 1;
                 l4MsgInfo.msgReport.remark = "";
                 logger.Info($"STARTED Event -> Table: L4_L3_EVENT, MsgCounter:{l4MsgInfo.msgCounter}");
-                using (OracleConnection conn = BaseRepo.GetDBConnection())
+                using (OracleConnection conn = GetConnection())
                 {
                     using (var transaction = conn.BeginTransaction())
                     {
@@ -192,7 +192,7 @@ namespace LPKService.Infrastructure.Builders
                                 default:
                                     isOpCodeOk = false;
                                     check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, $"OP_CODE: {l4MsgInfo.opCode} is not valid");
-                                    UpdateMsgStatus(l4MsgInfo);
+                                    UpdateMsgStatus(l4MsgInfo,transaction);
                                     break;
                             }
                             if (isOpCodeOk)
@@ -220,7 +220,7 @@ namespace LPKService.Infrastructure.Builders
                                         break;
                                 }
                                 if (l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_INSERT)
-                                    UpdateMsgStatus(l4MsgInfo);
+                                    UpdateMsgStatus(l4MsgInfo,transaction);
                             }
                             logger.Info($"STOPPED Event -> Table: L4_L3_EVENT, MsgCounter:{l4MsgInfo.msgCounter}");
                             transaction.Commit();
@@ -230,14 +230,14 @@ namespace LPKService.Infrastructure.Builders
                             transaction.Rollback();
                             if (IsBlocked(l4MsgInfo.msgCounter))
                                 BlockForProcess(l4MsgInfo, false);
-                            using (OracleConnection conn1 = BaseRepo.GetDBConnection())
+                            using (OracleConnection conn1 = GetConnection())
                             {
                                 using (var transaction1 = conn.BeginTransaction())
                                 {
                                     try
                                     {
                                         check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, e.Message.Substring(0, 4000));
-                                        UpdateMsgStatus(l4MsgInfo);
+                                        UpdateMsgStatus(l4MsgInfo,transaction1);
                                         transaction1.Commit();
                                     }
                                     catch
@@ -257,16 +257,16 @@ namespace LPKService.Infrastructure.Builders
         /// Обновление статуса сообщения
         /// </summary>
         /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
-        private void UpdateMsgStatus(TL4MsgInfo l4MsgInfo)
+        private void UpdateMsgStatus(TL4MsgInfo l4MsgInfo, OracleTransaction transaction)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
             string str = "UPDATE L4_L3_EVENT SET   MSG_STATUS  = %p, MSG_REMARK  = %p WHERE MSG_COUNTER = %p ";
             odp.Add("P_MSG_STATUS", l4MsgInfo.msgReport.status);
             odp.Add("P_MSG_REMARK", l4MsgInfo.msgReport.remark);
             odp.Add("P_MSG_COUNTER", l4MsgInfo.msgCounter);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
-                connection.Execute(str, odp);
+                connection.Execute(str, odp,transaction);
             }
         }
         /// <summary>

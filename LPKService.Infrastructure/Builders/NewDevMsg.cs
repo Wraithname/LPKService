@@ -13,7 +13,7 @@ namespace LPKService.Infrastructure.Builders
     {
         void GetNewMessageDelivery();
     }
-    public class NewDevMsg : INewDevMsg
+    public class NewDevMsg : BuildersRepoBase,INewDevMsg
     {
         #region Constant
         const int bol_new = 1;
@@ -41,11 +41,12 @@ namespace LPKService.Infrastructure.Builders
             odp.Add("MSG_ID", bol_new);
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
+                LogSqlWithParams(str, odp);
                 l3DelEventDel = connection.QueryFirstOrDefault<L4L3DelEventDel>(str, odp);
             }
             if (l3DelEventDel != null)
             {
-                using (OracleConnection conn = BaseRepo.GetDBConnection())
+                using (OracleConnection conn = GetConnection())
                 {
                     using (OracleTransaction transaction = conn.BeginTransaction())
                     {
@@ -129,8 +130,9 @@ namespace LPKService.Infrastructure.Builders
                         "left join SALES_ORDER_LINE sol on SOL.SO_ID  = SOH.SO_ID and SOL.SO_LINE_ID = nvl(to_number(lD.SO_LINE_ID),0)/10 " +
                         "WHERE LDE.MSG_COUNTER = :MSG_COUNTER";
                     odp.Add("MSG_COUNTER", msgCounter);
-                    using (OracleConnection connection = BaseRepo.GetDBConnection())
+                    using (OracleConnection connection = GetConnection())
                     {
+                        LogSqlWithParams(str, odp);
                         deliveryev = connection.QueryFirstOrDefault<DeliveryESOHandSOL>(str, odp);
                     }
                     if (deliveryev != null)
@@ -146,6 +148,7 @@ namespace LPKService.Infrastructure.Builders
                         odp.Add("SO_LINE_ID_MET", deliveryev.soLineIdMet);
                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                         {
+                            LogSqlWithParams(str, odp);
                             connection.Execute(str, odp,transaction);
                         }
                         UpdateStatusMessage(deliveryev.msgCounter, bol_created, "");
@@ -155,8 +158,9 @@ namespace LPKService.Infrastructure.Builders
                         VecAuto auto = new VecAuto();
                         str = "SELECT nvl(VEHICLE_ID,''-'') as VEHICLE_ID, case when nvl(AUTO_FLG,''03'') = ''03'' then ''N'' else ''Y'' end as AUTO_FLG FROM L4_L3_DELIVERY WHERE MSG_COUNTER	= :MSG_COUNTER ";
                         odp.Add("MSG_COUNTER", msgCounter);
-                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        using (OracleConnection connection = GetConnection())
                         {
+                            LogSqlWithParams(str, odp);
                             auto = connection.QueryFirstOrDefault<VecAuto>(str, odp);
                         }
                         if (auto != null)
@@ -164,7 +168,7 @@ namespace LPKService.Infrastructure.Builders
                             autoFlag = auto.autoFlg;
                             vehicleSap = auto.vehicleId;
                         }
-                        odp = null;
+                        odp = new OracleDynamicParameters();
                         str = "INSERT INTO EXT_BOL_HEADER (MOD_USER_ID,MOD_DATETIME,BOL_ID,CREATION_DATETIME,SHIP_DATETIME,VEHICLE_ID_SAP,ON_AUTO_SHIPPING,STATUS) " +
                             "VALUES (-999,SYSDATE,:BOL_ID,SYSDATE,SYSDATE,:VEHICLE_ID_SAP,:ON_AUTO_SHIPPING,1";
                         odp.Add("BOL_ID", bolId);
@@ -172,9 +176,10 @@ namespace LPKService.Infrastructure.Builders
                         odp.Add("ON_AUTO_SHIPPING", autoFlag);
                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                         {
+                            LogSqlWithParams(str, odp);
                             connection.Execute(str, odp,transaction);
                         }
-                        odp = null;
+                        odp = new OracleDynamicParameters();
                         List<DeliveryESOHandSOL> deliv = new List<DeliveryESOHandSOL>();
                         str = "SELECT LDE.MSG_COUNTER, " +
                         "lde.op_code, " +
@@ -196,8 +201,9 @@ namespace LPKService.Infrastructure.Builders
                         odp.Add("MSG_ID", bol_new_sap_met);
                         odp.Add("BOL_ID", bolId);
                         odp.Add("MSG_COUNTER", msgCounter);
-                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        using (OracleConnection connection = GetConnection())
                         {
+                            LogSqlWithParams(str, odp);
                             deliv = connection.Query<DeliveryESOHandSOL>(str, odp).AsList();
                         }
                         if (deliveryev != null)
@@ -208,7 +214,7 @@ namespace LPKService.Infrastructure.Builders
                                 {
                                     if (!ExistBolPosition(bolId, del.bolPositionId.ToString()))
                                     {
-                                        odp = null;
+                                        odp = new OracleDynamicParameters();
                                         str = "INSERT INTO EXT_BOL_POSITION (WEIGHT, POS_NUM_ID, BOL_ID, POS_ID, SO_ID, SO_LINE_ID, SO_ID_MET, SO_LINE_ID_MET) " +
                                             "VALUES (:WEIGHT, SQN_EXT_BOL_POSITION.NEXTVAL, :BOL_ID, :POS_ID, :SO_ID, :SO_LINE_ID, :SO_ID_MET, :SO_LINE_ID_MET) ";
                                         odp.Add("WEIGHT");
@@ -220,6 +226,7 @@ namespace LPKService.Infrastructure.Builders
                                         odp.Add("SO_LINE_ID_MET");
                                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                                         {
+                                            LogSqlWithParams(str, odp);
                                             connection.Execute(str, odp, transaction);
                                         }
                                         UpdateStatusMessage(del.msgCounter, bol_created, "");
@@ -388,7 +395,7 @@ namespace LPKService.Infrastructure.Builders
                             "AND pp.POS_NUM_ID is null " +
                             "group by bp.POS_NUM_ID";
                         odp1.Add("MSG_COUNTER", msgCounter);
-                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        using (OracleConnection connection = GetConnection())
                         {
                             joint = connection.QueryFirstOrDefault<JoinedModel>(str, odp);
                         }
@@ -429,7 +436,7 @@ namespace LPKService.Infrastructure.Builders
                 "left join SALES_ORDER_LINE sol on SOL.SO_ID  = SOH.SO_ID and SOL.SO_LINE_ID = nvl(to_number(lD.SO_LINE_ID),0)/10 " +
                 "WHERE ld.MSG_COUNTER = :MSG_COUNTER ";
             odp.Add("MSG_COUNTER", msgCounter);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 del = connection.QueryFirstOrDefault<DeliverySOHandSOL>(str, odp);
             }

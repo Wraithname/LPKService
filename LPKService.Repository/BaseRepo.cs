@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Oracle.ManagedDataAccess.Client;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
@@ -22,10 +23,23 @@ namespace LPKService.Repository
                 )
             );
         }
+        public abstract OracleConnection GetConnection();
         /// <summary>
         /// Подключение к базе данных
         /// </summary>
         /// <returns>Подключение к Oracle</returns>
+        public OracleConnection GetDBConnection(List<Type> models)
+        {
+            OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["default"].ConnectionString);
+            if(models!=null)
+            {
+                foreach(Type model in models)
+                {
+                    SetTypeMap(model);
+                }
+            }
+            return conn;
+        }
         public static OracleConnection GetDBConnection()
         {
             OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["default"].ConnectionString);

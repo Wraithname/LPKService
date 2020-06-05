@@ -2,6 +2,9 @@
 
 namespace LPKService.Domain.Interfaces
 {
+    /// <summary>
+    /// Интерфейс класса CCreditEngine
+    /// </summary>
     public interface ICCreditEngine
     {
         void Create(TL4EngineInterfaceMng interfaceMng);

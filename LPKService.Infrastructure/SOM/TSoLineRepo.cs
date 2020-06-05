@@ -68,7 +68,7 @@ namespace LPKService.Infrastructure.SOM
                         odp.Add("INTEGER_VALUE", val);
                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                         {
-                            count = connection.QueryFirstOrDefault<int>(str, odp);
+                            count = connection.ExecuteScalar<int>(str, odp);
                         }
                         if (count > 0)
                         {
@@ -127,7 +127,7 @@ namespace LPKService.Infrastructure.SOM
                         odp.Add("SAP_CODE", val);
                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                         {
-                            count = connection.QueryFirstOrDefault<int>(str, odp);
+                            count = connection.ExecuteScalar<int>(str, odp);
                         }
                         if (count > 0)
                         {
@@ -185,7 +185,7 @@ namespace LPKService.Infrastructure.SOM
                         odp.Add("INTEGER_VALUE", val);
                         using (OracleConnection connection = BaseRepo.GetDBConnection())
                         {
-                            count = connection.QueryFirstOrDefault<int>(str, odp);
+                            count = connection.ExecuteScalar<int>(str, odp);
                         }
                         if (count > 0)
                         {
@@ -267,7 +267,7 @@ namespace LPKService.Infrastructure.SOM
                         if (line.productType.Length > 0)
                         {
                             newData.m_strProductCode = CheckValueProductType(bVerifyData, m_L4MsgInfoLine).ToString();
-                            newData.m_strProductCode = som.ProductTypeCheck(newData.m_strProductCode);
+                            newData.m_strProductCode = ProductTypeCheck(newData.m_strProductCode);
                         }
                     }
                     if (bVerifyData)
@@ -321,6 +321,26 @@ namespace LPKService.Infrastructure.SOM
                 return TLineStatus.IsClosed;
             else
                 return TLineStatus.IsOpened;
+        }
+        /// <summary>
+        /// Определение типа продукта
+        /// </summary>
+        /// <param name="product">название продукта</param>
+        /// <returns>
+        /// Тип либо название продукта
+        /// </returns>
+        public string ProductTypeCheck(string product)
+        {
+            string type;
+            string sqlstr = $"select product_type from   product_type_catalogue where  sap_code = {product}";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                type = connection.ExecuteScalar<string>(sqlstr, null);
+            }
+            if (type != null)
+                return type;
+            else
+                return product;
         }
     }
 }

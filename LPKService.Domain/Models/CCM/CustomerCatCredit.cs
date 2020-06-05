@@ -3,7 +3,10 @@ using LPKService.Repository;
 
 namespace LPKService.Domain.Models.CCM
 {
-    public class CustomerCatCredit
+    /// <summary>
+    /// Модель таблицы CUSTOMER_CATALOG_CREDIT
+    /// </summary>
+    public class CustomerCatCredit:BaseModel
     {
         [Column("CUSTOMER_ID", "ИД заказчика")]
         public int customerId { get; set; }

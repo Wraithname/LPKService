@@ -37,7 +37,7 @@ namespace LPKService.Infrastructure.Shipping
             odp.Add("BOL_ID", strBolId);
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                bolId = connection.QueryFirstOrDefault<string>(str, odp);
+                bolId = connection.ExecuteScalar<string>(str, odp);
             }
             if (bolId == "")
             {

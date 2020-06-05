@@ -7,40 +7,36 @@ using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Work
+namespace LPKService.Infrastructure.SOM
 {
     interface IPartitionOrder
     {
         bool PartitionOfOrder(int msgCounter);
     }
-    struct L4L3_soline
-    {
-        public string lineID { get; set; }
-    }
-    class PartitionOrder : IPartitionOrder
+    class PartitionOrder : SOMRepoBase,IPartitionOrder
     {
         public bool PartitionOfOrder(int msgCounter)
         {
             int suffixSoId = 0; // суффикс номера заказа
             int newMessageCounter;
-            List<L4L3_soline> cust=new List<L4L3_soline>();
+            List<string> cust=new List<string>();
             
                 OracleDynamicParameters odp = new OracleDynamicParameters { BindByName = true };
                 odp.Add("P_MSG_ct", msgCounter);
                 StringBuilder stm = new StringBuilder(@"SELECT SO_LINE_ID FROM L4_L3_SO_LINE WHERE MSG_COUNTER =:P_MSG_ct");
                 using (OracleConnection conn = BaseRepo.GetDBConnection())
                 {
-                    cust = conn.Query<L4L3_soline>(stm.ToString(), odp).AsList();
+                    cust = conn.Query<string>(stm.ToString(), odp).AsList();
                 }
                 if (cust == null)
                     return false;
-                using (OracleConnection conn = BaseRepo.GetDBConnection())
+                using (OracleConnection conn = GetConnection())
                 {
                     using (var transaction = conn.BeginTransaction())
                     {
                         try
                         {
-                            foreach (L4L3_soline line in cust)
+                            foreach (string line in cust)
                             {
                                 suffixSoId++;
                                 string str = "select L4_L3_SRV_MSG.NEXTVAL as val from dual";
@@ -131,7 +127,7 @@ namespace Work
                      "AND   l4l3sl.SO_LINE_ID=:SO_LINE_ID        ";
                                 odpr.Add("MsgCnt", msgCounter);
                                 odpr.Add("KEY_MSG_COUNTER", newMessageCounter);
-                                odpr.Add("SO_LINE_ID", line.lineID);
+                                odpr.Add("SO_LINE_ID", line);
                                 l4L3SerSo=conn.QueryFirst<L4L3SoLine>(str, odpr, transaction);
                                 if (l4L3SerSo != null)
                                 {
@@ -469,7 +465,7 @@ namespace Work
                                         ":CUSTOMER_PO_DATE," +
                                         ":SO_NOTES," +
                                         ":MSG_COUNTER_SOURCE) ";
-                                    tr2er.Add("MSG_COUNTER", l4L3SoHeader.keyMsgCounter);
+                                    tr2er.Add("MSG_COUNTER", l4L3SoHeader.msgCounter);
                                     tr2er.Add("SO_ID", l4L3SoHeader.soID);
                                     tr2er.Add("INSERT_DATE", l4L3SoHeader.insertDate);
                                     tr2er.Add("CUSTOMER_ID", l4L3SoHeader.customerId);

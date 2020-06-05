@@ -1,5 +1,4 @@
 ﻿using System;
-using LPKService.Domain.Models;
 using Dapper.Oracle;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
@@ -13,7 +12,7 @@ using LPKService.Domain.Models.Work;
 
 namespace LPKService.Infrastructure.CCM
 {
-    public class CCManagement : ICCManagement
+    public class CCManagement : CCMRepoBase,ICCManagement
     {
         private Logger logger = LogManager.GetLogger(nameof(CCManagement));
         private L4L3CustomerRepo customerRepo = new L4L3CustomerRepo();
@@ -29,7 +28,7 @@ namespace LPKService.Infrastructure.CCM
             string str = "select an_control_value from   attrb_control_rules where  attrb_code like 'ENDUSER_STEEL_DESIGNATION' and an_control_value  = " + strClassification;
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                res = connection.QueryFirstOrDefault<string>(str, odp);
+                res = connection.ExecuteScalar<string>(str, odp);
             }
             if (res != "")
                 return res;
@@ -52,7 +51,7 @@ namespace LPKService.Infrastructure.CCM
             string str = "select count(*) from   customer_catalogue where  customer_descr_id  = " + strCustomerDescrId;
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                RecordCount = connection.QueryFirstOrDefault<int>(str, odp);
+                RecordCount = connection.ExecuteScalar<int>(str, odp);
             }
             if (RecordCount > 0)
                 return true;
@@ -70,7 +69,7 @@ namespace LPKService.Infrastructure.CCM
             TCheckResult checkres = new TCheckResult();
             checkres.rejType = 0;
             TL4EngineInterfaceMngRepo engInterf = new TL4EngineInterfaceMngRepo(customer, l4MsgInfo);
-            AddressEngine addressEngine = new AddressEngine();
+            AddressEngine addressEngine = new AddressEngine(engInterf);
             CCatalEngine catalEngine = new CCatalEngine();
             CCreditEngine creditEngine = new CCreditEngine();
             bool res = true;
@@ -226,7 +225,7 @@ namespace LPKService.Infrastructure.CCM
             logger.Trace("Init 'FillAddressEngine' function");
             bool result = true;
             string str = "SELECT * FROM COUNTRY WHERE COUNTRY =  " + customer.country;
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 cnt = connection.QueryFirstOrDefault<Country>(str, odp);
             }
@@ -255,7 +254,7 @@ namespace LPKService.Infrastructure.CCM
                 odp = null;
             }
             str = "SELECT * FROM ZIP_CATALOGUE WHERE COUNTRY = " + customer.country + " AND ZIP_CODE = " + customer.zipCode + " AND CITY = " + customer.city;
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 zip = connection.QueryFirstOrDefault<ZipCatalogue>(str, odp);
             }
@@ -316,7 +315,7 @@ namespace LPKService.Infrastructure.CCM
             string str = "SELECT CUSTOMER_ID FROM CUSTOMER_CATALOG WHERE CUSTOMER_DESCR_ID = " + sCustomerDescrId;
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
-                res = connection.QueryFirstOrDefault<int>(str, odp);
+                res = connection.ExecuteScalar<int>(str, odp);
             }
             if (res > 0)
                 return res;

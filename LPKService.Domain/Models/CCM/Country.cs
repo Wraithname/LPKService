@@ -3,7 +3,10 @@ using LPKService.Repository;
 
 namespace LPKService.Domain.Models.CCM
 {
-    public class Country
+    /// <summary>
+    /// Модель таблицы COUNTRY
+    /// </summary>
+    public class Country:BaseModel
     {
         [Column("COUNTRY", "Страна")]
         string countr { get; set; }

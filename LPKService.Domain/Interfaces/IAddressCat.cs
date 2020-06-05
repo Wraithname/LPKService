@@ -2,6 +2,9 @@
 
 namespace LPKService.Domain.Interfaces
 {
+    /// <summary>
+    /// Интерфейс класса AddressCat
+    /// </summary>
     public interface IAddressCat
     {
         void Create(TL4EngineInterfaceMng interfaceMng);

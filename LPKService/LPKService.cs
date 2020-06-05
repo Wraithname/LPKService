@@ -4,6 +4,10 @@ using System.Runtime.InteropServices;
 using System.Configuration;
 using System.Threading;
 using NLog;
+using Oracle.ManagedDataAccess.Client;
+using LPKService.Repository;
+using System;
+using Dapper;
 
 namespace LPKService
 {
@@ -47,9 +51,14 @@ namespace LPKService
         // Воспомогательный метод для отладки сервиса
         internal void ConsoleApp(string[] args)
         {
-            logger.Debug("Запуск как консольное приложение");
-            PeriodExecuteStart();
-            logger.Debug("Завершение работы консольного приложения");
+            //logger.Debug("Запуск как консольное приложение");
+            using (OracleConnection conn = BaseRepo.GetDBConnection())
+            {
+                Console.WriteLine(conn.ExecuteScalar<string>("SELECT user_id FROM all_users where username='OMK'", null));
+                Console.WriteLine("Success");
+                Console.ReadKey();
+            }
+                
         }
 #endif
         /// <summary>
