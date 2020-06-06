@@ -3,9 +3,9 @@ using LPKService.Domain.Models;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using LPKService.Domain.Models.CCM;
-using LPKService.Domain.Models.Work;
+using LPKService.Infrastructure.Work;
 
 namespace LPKService.Infrastructure.CCM
 {
@@ -13,7 +13,7 @@ namespace LPKService.Infrastructure.CCM
     {
         CustomerCat customerCat;
 
-        public CCatalEngine(TL4EngineInterfaceMng interfaceMng)
+        public CCatalEngine(TL4EngineInterfaceMngRepo interfaceMng)
         {
             this.customerCat = new CustomerCat();
         }

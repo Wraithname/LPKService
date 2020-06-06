@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
-namespace LPKService.Repository
+namespace LPKService.Domain.BaseRepository
 {
     public abstract class BaseRepo
     {

@@ -1,9 +1,12 @@
-﻿using LPKService.Repository;
+﻿using LPKService.Domain.BaseRepository;
 using System;
 
 namespace LPKService.Domain.Models.SOM
 {
-    public class L4L3SoHeader
+    /// <summary>
+    /// Модель таблицы L4_L3_SO_HEADER
+    /// </summary>
+    public class L4L3SoHeader:BaseModel
     {
         [Column("MSG_COUNTER", "Счетчик сообщений")]
         public int msgCounter { get; set; }

@@ -2,7 +2,7 @@
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using Dapper.Oracle;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using LPKService.Domain.Models.SOM;
 
 namespace LPKService.Infrastructure.Work

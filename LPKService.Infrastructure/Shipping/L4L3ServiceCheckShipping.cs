@@ -5,7 +5,7 @@ using Oracle.ManagedDataAccess.Client;
 using Dapper.Oracle;
 using Dapper;
 using LPKService.Infrastructure.Repository;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using LPKService.Domain.Models.Shipping;
 using System.Collections.Generic;
 

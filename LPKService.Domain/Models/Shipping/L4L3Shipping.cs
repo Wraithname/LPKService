@@ -1,5 +1,5 @@
 ﻿using System;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 
 namespace LPKService.Domain.Models.Shipping
 {

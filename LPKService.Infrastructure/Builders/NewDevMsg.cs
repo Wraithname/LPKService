@@ -4,7 +4,7 @@ using LPKService.Domain.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using LPKService.Domain.Models.Work.Delivery;
 
 namespace LPKService.Infrastructure.Builders

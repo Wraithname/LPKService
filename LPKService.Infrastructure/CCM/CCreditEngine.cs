@@ -1,6 +1,6 @@
 ﻿using System;
 using LPKService.Domain.Models.CCM;
-using LPKService.Domain.Models.Work;
+using LPKService.Infrastructure.Work;
 
 namespace LPKService.Infrastructure.CCM
 {
@@ -8,14 +8,9 @@ namespace LPKService.Infrastructure.CCM
     {
         CustomerCatCredit catCredit;
 
-        public CCreditEngine()
+        public CCreditEngine(TL4EngineInterfaceMngRepo interfaceMng)
         {
             this.catCredit = new CustomerCatCredit();
-        }
-        //Подумать над функционалом
-        public void Create(TL4EngineInterfaceMng interfaceMng)
-        {
-            throw new NotImplementedException();
         }
         public void ForceModUserDatetime(string modUserId, string str = "")
         {

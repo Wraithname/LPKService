@@ -2,7 +2,7 @@
 using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
 using NLog;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 
 namespace LPKService.Infrastructure.Repository
 {

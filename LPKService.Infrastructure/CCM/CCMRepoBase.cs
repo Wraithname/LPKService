@@ -1,5 +1,5 @@
 ﻿using Dapper.Oracle;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using NLog;
 using Oracle.ManagedDataAccess.Client;
 using System;
@@ -14,6 +14,10 @@ namespace LPKService.Infrastructure.CCM
     public class CCMRepoBase:BaseRepo
     {
         private Logger logger = LogManager.GetLogger(nameof(CCM));
+        /// <summary>
+        /// Подключение к БД
+        /// </summary>
+        /// <returns>Подключение к БД для получение данных через модель</returns>
         public override OracleConnection GetConnection()
         {
             return GetDBConnection(new List<Type>
@@ -26,6 +30,11 @@ namespace LPKService.Infrastructure.CCM
                 typeof(ZipCatalogue)
             });
         }
+        /// <summary>
+        /// Логирование sql запросов с параметрами
+        /// </summary>
+        /// <param name="stm">Строка запроса</param>
+        /// <param name="odp">Параметры</param>
         protected void LogSqlWithParams(string stm, OracleDynamicParameters odp = null)
         {
             Regex regex = new Regex(" {0,}\r{0,1}\n{0,1} {2,}");

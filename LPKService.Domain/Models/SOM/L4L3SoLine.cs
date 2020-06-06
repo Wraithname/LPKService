@@ -1,12 +1,13 @@
 ﻿using System;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 
 namespace LPKService.Domain.Models.SOM
 {
-    public class L4L3SoLine
+    /// <summary>
+    /// Модель таблицы L4_L3_SO_LINE
+    /// </summary>
+    public class L4L3SoLine:BaseModel
     {
-        [Column("KEY_MSG_COUNTER", "Счетчик сообщений")]
-        public int keyMsgCounter { get; set; }
         [Column("MSG_COUNTER", "Счетчик сообщений")]
         public int msgCounter { get; set; }
         [Column("SO_LINE_ID", "ИД линии заказа")]

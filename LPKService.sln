@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LPKService.Infrastructure",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{B5CB31DD-B458-4A8C-A51C-6B1715F4C183}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LPKService.Repository", "LPKService.Repository\LPKService.Repository.csproj", "{81927878-6F57-464A-8AA2-3A6AF276D061}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,22 +67,14 @@ Global
 		{A8D446B0-F73F-4048-B1DE-C39274313A3C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A8D446B0-F73F-4048-B1DE-C39274313A3C}.Release|x86.ActiveCfg = Release|Any CPU
 		{A8D446B0-F73F-4048-B1DE-C39274313A3C}.Release|x86.Build.0 = Release|Any CPU
-		{81927878-6F57-464A-8AA2-3A6AF276D061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81927878-6F57-464A-8AA2-3A6AF276D061}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81927878-6F57-464A-8AA2-3A6AF276D061}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{81927878-6F57-464A-8AA2-3A6AF276D061}.Debug|x86.Build.0 = Debug|Any CPU
-		{81927878-6F57-464A-8AA2-3A6AF276D061}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81927878-6F57-464A-8AA2-3A6AF276D061}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81927878-6F57-464A-8AA2-3A6AF276D061}.Release|x86.ActiveCfg = Release|Any CPU
-		{81927878-6F57-464A-8AA2-3A6AF276D061}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{882D4DD8-C734-4D0F-AAC0-577DA73202E6} = {B5CB31DD-B458-4A8C-A51C-6B1715F4C183}
 		{3E9D748E-1A4B-4E1E-AA17-DBBB1017CCB7} = {23E50A6A-2937-4568-8EF1-C388DF583569}
 		{A8D446B0-F73F-4048-B1DE-C39274313A3C} = {CFEC63B1-4789-4E7E-9AB3-570D0804087D}
-		{81927878-6F57-464A-8AA2-3A6AF276D061} = {CFEC63B1-4789-4E7E-9AB3-570D0804087D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80BF754F-2C5D-451B-8F47-574E89B769A2}

@@ -8,7 +8,7 @@ using LPKService.Domain.Interfaces;
 using NLog;
 using LPKService.Infrastructure.Work;
 using LPKService.Infrastructure.Repository;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using LPKService.Domain.Models.Work;
 
 namespace LPKService.Infrastructure.SOM

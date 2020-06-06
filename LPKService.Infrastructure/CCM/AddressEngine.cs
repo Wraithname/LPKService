@@ -3,7 +3,7 @@ using LPKService.Domain.Models.CCM;
 using LPKService.Domain.Interfaces;
 using LPKService.Infrastructure.Work;
 using Oracle.ManagedDataAccess.Client;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using Dapper;
 using Dapper.Oracle;
 
@@ -13,16 +13,27 @@ namespace LPKService.Infrastructure.CCM
     {
         AddresCat adressCatalog;
         bool exist=false;
+        /// <summary>
+        /// Конструктор создания модели Address_catalogue
+        /// </summary>
+        /// <param name="interfaceMng"></param>
         public AddressEngine(TL4EngineInterfaceMngRepo interfaceMng)
         {
             this.adressCatalog = new AddresCat();
         }
-
+        /// <summary>
+        /// Получение addressID
+        /// </summary>
+        /// <returns>addressID</returns>
         public string GetAddressId()
         {
             return adressCatalog.addressId.ToString();
         }
-        
+        /// <summary>
+        /// Количество записей для адреса
+        /// </summary>
+        /// <param name="addressId">ИД адресса</param>
+        /// <returns>Число строк</returns>
         public int LoadData(int addressId)
         {
             int count=-1;
@@ -38,6 +49,10 @@ namespace LPKService.Infrastructure.CCM
             }
             return count;
         }
+        /// <summary>
+        /// Получение данных по ИД адреса
+        /// </summary>
+        /// <param name="addressId">ИД адресса</param>
         public void GetData(int addressId)
         {
             string sqlstr = $"SELECT * FROM ADDRESS_CATALOG WHERE ADDRESS_ID = {addressId}";
@@ -46,6 +61,13 @@ namespace LPKService.Infrastructure.CCM
                 adressCatalog = connection.QueryFirstOrDefault<AddresCat>(sqlstr, null);
             }
         }
+        /// <summary>
+        /// Сохранение данных по адресу
+        /// </summary>
+        /// <returns>
+        /// true - данные сохранены
+        /// false - данные не сохранены
+        /// </returns>
         public bool SaveData()
         {
             bool res = false;
@@ -145,68 +167,107 @@ namespace LPKService.Infrastructure.CCM
             }
             return res;
         }
-
+        /// <summary>
+        /// Запись 1 адреса
+        /// </summary>
+        /// <param name="address1">1 адрес</param>
         public void SetAddress1(string address1)
         {
             adressCatalog.address1 = address1;
         }
-
+        /// <summary>
+        /// Запись 2 адреса
+        /// </summary>
+        /// <param name="address2">2 адрес</param>
         public void SetAddress2(string address2)
         {
             adressCatalog.address2 = address2;
         }
-
+        /// <summary>
+        /// Запись 3 адреса
+        /// </summary>
+        /// <param name="address3">3 адрес</param>
         public void SetAddress3(string address3)
         {
             adressCatalog.contactMobile = address3;
         }
-
+        /// <summary>
+        /// Запись имени заказчика
+        /// </summary>
+        /// <param name="custName">Имя заказчика</param>
         public void SetAddressFullName(string custName)
         {
             adressCatalog.addressFullName = custName;
         }
-
+        /// <summary>
+        /// Запись города
+        /// </summary>
+        /// <param name="city">Город</param>
         public void SetCity(string city)
         {
             adressCatalog.city = city;
         }
-
+        /// <summary>
+        /// Запись контактного факса
+        /// </summary>
+        /// <param name="contactFax">Контактный факс</param>
         public void SetContactFax(string contactFax)
         {
             adressCatalog.contactFax = contactFax;
         }
-
+        /// <summary>
+        /// Запись контактоного телефона
+        /// </summary>
+        /// <param name="contactMobile">Контактный телефон</param>
         public void SetContactMobile(string contactMobile)
         {
             adressCatalog.contactMobile = contactMobile;
         }
-
+        /// <summary>
+        /// Запись имени контакта
+        /// </summary>
+        /// <param name="contactName">Имя контакта</param>
         public void SetContactName(string contactName)
         {
             adressCatalog.contactName = contactName;
         }
-
+        /// <summary>
+        /// Запись контактного 1 телефона 
+        /// </summary>
+        /// <param name="contactPhone">Контактный телефон</param>
         public void SetContactPhone1(string contactPhone)
         {
             adressCatalog.contactPhone1 = contactPhone;
         }
-
+        /// <summary>
+        /// Запись страны
+        /// </summary>
+        /// <param name="country">Страна</param>
         public void SetCountry(string country)
         {
             adressCatalog.country = country;
         }
-
+        /// <summary>
+        /// Запись E-mail адреса
+        /// </summary>
+        /// <param name="contactEmail">E-mail адрес</param>
         public void SetEmailAddress(string contactEmail)
         {
             adressCatalog.emailAddress = contactEmail;
         }
-
+        /// <summary>
+        /// Запись области
+        /// </summary>
+        /// <param name="state">Область</param>
         public void SetState(string state)
         {
 
             adressCatalog.state = state;
         }
-
+        /// <summary>
+        /// Запись почтового индекса
+        /// </summary>
+        /// <param name="zimCode">Почтовый индекс</param>
         public void SetZipCode(string zimCode)
         {
             adressCatalog.zipCode = zimCode;

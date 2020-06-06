@@ -4,7 +4,6 @@ using LPKService.Domain.Interfaces;
 using LPKService.Domain.Models.Material;
 using LPKService.Domain.Models.Work;
 using LPKService.Infrastructure.Repository;
-using LPKService.Repository;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;

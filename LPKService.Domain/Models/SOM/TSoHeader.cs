@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace LPKService.Domain.Models.SOM
 {
+    /// <summary>
+    /// Программная модель таблицы SO_HEADER
+    /// </summary>
     public class TSoHeader
     {
         public int m_iSoID { get; set; }

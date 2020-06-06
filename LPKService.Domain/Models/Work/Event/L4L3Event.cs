@@ -1,5 +1,5 @@
 ﻿using System;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 
 namespace LPKService.Domain.Models.Work.Event
 {
@@ -8,8 +8,6 @@ namespace LPKService.Domain.Models.Work.Event
     /// </summary>
     public class L4L3Event:BaseModel
     {
-        [Column("KEY_MSG_COUNTER", "Счетчик сообщений")]
-        public int keyMsgCounter { get; set; }
         [Column("MSG", "Счетчик сообщений")]
         public int msgCounter { get; set; }
         [Column("MSG_ID", "ИД сообщения")]

@@ -5,7 +5,7 @@ using System.Configuration;
 using System.Threading;
 using NLog;
 using Oracle.ManagedDataAccess.Client;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using System;
 using Dapper;
 

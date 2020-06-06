@@ -2,7 +2,7 @@
 using Dapper.Oracle;
 using LPKService.Domain.Models.SOM;
 using LPKService.Domain.Models.Work.Event;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +15,11 @@ namespace LPKService.Infrastructure.SOM
     }
     class PartitionOrder : SOMRepoBase,IPartitionOrder
     {
+        /// <summary>
+        /// Перемещение таблиц в обработку
+        /// </summary>
+        /// <param name="msgCounter"></param>
+        /// <returns></returns>
         public bool PartitionOfOrder(int msgCounter)
         {
             int suffixSoId = 0; // суффикс номера заказа
@@ -284,7 +289,7 @@ namespace LPKService.Infrastructure.SOM
                        "                                    :SLIT_WIDTH_NTOL,         " +
                        "                                    :MSG_COUNTER_SOURCE,      " +
                        "                                    :GRADE_CATEGORY)          ";
-                                    odpi.Add("MSG_COUNTER", l4L3SerSo.keyMsgCounter);
+                                    //odpi.Add("MSG_COUNTER", l4L3SerSo.keyMsgCounter);
                                     odpi.Add("SO_LINE_ID", l4L3SerSo.soLineId);
                                     odpi.Add("SO_ID", l4L3SerSo.soId);
                                     odpi.Add("SO_TYPE_CODE", l4L3SerSo.soTypeCode);
@@ -362,8 +367,8 @@ namespace LPKService.Infrastructure.SOM
                                     odpi.Add("GRADE_CATEGORY", l4L3SerSo.gradeCategory);
                                     conn.Execute(str, odpi, transaction);
                                 }
-                                //*******L4_L3_SERVICE_EVENT************
-                                L4L3Event l4L3Event = new L4L3Event();
+                            //*******L4_L3_SERVICE_EVENT************
+                            L4L3Event l4L3Event = new L4L3Event();
                                 OracleDynamicParameters odpe = new OracleDynamicParameters();
                                 str = "SELECT :KEY_MSG_COUNTER AS KEY_MSG_COUNTER," +
                                     "l4l3Ev.MSG_ID," +
@@ -412,7 +417,7 @@ namespace LPKService.Infrastructure.SOM
                                         ":MOD_DATETIME," +
                                         ":MSG_COUNTER_SOURCE)";
                                     OracleDynamicParameters odpre = new OracleDynamicParameters();
-                                    odpre.Add("MSG_COUNTER", l4L3Event.keyMsgCounter);
+                                    //odpre.Add("MSG_COUNTER", l4L3Event.keyMsgCounter);
                                     odpre.Add("MSG_ID", l4L3Event.msgId);
                                     odpre.Add("MSG_DATETIME", l4L3Event.msgDatetime);
                                     odpre.Add("OP_CODE", l4L3Event.opCode);

@@ -9,7 +9,7 @@ using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using NLog;
-using LPKService.Repository;
+using LPKService.Domain.BaseRepository;
 using LPKService.Domain.Models.Work;
 using LPKService.Domain.Models.Work.AutoCloseOrder;
 

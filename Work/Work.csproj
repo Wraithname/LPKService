@@ -100,10 +100,6 @@
       <Project>{A8D446B0-F73F-4048-B1DE-C39274313A3C}</Project>
       <Name>LPKService.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LPKService.Repository\LPKService.Repository.csproj">
-      <Project>{81927878-6f57-464a-8aa2-3a6af276d061}</Project>
-      <Name>LPKService.Repository</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

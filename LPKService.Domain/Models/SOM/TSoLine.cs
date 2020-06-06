@@ -3,6 +3,9 @@ using System;
 
 namespace LPKService.Domain.Models.SOM
 {
+    /// <summary>
+    /// Программная модель таблицы SO_LINE
+    /// </summary>
     public class TSoLine
     {
         public int m_iSoID { get; set; }

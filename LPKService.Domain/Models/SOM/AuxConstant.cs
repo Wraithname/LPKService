@@ -1,7 +1,10 @@
-﻿using LPKService.Repository;
+﻿using LPKService.Domain.BaseRepository;
 
 namespace LPKService.Domain.Models.SOM
 {
+    /// <summary>
+    /// Модель таблицы AUX_CONSTANT
+    /// </summary>
     public class AuxConstant:BaseModel
     {
         [Column("INTEGER_VALUE", "Значение целочисленного типа")]
