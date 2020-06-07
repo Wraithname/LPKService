@@ -95,6 +95,10 @@
       <Project>{3e9d748e-1a4b-4e1e-aa17-dbbb1017ccb7}</Project>
       <Name>LPKService.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Repository\Repository.csproj">
+      <Project>{16230be5-7057-40ad-8e83-5d4d9ba3e070}</Project>
+      <Name>Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -105,6 +109,7 @@
     </None>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

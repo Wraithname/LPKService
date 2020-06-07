@@ -10,7 +10,7 @@ namespace LPKService.Infrastructure.CCM
 {
     public class L4L3CustomerRepo : CCMRepoBase,IL4L3Customer
     {
-        private Logger logger = LogManager.GetLogger(nameof(Repository));
+        private Logger logger = LogManager.GetLogger(nameof(CCM));
         /// <summary>
         /// Получение таблицы на обработку
         /// </summary>

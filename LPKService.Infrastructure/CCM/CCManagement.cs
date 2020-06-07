@@ -5,7 +5,7 @@ using Oracle.ManagedDataAccess.Client;
 using NLog;
 using LPKService.Infrastructure.Work;
 using LPKService.Infrastructure.Repository;
-using LPKService.Domain.BaseRepository;
+using Repository;
 using LPKService.Domain.Interfaces;
 using LPKService.Domain.Models.CCM;
 using LPKService.Domain.Models.Work;
@@ -14,7 +14,7 @@ namespace LPKService.Infrastructure.CCM
 {
     public class CCManagement : CCMRepoBase,ICCManagement
     {
-        private Logger logger = LogManager.GetLogger(nameof(CCManagement));
+        private Logger logger = LogManager.GetLogger(nameof(CCM));
         private L4L3CustomerRepo customerRepo = new L4L3CustomerRepo();
         /// <summary>
         /// Проверка классификации
@@ -187,6 +187,9 @@ namespace LPKService.Infrastructure.CCM
                         creditEngine.SetAddressIdBillTo(Convert.ToInt32(addressEngine.GetAddressId()));
                         creditEngine.SetCreditStatus(1);
                         creditEngine.ForceModUserDatetime(l4ModUserId);
+                        creditEngine.SetInvoiceType("Y");
+                        creditEngine.SetDirectPaymnt("Y");
+                        creditEngine.SetCustomerCode(Convert.ToInt32(customer.customerCurrencyCode));
                         res = creditEngine.SaveData();
                     }
                     // =====================================================================

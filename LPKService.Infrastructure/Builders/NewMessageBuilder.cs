@@ -9,7 +9,7 @@ using Dapper.Oracle;
 using Oracle.ManagedDataAccess.Client;
 using Dapper;
 using NLog;
-using LPKService.Domain.BaseRepository;
+using Repository;
 using LPKService.Domain.Models.Work;
 using LPKService.Domain.Models.Work.AutoCloseOrder;
 
@@ -22,7 +22,7 @@ namespace LPKService.Infrastructure.Builders
     }
     public class NewMessageBuilder : BuildersRepoBase,INewMessageBuilder
     {
-        private Logger logger = LogManager.GetLogger(nameof(NewMessageBuilder));
+        private Logger logger = LogManager.GetLogger(nameof(Builders));
         private readonly IGlobalCheck check;
         private readonly ICCManagement ccm ;
         private readonly ISOManagment som ;

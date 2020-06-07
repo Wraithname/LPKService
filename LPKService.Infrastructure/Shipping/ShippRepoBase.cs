@@ -1,6 +1,6 @@
 ﻿using Dapper.Oracle;
 using LPKService.Domain.Models.Shipping;
-using LPKService.Domain.BaseRepository;
+using Repository;
 using NLog;
 using Oracle.ManagedDataAccess.Client;
 using System;
@@ -13,7 +13,7 @@ namespace LPKService.Infrastructure.Shipping
 {
     public class ShippRepoBase:BaseRepo
     {
-        private Logger logger = LogManager.GetLogger(nameof(Shipping));
+        private Logger logger = LogManager.GetLogger(nameof(BaseRepo));
         /// <summary>
         /// Подключение к БД
         /// </summary>

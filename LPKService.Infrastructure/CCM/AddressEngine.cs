@@ -3,7 +3,7 @@ using LPKService.Domain.Models.CCM;
 using LPKService.Domain.Interfaces;
 using LPKService.Infrastructure.Work;
 using Oracle.ManagedDataAccess.Client;
-using LPKService.Domain.BaseRepository;
+using Repository;
 using Dapper;
 using Dapper.Oracle;
 
@@ -261,7 +261,6 @@ namespace LPKService.Infrastructure.CCM
         /// <param name="state">Область</param>
         public void SetState(string state)
         {
-
             adressCatalog.state = state;
         }
         /// <summary>

@@ -52,9 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseRepository\Attributes.cs" />
-    <Compile Include="BaseRepository\BaseModel.cs" />
-    <Compile Include="BaseRepository\BaseRepo.cs" />
     <Compile Include="Interfaces\IAddressCat.cs" />
     <Compile Include="Interfaces\IAddressEngine.cs" />
     <Compile Include="Interfaces\IAuxConstant.cs" />
@@ -110,6 +107,11 @@
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Repository\Repository.csproj">
+      <Project>{16230be5-7057-40ad-8e83-5d4d9ba3e070}</Project>
+      <Name>Repository</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

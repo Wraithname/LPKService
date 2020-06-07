@@ -7,7 +7,7 @@ using Dapper;
 using Dapper.Oracle;
 using NLog;
 using LPKService.Infrastructure.Repository;
-using LPKService.Domain.BaseRepository;
+using Repository;
 using LPKService.Infrastructure.Work;
 using LPKService.Domain.Models.SOM;
 

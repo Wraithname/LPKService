@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace LPKService.Domain.BaseRepository
+namespace Repository
 {
     public enum ToStringBy { AttrDispalyName, AttrColumnName, PropertyName }
     public class BaseModel

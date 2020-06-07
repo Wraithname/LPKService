@@ -5,7 +5,7 @@ using System.Configuration;
 using System.Threading;
 using NLog;
 using Oracle.ManagedDataAccess.Client;
-using LPKService.Domain.BaseRepository;
+using Repository;
 using System;
 using Dapper;
 
@@ -54,6 +54,7 @@ namespace LPKService
             //logger.Debug("Запуск как консольное приложение");
             using (OracleConnection conn = BaseRepo.GetDBConnection())
             {
+                logger.Debug("Запуск сервиса");
                 Console.WriteLine(conn.ExecuteScalar<string>("SELECT user_id FROM all_users where username='OMK'", null));
                 Console.WriteLine("Success");
                 Console.ReadKey();

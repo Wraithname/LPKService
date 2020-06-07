@@ -8,7 +8,7 @@ using LPKService.Domain.Models;
 using LPKService.Domain.Models.Work.AutoCloseOrder;
 using LPKService.Domain.Models.Work.Delivery;
 using LPKService.Domain.Models.Work.Event;
-using LPKService.Domain.BaseRepository;
+using Repository;
 using Oracle.ManagedDataAccess.Client;
 using NLog;
 
@@ -16,7 +16,7 @@ namespace LPKService.Infrastructure.Builders
 {
     public class BuildersRepoBase :BaseRepo
     {
-        private Logger logger = LogManager.GetLogger(nameof(Work));
+        private Logger logger = LogManager.GetLogger(nameof(BaseRepo));
         /// <summary>
         /// Подключение к БД
         /// </summary>

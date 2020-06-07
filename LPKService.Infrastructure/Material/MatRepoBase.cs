@@ -1,5 +1,5 @@
 ﻿using Dapper.Oracle;
-using LPKService.Domain.BaseRepository;
+using Repository;
 using NLog;
 using Oracle.ManagedDataAccess.Client;
 using System;
@@ -13,7 +13,7 @@ namespace LPKService.Infrastructure.Material
 {
     public class MatRepoBase:BaseRepo
     {
-        private Logger logger = LogManager.GetLogger(nameof(Material));
+        private Logger logger = LogManager.GetLogger(nameof(BaseRepo));
         /// <summary>
         /// Подключение к БД
         /// </summary>

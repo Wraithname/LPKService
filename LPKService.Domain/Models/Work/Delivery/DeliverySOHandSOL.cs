@@ -1,4 +1,4 @@
-﻿using LPKService.Domain.BaseRepository;
+﻿using Repository;
 
 namespace LPKService.Domain.Models.Work.Delivery
 {

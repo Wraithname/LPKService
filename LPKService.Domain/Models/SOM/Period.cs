@@ -1,4 +1,4 @@
-﻿using LPKService.Domain.BaseRepository;
+﻿using Repository;
 using System;
 
 namespace LPKService.Domain.Models.SOM

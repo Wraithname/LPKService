@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LPKService.Domain.BaseRepository
+namespace Repository
 {
     public class ColumnAttribute:Attribute
     {

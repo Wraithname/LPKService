@@ -4,7 +4,7 @@ using LPKService.Domain.Interfaces;
 using LPKService.Domain.Models.CCM;
 using LPKService.Domain.Models.SOM;
 using LPKService.Domain.Models.Work;
-using LPKService.Domain.BaseRepository;
+using Repository;
 using Oracle.ManagedDataAccess.Client;
 
 namespace LPKService.Infrastructure.Work
