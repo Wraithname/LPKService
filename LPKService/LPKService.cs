@@ -4,9 +4,6 @@ using System.Runtime.InteropServices;
 using System.Configuration;
 using System.Threading;
 using NLog;
-using Oracle.ManagedDataAccess.Client;
-using Repository;
-using System;
 
 namespace LPKService
 {
@@ -78,7 +75,8 @@ namespace LPKService
             // Update the service state to Running.
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-            workthread = new Thread(new ThreadStart(PeriodExecuteStart)) {IsBackground=true };
+            workthread = new Thread(PeriodExecuteStart) {IsBackground=true };
+            workthread.Start();
         }
         /// <summary>
         /// Функция для периодического запуска
@@ -131,7 +129,7 @@ namespace LPKService
         {
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_PAUSE_PENDING;
-            serviceStatus.dwWaitHint = 20000;
+            serviceStatus.dwWaitHint = 5000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             logger.Info("Приостановление обработки");
             PauseEvent.Set();
