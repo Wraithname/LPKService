@@ -7,7 +7,6 @@ using NLog;
 using Oracle.ManagedDataAccess.Client;
 using Repository;
 using System;
-using Dapper;
 
 namespace LPKService
 {
@@ -36,8 +35,9 @@ namespace LPKService
     {
         private Logger logger=LogManager.GetLogger(nameof(LPKService));
         private int timeout;
-        private Thread workthread;
-        private System.Timers.Timer timer = new System.Timers.Timer();
+        Thread workthread;
+        AutoResetEvent ShutdownEvent = new AutoResetEvent(false);
+        ManualResetEvent PauseEvent = new ManualResetEvent(false);
         private readonly Work.IServiceWork working;
         public LPKService(Work.IServiceWork working)
         {
@@ -71,12 +71,10 @@ namespace LPKService
             logger.Info("Запуск сервиса");
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
-            serviceStatus.dwWaitHint = 20000;
+            serviceStatus.dwWaitHint = 5000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             var config = ConfigurationManager.AppSettings;
             int.TryParse(config.Get("WorkerTimeout") ?? "20000", out timeout);
-            timer.Interval = timeout; // 20 секунд
-            timer.Elapsed += new ElapsedEventHandler(this.OnTimer);
             // Update the service state to Running.
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
@@ -87,16 +85,14 @@ namespace LPKService
         /// </summary>
         private void PeriodExecuteStart()
         {
-            timer.Start();
-        }
-        /// <summary>
-        /// Действие по таймеру
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnTimer(object sender, ElapsedEventArgs e)
-        {
-           working.MngLoop();
+            while (!ShutdownEvent.WaitOne(timeout))
+            {
+                if (!PauseEvent.WaitOne(0))
+                {
+                    logger.Debug($"Запуска обработчика каждые {timeout / 1000} сек.");
+                    working.MngLoop();
+                }
+            }
         }
         /// <summary>
         /// Продолжение работы сервиса
@@ -105,8 +101,8 @@ namespace LPKService
         {
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_CONTINUE_PENDING;
-            serviceStatus.dwWaitHint = 20000;
-            timer.Start();
+            serviceStatus.dwWaitHint = 5000;
+            PauseEvent.Reset();
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             logger.Info("Возобновление обработки");
             base.OnContinue();
@@ -119,11 +115,10 @@ namespace LPKService
             // Update the service state to Stop Pending.
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
-            serviceStatus.dwWaitHint = 20000;
+            serviceStatus.dwWaitHint = 5000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-            workthread?.Join(20000);
-            timer.Stop();
-            timer.Close();
+            ShutdownEvent.Set();
+            workthread?.Join(5000);
             logger.Info("Сервис остановлен");
             // Update the service state to Stopped.
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
@@ -139,7 +134,7 @@ namespace LPKService
             serviceStatus.dwWaitHint = 20000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             logger.Info("Приостановление обработки");
-            timer.Stop();
+            PauseEvent.Set();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_PAUSED;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             base.OnPause();
