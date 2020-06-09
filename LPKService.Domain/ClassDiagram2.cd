@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="LPKService.Domain.Models.CCM.AddresCat" Collapsed="true">
+    <Position X="32.75" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ABIAAQAgAgEAACCAAAIACBsDBAABACAGAAAABEIACAA=</HashCode>
+      <FileName>Models\CCM\AddressCat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.CCM.Country" Collapsed="true">
+    <Position X="5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAABAAAIEAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Models\CCM\Country.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.CCM.CustomerCat" Collapsed="true">
+    <Position X="30" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ABCBIEAAQgACIASBQgAAQABgBIABIWAAAAKIBIIAEgE=</HashCode>
+      <FileName>Models\CCM\CustomerCat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.CCM.CustomerCatCredit">
+    <Position X="13.75" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>QACAAgQCgAIhAACAAQAYBEBAAAAADCAEAAARAEBAACE=</HashCode>
+      <FileName>Models\CCM\CustomerCatCredit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.CCM.L4L3Customer" Collapsed="true">
+    <Position X="30" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>ABCAIQAgBAECICAgAAAACAAgBAAAAWBGAASQAAIAAAA=</HashCode>
+      <FileName>Models\CCM\L4L3Customer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.CCM.ZipCatalogue" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAACAAAAACEgQAEAAAAAGAAAACAAAAAA=</HashCode>
+      <FileName>Models\CCM\ZipCatalogue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Material.L4L3RmAndMatCat" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAgAAAACAAAAAAAEAAAAEEAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Material\L4L3RmAndMatCat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Shipping.L4L3Shipping" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AABAAAIAAAAAAAAAAAAAAAAAgAAQEQAAAAAEAAAAAAA=</HashCode>
+      <FileName>Models\Shipping\L4L3Shipping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.ACEandSoLine" Collapsed="true">
+    <Position X="32.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAQAhABIAAAAIAAAQAAIAIQABAAEAM=</HashCode>
+      <FileName>Models\SOM\ACEandSoLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.AttrbContrExtLink" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAQAAAAQAAAAAAA=</HashCode>
+      <FileName>Models\SOM\AttrbContrExtLink.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.AuxConstant">
+    <Position X="20.75" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAACAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Models\SOM\AuxConstant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.L4L3SoHeader">
+    <Position X="20.25" Y="4.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>gAQAAAAAAAABAAAAAAEAABAAAAgAARAAAAAQAgEAAAA=</HashCode>
+      <FileName>Models\SOM\L4L3SoHeader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.L4L3SoLine" Collapsed="true">
+    <Position X="35" Y="2.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>BTBjiBCADAhAAGIOykdBYGFRqYA5NRGFCQkYLGIQNQw=</HashCode>
+      <FileName>Models\SOM\L4L3SoLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.LinesCom" Collapsed="true">
+    <Position X="35.25" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BTBjjBGADAhAAGIOykfBYGFRqZA5NRGFCQkYLGYQNQw=</HashCode>
+      <FileName>Models\SOM\LinesCom.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.Period">
+    <Position X="17.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAQAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Models\SOM\Period.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.THeaderNote" Collapsed="true">
+    <Position X="5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SOM\THeaderNote.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.TLineNote" Collapsed="true">
+    <Position X="32.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAEAAAAAAAAAAAAAAAAQAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Models\SOM\TLineNote.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.TSoHeader" Collapsed="true">
+    <Position X="30.25" Y="1.5" Width="2.25" />
+    <NestedTypes>
+      <Enum Name="LPKService.Domain.Models.SOM.TSoHeader.ContractType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\SOM\TSoHeader.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IAAEAAgEAEAIAAAAAEAQAQAQAAAAAAARAAAAAQACAAA=</HashCode>
+      <FileName>Models\SOM\TSoHeader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.SOM.TSoLine" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUEQACQAAAAQAAAAAAwAQAAAAAAAAA1AAAQAQADAAA=</HashCode>
+      <FileName>Models\SOM\TSoLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.AutoCloseOrder.AutoClose">
+    <Position X="14" Y="8.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAgAAAABQAAAQBQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Work\AutoCloseOrder\AutoClose.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.Delivery.DeliveryESOHandSOL" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABBBAAAAAAAAAAAAAAAAAACAABQEYAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Work\Delivery\DeliveryESOHandSOL.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.Delivery.DeliverySOHandSOL" Collapsed="true">
+    <Position X="30" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AABBAAAAAAAAAAAAAAAAAAACAABQEIAAAIAAAAAAAAA=</HashCode>
+      <FileName>Models\Work\Delivery\DeliverySOHandSOL.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.Delivery.JoinedModel" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Work\Delivery\JoinedModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.Delivery.L4L3DelEventDel" Collapsed="true">
+    <Position X="5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABBAAAAAAAAAAAAAAAAAAAAAAAEQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Work\Delivery\L4L3DelEventDel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.Delivery.L4L3Delivery">
+    <Position X="17.25" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAAQIAAAAAAAAAAAAAAAABQEQAAAIAABEAAAAA=</HashCode>
+      <FileName>Models\Work\Delivery\L4L3Delivery.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.EngineSom">
+    <Position X="17.25" Y="4" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Work\EngineSom.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.TCheckRelatedList" Collapsed="true">
+    <Position X="32.75" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Work\TCheckRelatedList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.TCheckResult">
+    <Position X="20.75" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAQIAAAAAA=</HashCode>
+      <FileName>Models\Work\TCheckResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.TL4EngineInterfaceMng">
+    <Position X="13.75" Y="6.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Work\TL4EngineInterfaceMng.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.TL4MsgInfo" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAQAAAAAAAAAAAAAAAAAAAAAAQAECQAAAwAAAAg=</HashCode>
+      <FileName>Models\Work\TL4MsgInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.TL4MsgInfoLine">
+    <Position X="17.25" Y="2.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAIQAAAA=</HashCode>
+      <FileName>Models\Work\TL4MsgInfoLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.TMessageResult" Collapsed="true">
+    <Position X="2.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Work\TMessageResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.Work.Event.L4L3Event">
+    <Position X="20.25" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAQBBAQAAAAAAAAAAAAAIAAAAAAAAQAACQAABwAAABg=</HashCode>
+      <FileName>Models\Work\Event\L4L3Event.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LPKService.Domain.Models.VecAuto" Collapsed="true">
+    <Position X="32.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAEAAAAA=</HashCode>
+      <FileName>Models\Work\VecAuto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="LPKService.Domain.Interfaces.IAddressCat">
+    <Position X="16.25" Y="17.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AIgABQAAABQQAAAAgACAAAAQQQgAAEAAgACAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IAddressCat.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.IAddressEngine">
+    <Position X="13" Y="17.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AIgABQAAABQQAAAAgACAAAAQQQgAAAAAgACAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IAddressEngine.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.IAuxConstant">
+    <Position X="20.25" Y="24.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAACAAAAAQAAAAA=</HashCode>
+      <FileName>Interfaces\IAuxConstant.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.ICCManagement">
+    <Position X="12.25" Y="27.5" Width="7.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAQAAAAABAAgAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\ICCManagement.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.ICCreditEngine">
+    <Position X="20.25" Y="26.75" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQCAAAAAAAAAAQAAAAAECAAAEAAAAAAAQ=</HashCode>
+      <FileName>Interfaces\ICCreditEngine.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.IL4L3Customer">
+    <Position X="19.75" Y="20.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IL4L3Customer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.IL4L3Shipping">
+    <Position X="12.75" Y="22" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IL4L3Shipping.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.IL4L3SoHeader">
+    <Position X="16.5" Y="22" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IL4L3SoHeader.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.IMaterial">
+    <Position X="13.5" Y="23.25" Width="9" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Interfaces\IMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.ISOManagment">
+    <Position X="13" Y="13.75" Width="9.25" />
+    <TypeIdentifier>
+      <HashCode>AQBAgQAAAAACAAAAEAQBAAAABABAAAAAAAEEACAIAIA=</HashCode>
+      <FileName>Interfaces\ISOManagment.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.ITL4EngineInterfaceMng">
+    <Position X="19.75" Y="17.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>EAECAAAgAAAAACAQAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\ITL4EngineInterfaceMng.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.ITL4MsgInfoLine">
+    <Position X="19.75" Y="21.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\ITL4MsgInfoLine.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.ITSoHeader">
+    <Position X="12.75" Y="24.75" Width="7.25" />
+    <TypeIdentifier>
+      <HashCode>ACMAAAAAAAAAAAAAAIAAAAAAAAAAQEAAAgAICAAAAAA=</HashCode>
+      <FileName>Interfaces\ITSoHeader.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="LPKService.Domain.Interfaces.ITSoLine">
+    <Position X="16.5" Y="29.5" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAAgQAEAAAAAAAAAAAAAAAAAAAEAEAEAAACAAAAAAA=</HashCode>
+      <FileName>Interfaces\ITSoLine.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="LPKService.Domain.Interfaces.TLineStatus" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAEEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\ITSoLine.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

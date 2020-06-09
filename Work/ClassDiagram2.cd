@@ -1,41 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
-  <Class Name="Work.PartitionOrder" BaseTypeListCollapsed="true">
-    <Position X="0.5" Y="0.5" Width="3" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
-      <FileName>PartitionOrder.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
   <Class Name="Work.ServiceWorker" BaseTypeListCollapsed="true">
-    <Position X="4" Y="0.5" Width="2" />
+    <Position X="0.5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAQBAAAA=</HashCode>
       <FileName>ServiceWorker.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Struct Name="Work.L4L3_soline">
-    <Position X="1" Y="3" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>PartitionOrder.cs</FileName>
-    </TypeIdentifier>
-  </Struct>
-  <Interface Name="Work.IPartitionOrder">
-    <Position X="0.5" Y="1.75" Width="2.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
-      <FileName>PartitionOrder.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
+  <Class Name="Repository.ColumnAttribute">
+    <Position X="0.5" Y="4.75" Width="4" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Repository.BaseModel">
+    <Position X="3" Y="0.5" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Repository.BaseRepo">
+    <Position X="2.75" Y="2.25" Width="4" />
+    <TypeIdentifier />
+  </Class>
   <Interface Name="Work.IServiceWork">
-    <Position X="3.75" Y="3" Width="1.5" />
+    <Position X="0.5" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>ServiceWorker.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Enum Name="Repository.ToStringBy">
+    <Position X="4.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier />
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
