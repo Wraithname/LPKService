@@ -2,11 +2,22 @@
 
 namespace Repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ColumnAttribute:Attribute
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public string ColumnName { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string DisplayName { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ColumnAttribute()
         { }
         /// <summary>

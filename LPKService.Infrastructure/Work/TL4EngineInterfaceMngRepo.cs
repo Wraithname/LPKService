@@ -78,7 +78,7 @@ namespace LPKService.Infrastructure.Work
         /// <returns></returns>
         public string GetCreateUserId()
         {
-            return DecodeUserToUserId("c##OMK");
+            return DecodeUserToUserId("OMK");
         }
         /// <summary>
         /// Получение даты

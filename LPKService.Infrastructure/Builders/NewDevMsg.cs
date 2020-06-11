@@ -48,6 +48,7 @@ namespace LPKService.Infrastructure.Builders
             {
                 using (OracleConnection conn = GetConnection())
                 {
+                    conn.Open();
                     using (OracleTransaction transaction = conn.BeginTransaction())
                     {
                         try

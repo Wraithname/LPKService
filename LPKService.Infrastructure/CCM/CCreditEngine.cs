@@ -115,7 +115,7 @@ namespace LPKService.Infrastructure.CCM
                     odp.Add("P_BANK_ACCOUNT", catCredit.bankAccount);
                     odp.Add("P_CREDIT_TERM_CODE", catCredit.creditTermCode);
                     odp.Add("P_CUSTOMER_CODE", catCredit.customerCode);
-                    using (OracleConnection connection = BaseRepo.GetDBConnection())
+                    using (OracleConnection connection = GetConnection())
                     {
                         LogSqlWithParams(sqlstr, odp);
                         connection.Execute(sqlstr, odp);

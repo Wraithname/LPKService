@@ -35,7 +35,7 @@ namespace LPKService.Infrastructure.Repository
         /// <returns>ИД заказа</returns>
         public int GetSoIdFromDescr(string sSoDescrID, OracleDynamicParameters odp = null)
         {
-            string stm = @"SELECT SO_ID FROM   SALES_ORDER_HEADER WHERE  SO_DESCR_ID = " + sSoDescrID + "";
+            string stm = @"SELECT SO_ID FROM SALES_ORDER_HEADER WHERE  SO_DESCR_ID = " + sSoDescrID + "";
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 return connection.ExecuteScalar<int>(stm, odp);

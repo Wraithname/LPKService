@@ -8,7 +8,7 @@ namespace LPKService.Domain.Models.Work.Event
     /// </summary>
     public class L4L3Event:BaseModel
     {
-        [Column("MSG", "Счетчик сообщений")]
+        [Column("MSG_COUNTER", "Счетчик сообщений")]
         public int msgCounter { get; set; }
         [Column("MSG_ID", "ИД сообщения")]
         public int msgId { get; set; }

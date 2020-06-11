@@ -28,6 +28,8 @@ namespace LPKService.Infrastructure.Builders
         private readonly ISOManagment som ;
         private readonly IL4L3SerShipping sship;
         private readonly IMaterial mat;
+        private TCheckResult cheker;
+        Task<TCheckResult> somtask, ccmtask, shiptask, mattask;
         /// <summary>
         /// Конструктор для осуществления работы с необходимыми обработчиками
         /// </summary>
@@ -135,22 +137,23 @@ namespace LPKService.Infrastructure.Builders
                 if (acceptOrderConsts == "")
                     acceptOrderConsts = "N";
                 List<L4L3Event> events = new List<L4L3Event>();
-                sqlstr = "SELECT * " +
-                    "FROM ( " +
-                    "SELECT le.* FROM L4_L3_EVENT le WHERE MSG_STATUS = 1 AND msg_id IN (4303, 4304, 4305) AND le.MSG_DATETIME > SYSDATE - 7 " +
-                    "UNION ALL select l.* " +
-                    "join (select shm.MSG_COUNTER FROM ( SELECT MAX(sh.MSG_COUNTER) as MSG_COUNTER , sh.SO_ID FROM L4_L3_SO_HEADER sh JOIN L4_L3_SO_LINE sl ON sh.MSG_COUNTER =sl.MSG_COUNTER" +
-                    "WHERE sh.STATUS =20 GROUP BY sh.SO_ID) shm ) sh5 on sh5.MSG_COUNTER=l.MSG_COUNTER" +
-                    "WHERE l.MSG_STATUS = 1 " +
-                    "AND   l.msg_id = 4301 " +
-                    "AND   l.MSG_DATETIME > SYSDATE - 7 " +
-                    "UNION ALL" +
-                    "SELECT st.* FROM L4_L3_EVENT st WHERE MSG_STATUS = 1 " +
-                    "AND msg_id IN (4311,4312,4313,4314,4315)" +
-                    ") ORDER BY MSG_COUNTER ";
+                sqlstr = "SELECT le.* FROM L4_L3_EVENT le WHERE MSG_STATUS = 1 AND msg_id IN (4301,4303, 4304, 4305) AND le.MSG_DATETIME > SYSDATE - 7 ORDER BY MSG_COUNTER";
+                //sqlstr = "SELECT * " +
+                //    "FROM ( " +
+                //    "SELECT le.* FROM L4_L3_EVENT le WHERE MSG_STATUS = 1 AND msg_id IN (4303, 4304, 4305) AND le.MSG_DATETIME > SYSDATE - 7 " +
+                //    "UNION ALL select l.* " +
+                //    "join (select shm.MSG_COUNTER FROM ( SELECT MAX(sh.MSG_COUNTER) as MSG_COUNTER , sh.SO_ID FROM L4_L3_SO_HEADER sh JOIN L4_L3_SO_LINE sl ON sh.MSG_COUNTER =sl.MSG_COUNTER" +
+                //    "WHERE sh.STATUS =20 GROUP BY sh.SO_ID) shm ) sh5 on sh5.MSG_COUNTER=l.MSG_COUNTER" +
+                //    "WHERE l.MSG_STATUS = 1 " +
+                //    "AND   l.msg_id = 4301 " +
+                //    "AND   l.MSG_DATETIME > SYSDATE - 7 " +
+                //    "UNION ALL" +
+                //    "SELECT st.* FROM L4_L3_EVENT st WHERE MSG_STATUS = 1 " +
+                //    "AND msg_id IN (4311,4312,4313,4314,4315)" +
+                //    ") ORDER BY MSG_COUNTER ";
                 using (OracleConnection connection = GetConnection())
                 {
-                    events = connection.Query<L4L3Event>(sqlstr, odp).AsList();
+                    events = connection.Query<L4L3Event>(sqlstr, null).AsList();
                 }
                 if (events == null)
                 {
@@ -167,11 +170,13 @@ namespace LPKService.Infrastructure.Builders
                     l4MsgInfo.keyString2 = evnt.keyString2;
                     l4MsgInfo.keyNumber1 = evnt.keyNumber1;
                     l4MsgInfo.keyNumber2 = evnt.keyNumber2;
+                l4MsgInfo.msgReport = new TMessageResult();
                     l4MsgInfo.msgReport.status = 1;
                     l4MsgInfo.msgReport.remark = "";
                     logger.Info($"STARTED Event -> Table: L4_L3_EVENT, MsgCounter:{l4MsgInfo.msgCounter}");
                     using (OracleConnection conn = GetConnection())
                     {
+                        conn.Open();
                         using (var transaction = conn.BeginTransaction())
                         {
                             try
@@ -192,7 +197,7 @@ namespace LPKService.Infrastructure.Builders
                                         break;
                                     default:
                                         isOpCodeOk = false;
-                                        check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, $"OP_CODE: {l4MsgInfo.opCode} is not valid");
+                                        l4MsgInfo=check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, $"OP_CODE: {l4MsgInfo.opCode} is not valid");
                                         UpdateMsgStatus(l4MsgInfo, transaction);
                                         break;
                                 }
@@ -204,24 +209,47 @@ namespace LPKService.Infrastructure.Builders
                                         case L4L3InterfaceServiceConst.L4_L3_SALES_ORDER:
                                             if (IsBlocked(evnt.msgCounter))
                                             {
-                                                Task.Run(() => som.SalesOrderMng(l4MsgInfo));
+                                                somtask=Task.Run(() => som.SalesOrderMng(l4MsgInfo));
+                                                somtask.Start();
+                                                somtask.Wait();
+                                                cheker = somtask.Result;
                                             }
                                             break;
                                         //Запуск задачи CUSTOMER_CATALOG
                                         case L4L3InterfaceServiceConst.L4_L3_CUSTOMER_CATALOG:
-                                            Task.Run(() => ccm.CustomerMng(l4MsgInfo));
+                                            ccmtask = Task.Run(() => ccm.CustomerMng(l4MsgInfo));
+                                            ccmtask.Start();
+                                            ccmtask.Wait();
+                                            cheker = ccmtask.Result;
                                             break;
                                         //Запуск задачи SHIPPING
                                         case L4L3InterfaceServiceConst.L4_L3_SHIPPING:
-                                            Task.Run(() => sship.ShippingMng(l4MsgInfo));
+                                            shiptask = Task.Run(() => sship.ShippingMng(l4MsgInfo));
+                                            shiptask.Start();
+                                            shiptask.Wait();
+                                            cheker = shiptask.Result;
                                             break;
                                         //Запуск задачи MATERIAL
                                         case L4L3InterfaceServiceConst.L4_L3_RAW_MATERIAL:
-                                            Task.Run(() => mat.L4L3MaterialMovement(l4MsgInfo));
+                                            mattask = Task.Run(() => mat.L4L3MaterialMovement(l4MsgInfo));
+                                            mattask.Start();
+                                            mattask.Wait();
+                                            cheker = mattask.Result;
                                             break;
                                     }
                                     if (l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_INSERT)
                                         UpdateMsgStatus(l4MsgInfo, transaction);
+                                    if(cheker.isOK)
+                                    {
+                                        l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
+                                        l4MsgInfo.msgReport.remark = cheker.data;
+                                    }
+                                    else
+                                    {
+                                        l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_ERROR;
+                                        l4MsgInfo.msgReport.remark = cheker.data;
+                                    }
+                                    UpdateMsgStatus(l4MsgInfo, transaction);
                                 }
                                 logger.Info($"STOPPED Event -> Table: L4_L3_EVENT, MsgCounter:{l4MsgInfo.msgCounter}");
                                 transaction.Commit();
@@ -237,7 +265,8 @@ namespace LPKService.Infrastructure.Builders
                                     {
                                         try
                                         {
-                                            check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, e.Message.Substring(0, 4000));
+                                            l4MsgInfo=check.SetMsgResult(l4MsgInfo, L4L3InterfaceServiceConst.MSG_STATUS_ERROR, e.Message.Substring(0, 4000));
+                                            logger.Info($"STOPPED Event -> Table: L4_L3_EVENT, MsgCounter:{l4MsgInfo.msgCounter} with error");
                                             UpdateMsgStatus(l4MsgInfo, transaction1);
                                             transaction1.Commit();
                                         }
@@ -254,7 +283,9 @@ namespace LPKService.Infrastructure.Builders
                     }
                 }
             }
-            catch { logger.Error("Ошибка выполнения обработчика событий"); }
+            catch {
+                logger.Error("Ошибка выполнения обработчика событий");
+            }
         }
         /// <summary>
         /// Обновление статуса сообщения
@@ -263,7 +294,7 @@ namespace LPKService.Infrastructure.Builders
         private void UpdateMsgStatus(TL4MsgInfo l4MsgInfo, OracleTransaction transaction)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
-            string str = "UPDATE L4_L3_EVENT SET   MSG_STATUS  = %p, MSG_REMARK  = %p WHERE MSG_COUNTER = %p ";
+            string str = "UPDATE L4_L3_EVENT SET   MSG_STATUS  = :P_MSG_STATUS, MSG_REMARK  = :P_MSG_REMARK WHERE MSG_COUNTER = :P_MSG_COUNTER ";
             odp.Add("P_MSG_STATUS", l4MsgInfo.msgReport.status);
             odp.Add("P_MSG_REMARK", l4MsgInfo.msgReport.remark);
             odp.Add("P_MSG_COUNTER", l4MsgInfo.msgCounter);

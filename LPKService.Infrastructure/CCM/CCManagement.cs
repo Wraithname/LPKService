@@ -12,7 +12,7 @@ using LPKService.Domain.Models.Work;
 
 namespace LPKService.Infrastructure.CCM
 {
-    public class CCManagement : CCMRepoBase,ICCManagement
+    public class CCManagement : CCMRepoBase, ICCManagement
     {
         private Logger logger = LogManager.GetLogger(nameof(CCM));
         private L4L3CustomerRepo customerRepo = new L4L3CustomerRepo();
@@ -75,14 +75,14 @@ namespace LPKService.Infrastructure.CCM
             bool res = true;
             float el4CustomerId;
             string l4CustomerId = "", customerIdForL4m = "", sAddressIdBillTo = "", l4CreateUserId = "", l4ModUserId = "";
-            logger.Trace("Init 'CustomerMng' function");
+            logger.Info("Init 'CustomerMng' function");
             l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
             try
             {
                 l4CustomerId = customer.customerId.ToString();
                 el4CustomerId = customer.customerId;
                 customerIdForL4m = l4CustomerId;
-                logger.Trace("LOG_TRACE e - 'CustomerIdForL4':" + customerIdForL4m + "'l4CustomerId':" + l4CustomerId);
+                logger.Info("'CustomerIdForL4':" + customerIdForL4m + "'l4CustomerId':" + l4CustomerId);
                 if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_DEL)
                 {
                     if (catalEngine.LoadData(l4CustomerId) > 0)
@@ -91,29 +91,27 @@ namespace LPKService.Infrastructure.CCM
                             catalEngine.DeleteCustomer(catalEngine.GetCustomerID());
                     }
                     else
-                        engInterf.NotifyErrorMessage($"Заказчик {l4CustomerId} не существует");
+                    {
+                        checkres.isOK = engInterf.NotifyErrorMessage($"Заказчик {l4CustomerId} не существует");
+                        logger.Error($"Заказчик {l4CustomerId} не существует");
+                    }
                 }
                 else
                 {
-                    if (res)
-                    {
-                        l4CustomerId = engInterf.GetCreateUserId();
-                        if (l4CustomerId == "")
-                            res = false;
-                    }
-                    if (res)
-                    {
-                        l4ModUserId = engInterf.GetModUserId();
-                        if (l4ModUserId == "")
-                            res = false;
-                    }
+                    l4CustomerId = engInterf.GetCreateUserId();
+                    if (l4CustomerId == "")
+                        res = false;
+                    l4ModUserId = engInterf.GetModUserId();
+                    if (l4ModUserId == "")
+                        res = false;
                     if (res)
                     {
                         if (catalEngine.LoadData(l4CustomerId) > 0)
                         {
                             if (addressEngine.LoadData(catalEngine.GetAddressIdCatalog()) != 1)
                             {
-                                engInterf.NotifyErrorMessage($"Ошибка при обработке заказчика - Фатальная ошибка - поле ADDRESS_ID={catalEngine.GetAddressIdCatalog().ToString() } не найдено");
+                                checkres.isOK = engInterf.NotifyErrorMessage($"Ошибка при обработке заказчика - Фатальная ошибка - поле ADDRESS_ID={catalEngine.GetAddressIdCatalog().ToString() } не найдено");
+                                logger.Error($"Ошибка при обработке заказчика - Фатальная ошибка - поле ADDRESS_ID ={ catalEngine.GetAddressIdCatalog().ToString() } не найдено");
                                 res = false;
                             }
                             if (res)
@@ -131,23 +129,16 @@ namespace LPKService.Infrastructure.CCM
                                 {
                                     sAddressIdBillTo = "";
                                 }
-                                engInterf.NotifyErrorMessage($"Ошибка при обработке заказчика - Фатальная ошибка - поле ADDRESS_ID={sAddressIdBillTo} не найдено");
+                                checkres.isOK = engInterf.NotifyErrorMessage($"Ошибка при обработке заказчика - Фатальная ошибка - поле ADDRESS_ID={sAddressIdBillTo} не найдено");
                                 res = false;
                             }
                         }
                     }
-                    // =====================================================================
-                    // ADDRESS_CATALOG
-                    // =====================================================================
                     if (res)
-                        res = FillAddressEngine(customer, addressEngine, l4ModUserId);
-                    logger.Trace("'CustomerMng - Load Customer Catalog data'");
-                    // =====================================================================
-                    // CUSTOMER_CATALOG
-                    // =====================================================================
+                        res=FillAddressEngine(customer, addressEngine, l4ModUserId);
+                    logger.Info("'CustomerMng - Load Customer Catalog data'");
                     if (res)
                     {
-
                         catalEngine.SetCustomerDescrId(l4CustomerId);
                         catalEngine.SetAddressIdCatalog(addressEngine.GetAddressId());
                         catalEngine.SetInternalCustomerFlag(Convert.ToBoolean(customer.internalCustomerFlag));
@@ -162,6 +153,7 @@ namespace LPKService.Infrastructure.CCM
                         catalEngine.SetRwStationCode(customer.rwstationCode.Substring(0, 40));
                         catalEngine.SetRegion(customer.region.Substring(0, 40));
                         catalEngine.SetLevel4CustomerId(customerIdForL4m);
+                        
                         DateTime date = new DateTime();
                         if (customer.vailityFlag.ToString() == "Y")
                         {
@@ -177,10 +169,7 @@ namespace LPKService.Infrastructure.CCM
                         catalEngine.ForceModUserDatetime(l4ModUserId);
                         res = catalEngine.SaveData();
                     }
-                    logger.Trace("'CustomerMng - Load Customer Catalog Credit Data'");
-                    // =====================================================================
-                    // CUSTOMER_CATALOG_CREDIT
-                    // =====================================================================
+                    logger.Info("'CustomerMng - Load Customer Catalog Credit Data'");
                     if (res)
                     {
                         creditEngine.SetCustomerID(GetCustIDFromDescr(l4CustomerId));
@@ -192,9 +181,6 @@ namespace LPKService.Infrastructure.CCM
                         creditEngine.SetCustomerCode(Convert.ToInt32(customer.customerCurrencyCode));
                         res = creditEngine.SaveData();
                     }
-                    // =====================================================================
-                    // final operations
-                    // =====================================================================
                     if (!res && l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
                     {
                         engInterf.NotifyErrorMessage("CistomerMng - Unknown fatal error.");
@@ -208,7 +194,7 @@ namespace LPKService.Infrastructure.CCM
                         checkres.isOK = true;
                     }
                 }
-                logger.Trace("End ''CustomerMng'' function");
+                logger.Info("End ''CustomerMng'' function");
                 return checkres;
             }
             catch { return checkres; }
@@ -221,72 +207,76 @@ namespace LPKService.Infrastructure.CCM
         /// <param name="pModUserId">ИД пользователя</param>
         /// <param name="odp"></param>
         /// <returns>Результат обработки</returns>
-        public bool FillAddressEngine(L4L3Customer customer, IAddressEngine addressEngine, string pModUserId, OracleDynamicParameters odp = null)
+        public bool FillAddressEngine(L4L3Customer customer, AddressEngine addressEngine, string pModUserId, OracleDynamicParameters odp = null)
         {
-            Country cnt = new Country();
-            ZipCatalogue zip = new ZipCatalogue();
-            logger.Trace("Init 'FillAddressEngine' function");
-            bool result = true;
-            string str = "SELECT * FROM COUNTRY WHERE COUNTRY =  " + customer.country;
-            using (OracleConnection connection = GetConnection())
+            bool res = false;
+            try
             {
-                cnt = connection.QueryFirstOrDefault<Country>(str, odp);
-            }
-            if (cnt == null)
-            {
-                str = "INSERT INTO COUNTRY ( " +
-                    "COUNTRY," +
-                    "COUNTRY_CODE," +
-                    "COUNTRY_ON_DOC," +
-                    "MOD_USER_ID," +
-                    "MOD_DATETIME" +
-                    ") VALUES (" +
-                    ":P_COUNTRY," +
-                    ":P_COUNTRY_CODE," +
-                    ":P_COUNTRY_ON_DOC," +
-                    ":P_MOD_USER_ID," +
-                    "SYSDATE )";
-                odp.Add("P_COUNTRY", customer.country);
-                odp.Add("P_COUNTRY_CODE", customer.country.Substring(0, 40));
-                odp.Add("P_COUNTRY_ON_DOC", customer.country);
-                odp.Add("P_MOD_USER_ID", pModUserId);
-                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                Country cnt = new Country();
+                ZipCatalogue zip = new ZipCatalogue();
+                logger.Info("Init 'FillAddressEngine' function");
+                string str = $"SELECT * FROM COUNTRY WHERE COUNTRY = '{customer.country}'";
+                using (OracleConnection connection = GetConnection())
                 {
-                    connection.Execute(str, odp);
+                    cnt = connection.QueryFirstOrDefault<Country>(str, null);
                 }
-                odp = null;
-            }
-            str = "SELECT * FROM ZIP_CATALOGUE WHERE COUNTRY = " + customer.country + " AND ZIP_CODE = " + customer.zipCode + " AND CITY = " + customer.city;
-            using (OracleConnection connection = GetConnection())
-            {
-                zip = connection.QueryFirstOrDefault<ZipCatalogue>(str, odp);
-            }
-            if (zip == null)
-            {
-                str = "INSERT INTO ZIP_CATALOGUE ( " +
-                    "COUNTRY," +
-                    "ZIP_CODE," +
-                    "CITY," +
-                    "MOD_USER_ID," +
-                    "MOD_DATETIME" +
-                    ") VALUES (" +
-                    ":P_COUNTRY," +
-                    ":P_ZIP_CODE," +
-                    ":P_CITY," +
-                    ":P_MOD_USER_ID," +
-                    "SYSDATE )";
-                odp.Add("P_COUNTRY", customer.country);
-                odp.Add("P_ZIP_CODE", customer.zipCode);
-                odp.Add("P_CITY", customer.city);
-                odp.Add("P_MOD_USER_ID", pModUserId);
-                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                if (cnt == null)
                 {
-                    connection.Execute(str, odp);
+                    odp = new OracleDynamicParameters();
+                    str = "INSERT INTO COUNTRY ( " +
+                        "COUNTRY," +
+                        "COUNTRY_CODE," +
+                        "COUNTRY_ON_DOC," +
+                        "MOD_USER_ID," +
+                        "MOD_DATETIME" +
+                        ") VALUES (" +
+                        ":P_COUNTRY," +
+                        ":P_COUNTRY_CODE," +
+                        ":P_COUNTRY_ON_DOC," +
+                        ":P_MOD_USER_ID," +
+                        "SYSDATE )";
+                    odp.Add("P_COUNTRY", customer.country);
+                    odp.Add("P_COUNTRY_CODE", customer.country.Substring(0, 3));
+                    odp.Add("P_COUNTRY_ON_DOC", customer.country);
+                    odp.Add("P_MOD_USER_ID", pModUserId);
+                    using (OracleConnection connection = GetConnection())
+                    {
+                        LogSqlWithParams(str, odp);
+                        logger.Info("Mark");
+                        connection.Execute(str, odp);
+                    }
+                    odp = new OracleDynamicParameters();
                 }
-                odp = null;
-            }
-            if (result)
-            {
+
+                str = "SELECT * FROM ZIP_CATALOGUE WHERE COUNTRY = '" + customer.country + "' AND ZIP_CODE = '" + customer.zipCode + "' AND CITY = '" + customer.city + "'";
+                using (OracleConnection connection = GetConnection())
+                {
+                    zip = connection.QueryFirstOrDefault<ZipCatalogue>(str, null);
+                }
+                if (zip == null)
+                {
+                    str = "INSERT INTO ZIP_CATALOGUE ( " +
+                        "COUNTRY," +
+                        "ZIP_CODE," +
+                        "CITY," +
+                        "MOD_USER_ID," +
+                        "MOD_DATETIME" +
+                        ") VALUES (" +
+                        ":P_COUNTRY," +
+                        ":P_ZIP_CODE," +
+                        ":P_CITY," +
+                        ":P_MOD_USER_ID," +
+                        "SYSDATE )";
+                    odp.Add("P_COUNTRY", customer.country.ToString());
+                    odp.Add("P_ZIP_CODE", customer.zipCode.ToString());
+                    odp.Add("P_CITY", customer.city.ToString());
+                    odp.Add("P_MOD_USER_ID", pModUserId);
+                    using (OracleConnection connection = GetConnection())
+                    {
+                        LogSqlWithParams(str, odp);
+                        connection.Execute(str, odp);
+                    }
+                }
                 addressEngine.SetAddressFullName(customer.customerName);
                 addressEngine.SetZipCode(customer.zipCode);
                 addressEngine.SetAddress1(customer.address1);
@@ -300,10 +290,13 @@ namespace LPKService.Infrastructure.CCM
                 addressEngine.SetContactFax(customer.contactFax);
                 addressEngine.SetContactMobile(customer.contactMobile);
                 addressEngine.SetEmailAddress(customer.contactEmail);
-                result = addressEngine.SaveData();
+                logger.Info("End 'FillAddressEngine' function");
+                res=addressEngine.SaveData();
+                //logger.Info($"Mark {res}");
+                return res;
             }
-            return result;
-        }
+            catch { return res; }
+            }
         /// <summary>
         /// Получение ИД заказчика
         /// </summary>

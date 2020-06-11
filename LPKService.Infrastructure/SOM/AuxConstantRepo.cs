@@ -48,10 +48,7 @@ namespace LPKService.Infrastructure.SOM
             string sqlstr = $"SELECT INTEFER_VALUE,CHAR_VALUE,FLOAT_VALUE FROM AUX_CONTSTANT WHERE CONSTANT_ID= {constId}";
             using (OracleConnection conn = GetConnection())
             {
-                conn.Open();
                 auxConstant = conn.ExecuteScalar<AuxConstant>(sqlstr,null);
-                conn.Clone();
-                conn.Dispose();
             }
         }
     }

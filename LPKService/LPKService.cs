@@ -116,7 +116,7 @@ namespace LPKService
             serviceStatus.dwWaitHint = 5000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
             ShutdownEvent.Set();
-            workthread?.Join(5000);
+            workthread?.Join(10000);
             logger.Info("Сервис остановлен");
             // Update the service state to Stopped.
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
@@ -138,6 +138,5 @@ namespace LPKService
             base.OnPause();
             
         }
-
     }
 }

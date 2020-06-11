@@ -4,14 +4,28 @@ using System.Reflection;
 
 namespace Repository
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum ToStringBy { AttrDispalyName, AttrColumnName, PropertyName }
+    /// <summary>
+    /// 
+    /// </summary>
     public class BaseModel
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return ToString(ToStringBy.PropertyName);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="by"></param>
+        /// <returns></returns>
         public string ToString(ToStringBy by)
         {
             Func<PropertyInfo, string> selector;

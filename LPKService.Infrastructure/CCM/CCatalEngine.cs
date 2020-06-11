@@ -158,7 +158,7 @@ namespace LPKService.Infrastructure.CCM
                 odp.Add("P_RWSTATION_CODE", customerCat.rwstationCode);
                 odp.Add("P_REGION", customerCat.region);
 
-                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                using (OracleConnection connection = GetConnection())
                 {
                     LogSqlWithParams(sqlstr, odp);
                     connection.Execute(sqlstr, odp);
