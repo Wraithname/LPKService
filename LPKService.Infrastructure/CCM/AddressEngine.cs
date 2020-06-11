@@ -155,7 +155,7 @@ namespace LPKService.Infrastructure.CCM
         /// <param name="address3">3 адрес</param>
         public void SetAddress3(string address3)
         {
-            adressCatalog.contactMobile = address3;
+            adressCatalog.address3 = address3;
         }
         /// <summary>
         /// Запись имени заказчика
