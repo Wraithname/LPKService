@@ -25,7 +25,11 @@ namespace LPKService.Infrastructure.CCM
         public string CheckClassificationType(string strClassification, OracleDynamicParameters odp = null)
         {
             string res = "";
-            string str = "select an_control_value from   attrb_control_rules where  attrb_code like 'ENDUSER_STEEL_DESIGNATION' and an_control_value  = " + strClassification;
+            try
+            {
+
+            
+                string str = "select an_control_value from   attrb_control_rules where  attrb_code like 'ENDUSER_STEEL_DESIGNATION' and an_control_value  = " + strClassification;
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 res = connection.ExecuteScalar<string>(str, odp);
@@ -34,6 +38,8 @@ namespace LPKService.Infrastructure.CCM
                 return res;
             else
                 return "N/A";
+            }
+            catch { return "N/A"; }
 
         }
         /// <summary>
@@ -81,6 +87,7 @@ namespace LPKService.Infrastructure.CCM
             {
                 l4CustomerId = customer.customerId.ToString();
                 el4CustomerId = customer.customerId;
+                l4CreateUserId = engInterf.GetCreateUserId();
                 customerIdForL4m = l4CustomerId;
                 logger.Info("'CustomerIdForL4':" + customerIdForL4m + "'l4CustomerId':" + l4CustomerId);
                 if (l4MsgInfo.opCode == L4L3InterfaceServiceConst.OP_CODE_DEL)
@@ -140,18 +147,33 @@ namespace LPKService.Infrastructure.CCM
                     if (res)
                     {
                         catalEngine.SetCustomerDescrId(l4CustomerId);
-                        catalEngine.SetAddressIdCatalog(addressEngine.GetAddressId());
-                        catalEngine.SetInternalCustomerFlag(Convert.ToBoolean(customer.internalCustomerFlag));
+                        catalEngine.SetAddressIdCatalog(addressEngine.GetAddressId().ToString());
+                        catalEngine.SetInternalCustomerFlag(customer.internalCustomerFlag);
                         catalEngine.SetInquiryValidityDays(30);
                         catalEngine.SetCustomerCurrencyCode(customer.customerCurrencyCode);
                         catalEngine.SetClassificationType(CheckClassificationType(customer.customerClassificationType));
                         catalEngine.SetWeightUnit("<NULL>");
-                        catalEngine.SetCustomerShortName(customer.customerName.Substring(0, 80));
+                        if (customer.customerName.Length > 80)
+                            catalEngine.SetCustomerShortName(customer.customerName.Substring(0, 80));
+                        else
+                            catalEngine.SetCustomerShortName(customer.customerName);
                         catalEngine.SetCreationUserId(l4CreateUserId);
+                        if(customer.inn.Length>40)
                         catalEngine.SetInn(customer.inn.Substring(0, 40));
+                        else
+                            catalEngine.SetInn(customer.inn);
+                        if(customer.kpp.Length>40)
                         catalEngine.SetKpp(customer.kpp.Substring(0, 40));
+                        else
+                            catalEngine.SetKpp(customer.kpp);
+                        if(customer.rwstationCode.Length>40)
                         catalEngine.SetRwStationCode(customer.rwstationCode.Substring(0, 40));
+                        else
+                            catalEngine.SetRwStationCode(customer.rwstationCode);
+                        if(customer.region.Length>40)
                         catalEngine.SetRegion(customer.region.Substring(0, 40));
+                        else
+                            catalEngine.SetRegion(customer.region);
                         catalEngine.SetLevel4CustomerId(customerIdForL4m);
                         
                         DateTime date = new DateTime();
@@ -163,7 +185,7 @@ namespace LPKService.Infrastructure.CCM
                         else
                         {
                             if (catalEngine.GetExpirationDate() == date)
-                                catalEngine.SetExpirationDate(new DateTime());
+                                catalEngine.SetExpirationDate(DateTime.Now);
                         }
 
                         catalEngine.ForceModUserDatetime(l4ModUserId);
@@ -173,7 +195,7 @@ namespace LPKService.Infrastructure.CCM
                     if (res)
                     {
                         creditEngine.SetCustomerID(GetCustIDFromDescr(l4CustomerId));
-                        creditEngine.SetAddressIdBillTo(Convert.ToInt32(addressEngine.GetAddressId()));
+                        creditEngine.SetAddressIdBillTo(addressEngine.GetAddressId());
                         creditEngine.SetCreditStatus(1);
                         creditEngine.ForceModUserDatetime(l4ModUserId);
                         creditEngine.SetInvoiceType("Y");
@@ -189,7 +211,6 @@ namespace LPKService.Infrastructure.CCM
                     }
                     if (res && l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
                     {
-                        engInterf.NotifyErrorMessage("Запись успешно обработана", "");
                         checkres.data = "CistomerMng - SUCCESS.";
                         checkres.isOK = true;
                     }
@@ -242,7 +263,6 @@ namespace LPKService.Infrastructure.CCM
                     using (OracleConnection connection = GetConnection())
                     {
                         LogSqlWithParams(str, odp);
-                        logger.Info("Mark");
                         connection.Execute(str, odp);
                     }
                     odp = new OracleDynamicParameters();
@@ -292,7 +312,6 @@ namespace LPKService.Infrastructure.CCM
                 addressEngine.SetEmailAddress(customer.contactEmail);
                 logger.Info("End 'FillAddressEngine' function");
                 res=addressEngine.SaveData();
-                //logger.Info($"Mark {res}");
                 return res;
             }
             catch { return res; }
@@ -308,7 +327,7 @@ namespace LPKService.Infrastructure.CCM
         public int GetCustIDFromDescr(string sCustomerDescrId, OracleDynamicParameters odp = null)
         {
             int res = 0;
-            string str = "SELECT CUSTOMER_ID FROM CUSTOMER_CATALOG WHERE CUSTOMER_DESCR_ID = " + sCustomerDescrId;
+            string str = "SELECT CUSTOMER_ID FROM CUSTOMER_CATALOG WHERE CUSTOMER_DESCR_ID = '" + sCustomerDescrId+"'";
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 res = connection.ExecuteScalar<int>(str, odp);

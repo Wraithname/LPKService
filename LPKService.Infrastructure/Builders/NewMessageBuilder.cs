@@ -130,9 +130,9 @@ namespace LPKService.Infrastructure.Builders
                 "WHERE CONSTANT_ID='ACCEPT_ORDER_IN_SRV'";
             try
             {
-                using (OracleConnection connection = GetConnection())
+                using (OracleConnection connection = GetDBConnection())
                 {
-                    acceptOrderConsts = connection.ExecuteScalar<string>(sqlstr, odp);
+                    acceptOrderConsts = connection.ExecuteScalar<string>(sqlstr, null);
                 }
                 if (acceptOrderConsts == "")
                     acceptOrderConsts = "N";
@@ -209,32 +209,32 @@ namespace LPKService.Infrastructure.Builders
                                         case L4L3InterfaceServiceConst.L4_L3_SALES_ORDER:
                                             if (IsBlocked(evnt.msgCounter))
                                             {
-                                                somtask=Task.Run(() => som.SalesOrderMng(l4MsgInfo));
-                                                somtask.Start();
-                                                somtask.Wait();
-                                                cheker = somtask.Result;
+                                                //somtask=Task.Run(() => som.SalesOrderMng(l4MsgInfo));
+                                                //somtask.Start();
+                                                //somtask.Wait();
+                                                cheker = som.SalesOrderMng(l4MsgInfo);
                                             }
                                             break;
                                         //Запуск задачи CUSTOMER_CATALOG
                                         case L4L3InterfaceServiceConst.L4_L3_CUSTOMER_CATALOG:
-                                            ccmtask = Task.Run(() => ccm.CustomerMng(l4MsgInfo));
-                                            ccmtask.Start();
-                                            ccmtask.Wait();
-                                            cheker = ccmtask.Result;
+                                            //ccmtask = Task.Run(() => ccm.CustomerMng(l4MsgInfo));
+                                            //ccmtask.Start();
+                                            //ccmtask.Wait();
+                                            cheker = ccm.CustomerMng(l4MsgInfo);
                                             break;
                                         //Запуск задачи SHIPPING
                                         case L4L3InterfaceServiceConst.L4_L3_SHIPPING:
-                                            shiptask = Task.Run(() => sship.ShippingMng(l4MsgInfo));
-                                            shiptask.Start();
-                                            shiptask.Wait();
-                                            cheker = shiptask.Result;
+                                            //shiptask = Task.Run(() => sship.ShippingMng(l4MsgInfo));
+                                            //shiptask.Start();
+                                            //shiptask.Wait();
+                                            cheker = sship.ShippingMng(l4MsgInfo);
                                             break;
                                         //Запуск задачи MATERIAL
                                         case L4L3InterfaceServiceConst.L4_L3_RAW_MATERIAL:
-                                            mattask = Task.Run(() => mat.L4L3MaterialMovement(l4MsgInfo));
-                                            mattask.Start();
-                                            mattask.Wait();
-                                            cheker = mattask.Result;
+                                            //mattask = Task.Run(() => mat.L4L3MaterialMovement(l4MsgInfo));
+                                            //mattask.Start();
+                                            //mattask.Wait();
+                                            cheker = mat.L4L3MaterialMovement(l4MsgInfo);
                                             break;
                                     }
                                     if (l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_INSERT)

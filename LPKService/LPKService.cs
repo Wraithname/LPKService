@@ -44,21 +44,6 @@ namespace LPKService
         }
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
-#if DEBUG
-        // Воспомогательный метод для отладки сервиса
-        internal void ConsoleApp(string[] args)
-        {
-            //logger.Debug("Запуск как консольное приложение");
-            using (OracleConnection conn = BaseRepo.GetDBConnection())
-            {
-                logger.Debug("Запуск сервиса");
-                Console.WriteLine(conn.ExecuteScalar<string>("SELECT user_id FROM all_users where username='OMK'", null));
-                Console.WriteLine("Success");
-                Console.ReadKey();
-            }
-                
-        }
-#endif
         /// <summary>
         /// Запуск сервиса
         /// </summary>

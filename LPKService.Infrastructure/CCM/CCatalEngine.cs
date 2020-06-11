@@ -93,6 +93,20 @@ namespace LPKService.Infrastructure.CCM
             return count;
         }
         /// <summary>
+        /// Количество записей по заказчику
+        /// </summary>
+        /// <returns>Число строк</returns>
+        private int LoadData()
+        {
+            int count = 0;
+            string sqlstr = $"SELECT COUNT(*) FROM CUSTOMER_CATALOG";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                count = connection.ExecuteScalar<int>(sqlstr, null);
+            }
+            return count;
+        }
+        /// <summary>
         /// Получение данных по ИД заказчика
         /// </summary>
         /// <param name="id">ИД заказчика</param>
@@ -113,50 +127,25 @@ namespace LPKService.Infrastructure.CCM
         /// </returns>
         public bool SaveData()
         {
+            customerCat.custimerId= LoadData();
             bool res = false;
             try
             {
                 OracleDynamicParameters odp = new OracleDynamicParameters();
-                string sqlstr = "INSERT INTO CUSTOMER_CATALOG (CUSTOMER_ID,ADDRESS_FOREIGN_CUSTOMER_FLAG,AGENT_NUM_ID,ADDRESS_ID," +
-                    "PRICE_LIST_NUM_ID,CUSTOMER_SHORT_NAME,INSIDE_CUSTOMER_FLAG,CUSTOMER_TYPE,SPECIAL_NOTES,CREATION_DATE,VALIDITY_DATE,EXPIRATION_DATE,EXPIRATION_DECISION_DATE,REACTIVATION_DATE,CREATION_USER_ID,EXPIRATION_USER_ID," +
-                    "REACTIVATION_USER_ID,MOD_USER_ID,MOD_DATETIME,INTERNAL_CUSTOMER_FLAG,FIELD_SALES_REP_ID,CLASSIFICATION_TYPE,INQUIRY_VALIDITY_DAYS,CUSTOMER_CURRENCY_CODE,LEVEL4_CUSTOMER_ID,RETAILER_FLAG,PRODUCT_TYPE,CUSTOMER_WEIGHT_UNIT_ID," +
-                    "CUSTOMER_DESCR_ID,INN,KPP,RWSTATION_CODE,REGION)" +
-                    "VALUES(:P_CUSTOMER_ID,:P_ADDRESS_FOREIGN_CUSTOMER_FLAG,:P_AGENT_NUM_ID,ADDRESS_ID," +
-                    ":P_PRICE_LIST_NUM_ID,:P_CUSTOMER_SHORT_NAME,:P_INSIDE_CUSTOMER_FLAG,:P_CUSTOMER_TYPE,:P_SPECIAL_NOTES,:P_CREATION_DATE,:P_VALIDITY_DATE,:P_EXPIRATION_DATE,:P_EXPIRATION_DECISION_DATE,:P_REACTIVATION_DATE,:P_CREATION_USER_ID,:P_EXPIRATION_USER_ID," +
-                    ":P_REACTIVATION_USER_ID,:P_MOD_USER_ID,SYSDATE,:P_INTERNAL_CUSTOMER_FLAG,:P_FIELD_SALES_REP_ID,:P_CLASSIFICATION_TYPE,:P_INQUIRY_VALIDITY_DAYS,:P_CUSTOMER_CURRENCY_CODE,:P_LEVEL4_CUSTOMER_ID,:P_RETAILER_FLAG,:P_PRODUCT_TYPE,:P_CUSTOMER_WEIGHT_UNIT_ID," +
-                    ":P_CUSTOMER_DESCR_ID,:P_INN,:P_KPP,:P_RWSTATION_CODE,:P_REGION)";
-                odp.Add("P_CUSTOMER_ID", customerCat.custimerId);
-                odp.Add("P_ADDRESS_FOREIGN_CUSTOMER_FLAG", customerCat.foreignCustomerFlag);
-                odp.Add("P_AGENT_NUM_ID", customerCat.agentNumId);
+                string sqlstr = "INSERT INTO CUSTOMER_CATALOG (FOREIGN_CUSTOMER_FLAG,ADDRESS_ID," +
+                "CUSTOMER_SHORT_NAME,INSIDE_CUSTOMER_FLAG,CREATION_DATE,VALIDITY_DATE,CREATION_USER_ID," +
+                "MOD_USER_ID,MOD_DATETIME,INTERNAL_CUSTOMER_FLAG,RETAILER_FLAG," +
+                "CUSTOMER_DESCR_ID,INN,KPP,RWSTATION_CODE)" +
+                    "VALUES('N',:P_ADDRESS_ID," +
+                    $"'{customerCat.customerShortName}','N',SYSDATE,SYSDATE,:P_CREATION_USER_ID," +
+                    ":P_MOD_USER_ID,SYSDATE,'N','N'," +
+                    $"'{customerCat.customerShortName}',:P_INN,:P_KPP,:P_RWSTATION_CODE)";
                 odp.Add("P_ADDRESS_ID", customerCat.addresId);
-                odp.Add("P_PRICE_LIST_NUM_ID", customerCat.priceListNumId);
-                odp.Add("P_CUSTOMER_SHORT_NAME", customerCat.customerShortName);
-                odp.Add("P_INSIDE_CUSTOMER_FLAG", customerCat.insideCustomerFlag);
-                odp.Add("P_CUSTOMER_TYPE", customerCat.customerType);
-                odp.Add("P_SPECIAL_NOTES", customerCat.specialNotes);
-                odp.Add("P_CREATION_DATE", customerCat.creationDate);
-                odp.Add("P_VALIDITY_DATE", customerCat.validityDate);
-                odp.Add("P_EXPIRATION_DATE", customerCat.expirationDate);
-                odp.Add("P_EXPIRATION_DECISION_DATE", customerCat.expirationDecisionDate);
-                odp.Add("P_REACTIVATION_DATE", customerCat.reactivationDate);
                 odp.Add("P_CREATION_USER_ID", customerCat.creationUserId);
-                odp.Add("P_EXPIRATION_USER_ID", customerCat.expirationUserId);
-                odp.Add("P_REACTIVATION_USER_ID", customerCat.reactivationUserId);
                 odp.Add("P_MOD_USER_ID", customerCat.modUserId);
-                odp.Add("P_INTERNAL_CUSTOMER_FLAG", customerCat.internalCustomerFlag);
-                odp.Add("P_FIELD_SALES_REP_ID", customerCat.fieldSalesRepId);
-                odp.Add("P_CLASSIFICATION_TYPE", customerCat.classificationType);
-                odp.Add("P_INQUIRY_VALIDITY_DAYS", customerCat.inquiryValidityDays);
-                odp.Add("P_CUSTOMER_CURRENCY_CODE", customerCat.customerCurrencyCode);
-                odp.Add("P_LEVEL4_CUSTOMER_ID", customerCat.level4CustomerId);
-                odp.Add("P_RETAILER_FLAG", customerCat.retailerFlag);
-                odp.Add("P_PRODUCT_TYPE", customerCat.productType);
-                odp.Add("P_CUSTOMER_WEIGHT_UNIT_ID", customerCat.customerWeightUnitId);
-                odp.Add("P_CUSTOMER_DESCR_ID", customerCat.customerDescrId);
                 odp.Add("P_INN", customerCat.inn);
                 odp.Add("P_KPP", customerCat.kpp);
                 odp.Add("P_RWSTATION_CODE", customerCat.rwstationCode);
-                odp.Add("P_REGION", customerCat.region);
 
                 using (OracleConnection connection = GetConnection())
                 {
@@ -165,7 +154,7 @@ namespace LPKService.Infrastructure.CCM
                     res = true;
                 }
             }
-            catch { }
+            catch {}
             return res;
         }
         /// <summary>
@@ -223,6 +212,7 @@ namespace LPKService.Infrastructure.CCM
         public void SetExpirationDate(DateTime date)
         {
             customerCat.expirationDate = date;
+            customerCat.creationDate = date;
         }
         /// <summary>
         /// Запись ИНН
@@ -244,9 +234,9 @@ namespace LPKService.Infrastructure.CCM
         /// Запись внутреннего флага заказчика
         /// </summary>
         /// <param name="flag">Флаг заказчика</param>
-        public void SetInternalCustomerFlag(bool flag)
+        public void SetInternalCustomerFlag(char flag)
         {
-            customerCat.internalCustomerFlag = BaseRepo.BoolToChar(flag);
+            customerCat.internalCustomerFlag = flag;
         }
         /// <summary>
         /// Запись КПП

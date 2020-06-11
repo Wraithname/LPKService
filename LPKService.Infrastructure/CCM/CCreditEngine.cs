@@ -84,13 +84,12 @@ namespace LPKService.Infrastructure.CCM
                 try
                 {
                     OracleDynamicParameters odp = new OracleDynamicParameters();
-                    string sqlstr = "INSERT INTO ADDRESS_CATALOG (CUSTOMER_ID,CREDIT_STATUS,ADDRESS_ID,DB_NUMBER," +
+                    string sqlstr = "INSERT INTO CUSTOMER_CATALOG_CREDIT (CREDIT_STATUS,ADDRESS_ID,DB_NUMBER," +
                         "DB_RATING,AUDITED_BALANCE_FLAG,VAT_NUMBER,LAST_FINANC_STMT_DATE,FIRST_SALE_DATE,LAST_SALE_DATE,CUSTOMER_CREDIT_LIMIT,REQUIRED_CREDIT_LIMIT,INVOICE_SEND_BY,ACCOUNTING_CONTACT_NAME,MOD_USER_ID,MOD_DATETIME," +
                         "ADMINISTRATION_CONTACT_NAME,DISCOUNT_NOTE_FOR_CREDIT_TERM,INVOICE_TYPE,INVOICE_CURRENCY_CODE,INVOICE_COPIES,FREIGHT_AND_STEEL_APART_ON_INV,DIRECT_PAYMNT_FLAG,BANK_ACCOUNT,CREDIT_TERM_CODE,CUSTOMER_CODE)" +
-                        "VALUES(:P_CUSTOMER_ID,:P_CREDIT_STATUS,:P_ADDRESS_ID,:P_DB_NUMBER," +
+                        "VALUES(:P_CREDIT_STATUS,:P_ADDRESS_ID,:P_DB_NUMBER," +
                         ":P_DB_RATING,:P_AUDITED_BALANCE_FLAG,:P_VAT_NUMBER,:P_LAST_FINANC_STMT_DATE,:P_FIRST_SALE_DATE,:P_LAST_SALE_DATE,:P_CUSTOMER_CREDIT_LIMIT,:P_REQUIRED_CREDIT_LIMIT,:P_INVOICE_SEND_BY,:P_ACCOUNTING_CONTACT_NAME,:P_MOD_USER_ID,SYSDATE," +
                         ":P_ADMINISTRATION_CONTACT_NAME,:P_DISCOUNT_NOTE_FOR_CREDIT_TERM,:P_INVOICE_TYPE,:P_INVOICE_CURRENCY_CODE,:P_INVOICE_COPIES,:P_FREIGHT_AND_STEEL_APART_ON_INV,:P_DIRECT_PAYMNT_FLAG,:P_BANK_ACCOUNT,:P_CREDIT_TERM_CODE,:P_CUSTOMER_CODE)";
-                    odp.Add("P_CUSTOMER_ID", catCredit.customerId);
                     odp.Add("P_CREDIT_STATUS", catCredit.creditStatus);
                     odp.Add("P_ADDRESS_ID", catCredit.addressId);
                     odp.Add("P_DB_NUMBER", catCredit.dbNumber);
@@ -110,7 +109,7 @@ namespace LPKService.Infrastructure.CCM
                     odp.Add("P_INVOICE_TYPE", catCredit.invoiceType);
                     odp.Add("P_INVOICE_CURRENCY_CODE", catCredit.invoiceCurrencyCode);
                     odp.Add("P_INVOICE_COPIES", catCredit.invoiceCopies);
-                    odp.Add("P_FREIGHT_AND_STEEL_APART_ON_INV", catCredit.freightAndSteelApartOnInv);
+                    odp.Add("P_FREIGHT_AND_STEEL_APART_ON_INV", 'N');
                     odp.Add("P_DIRECT_PAYMNT_FLAG", catCredit.directPaymntFlag);
                     odp.Add("P_BANK_ACCOUNT", catCredit.bankAccount);
                     odp.Add("P_CREDIT_TERM_CODE", catCredit.creditTermCode);

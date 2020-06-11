@@ -29,9 +29,9 @@ namespace LPKService.Infrastructure.CCM
         /// Получение addressID
         /// </summary>
         /// <returns>addressID</returns>
-        public string GetAddressId()
+        public int GetAddressId()
         {
-            return adressCatalog.addressId.ToString();
+            return adressCatalog.addressId;
         }
         /// <summary>
         /// Количество записей для адреса
@@ -52,7 +52,21 @@ namespace LPKService.Infrastructure.CCM
                 GetData(addressId);
                 exist = true;
             }
-
+            return count;
+        }
+        /// <summary>
+        /// Количество записей для адреса
+        /// </summary>
+        /// <param name="addressId">ИД адресса</param>
+        /// <returns>Число строк</returns>
+        public int LoadData()
+        {
+            int count = 0;
+            string sqlstr = $"SELECT COUNT(*) FROM ADDRESS_CATALOG";
+            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            {
+                count = connection.ExecuteScalar<int>(sqlstr, null);
+            }
             return count;
         }
         /// <summary>
@@ -76,6 +90,7 @@ namespace LPKService.Infrastructure.CCM
         /// </returns>
         public bool SaveData()
         {
+            adressCatalog.addressId =LoadData();
             bool res = false;
             OracleDynamicParameters odp = new OracleDynamicParameters();
             string sqlstr = "INSERT INTO ADDRESS_CATALOG (ADDRESS_FULL_NAME,CONTACT_NAME,ZIP_CODE," +

@@ -7,7 +7,7 @@ namespace LPKService.Domain.Interfaces
     /// </summary>
     public interface IAddressEngine
     {
-        string GetAddressId();
+        int GetAddressId();
         int LoadData(int addressId);
         bool SaveData();
         void SetAddress1(string address1);
