@@ -139,7 +139,7 @@ namespace LPKService.Infrastructure.CCM
                     "VALUES('N',:P_ADDRESS_ID," +
                     $"'{customerCat.customerShortName}','N',SYSDATE,SYSDATE,:P_CREATION_USER_ID," +
                     ":P_MOD_USER_ID,SYSDATE,'N','N'," +
-                    $"'{customerCat.customerShortName}',:P_INN,:P_KPP,:P_RWSTATION_CODE)";
+                    $"'{customerCat.customerDescrId}',:P_INN,:P_KPP,:P_RWSTATION_CODE)";
                 odp.Add("P_ADDRESS_ID", customerCat.addresId);
                 odp.Add("P_CREATION_USER_ID", customerCat.creationUserId);
                 odp.Add("P_MOD_USER_ID", customerCat.modUserId);

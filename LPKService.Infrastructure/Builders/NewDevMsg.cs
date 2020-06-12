@@ -39,7 +39,7 @@ namespace LPKService.Infrastructure.Builders
                 "AND LDE.MSG_ID = :MSG_ID ";
             odp.Add("MSG_STATUS", bol_new_sap_met);
             odp.Add("MSG_ID", bol_new);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
                 LogSqlWithParams(str, odp);
                 l3DelEventDel = connection.QueryFirstOrDefault<L4L3DelEventDel>(str, odp);
@@ -138,6 +138,7 @@ namespace LPKService.Infrastructure.Builders
                     }
                     if (deliveryev != null)
                     {
+                        odp = new OracleDynamicParameters();
                         str = "INSERT INTO EXT_BOL_POSITION (WEIGHT, POS_NUM_ID, BOL_ID, POS_ID, SO_ID, SO_LINE_ID, SO_ID_MET, SO_LINE_ID_MET) " +
                             "VALUES (:WEIGHT, SQN_EXT_BOL_POSITION.NEXTVAL, :BOL_ID, :POS_ID, :SO_ID, :SO_LINE_ID, :SO_ID_MET, :SO_LINE_ID_MET)";
                         odp.Add("WEIGHT", deliveryev.entryQnt);
@@ -147,7 +148,7 @@ namespace LPKService.Infrastructure.Builders
                         odp.Add("SO_LINE_ID", deliveryev.soLineId);
                         odp.Add("SO_ID_MET", deliveryev.soIdMet);
                         odp.Add("SO_LINE_ID_MET", deliveryev.soLineIdMet);
-                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        using (OracleConnection connection = GetConnection())
                         {
                             LogSqlWithParams(str, odp);
                             connection.Execute(str, odp,transaction);
@@ -175,7 +176,7 @@ namespace LPKService.Infrastructure.Builders
                         odp.Add("BOL_ID", bolId);
                         odp.Add("VEHICLE_ID_SAP", vehicleSap);
                         odp.Add("ON_AUTO_SHIPPING", autoFlag);
-                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        using (OracleConnection connection = GetConnection())
                         {
                             LogSqlWithParams(str, odp);
                             connection.Execute(str, odp,transaction);
@@ -225,7 +226,7 @@ namespace LPKService.Infrastructure.Builders
                                         odp.Add("SO_LINE_ID");
                                         odp.Add("SO_ID_MET");
                                         odp.Add("SO_LINE_ID_MET");
-                                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                                        using (OracleConnection connection = GetConnection())
                                         {
                                             LogSqlWithParams(str, odp);
                                             connection.Execute(str, odp, transaction);

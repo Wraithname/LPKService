@@ -298,7 +298,7 @@ namespace LPKService.Infrastructure.Builders
         /// true - заблокирован
         /// false - разблокирован
         /// </returns>
-        private bool IsBlocked(int msgCounter)
+        public bool IsBlocked(int msgCounter)
         {
             OracleDynamicParameters odp = new OracleDynamicParameters();
             int res = 0;

@@ -27,9 +27,7 @@ namespace LPKService.Infrastructure.CCM
             string res = "";
             try
             {
-
-            
-                string str = "select an_control_value from   attrb_control_rules where  attrb_code like 'ENDUSER_STEEL_DESIGNATION' and an_control_value  = " + strClassification;
+                string str = "select an_control_value from   attrb_control_rules where  attrb_code like 'ENDUSER_STEEL_DESIGNATION' and an_control_value  = '"+ strClassification+"'";
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {
                 res = connection.ExecuteScalar<string>(str, odp);
@@ -40,7 +38,6 @@ namespace LPKService.Infrastructure.CCM
                 return "N/A";
             }
             catch { return "N/A"; }
-
         }
         /// <summary>
         /// Проверка существования заказчика в каталоге
@@ -105,7 +102,7 @@ namespace LPKService.Infrastructure.CCM
                 }
                 else
                 {
-                    l4CustomerId = engInterf.GetCreateUserId();
+                    customerIdForL4m = engInterf.GetCreateUserId();
                     if (l4CustomerId == "")
                         res = false;
                     l4ModUserId = engInterf.GetModUserId();
@@ -326,7 +323,7 @@ namespace LPKService.Infrastructure.CCM
         /// </returns>
         public int GetCustIDFromDescr(string sCustomerDescrId, OracleDynamicParameters odp = null)
         {
-            int res = 0;
+            int res;
             string str = "SELECT CUSTOMER_ID FROM CUSTOMER_CATALOG WHERE CUSTOMER_DESCR_ID = '" + sCustomerDescrId+"'";
             using (OracleConnection connection = BaseRepo.GetDBConnection())
             {

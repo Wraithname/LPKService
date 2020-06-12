@@ -29,7 +29,9 @@ namespace LPKService.Infrastructure.SOM
         private string m_strSO_Line_Id_MET = "";
         private string m_strSo_Lines_For_Where = "";
         private IAuxConstant auxConstant = new AuxConstantRepo();
-        private IGlobalCheck check;
+        private IGlobalCheck check=new L4L3InterfaceServiceGlobalCheck();
+        TSoHeader tsoHeader;
+        TSoHeaderRepo tSo;
         /// <summary>
         /// Добавление деталей к заказу
         /// </summary>
@@ -298,8 +300,7 @@ namespace LPKService.Infrastructure.SOM
         /// <param name="l4MsgInfo">Модель таблицы L4L3Event для обработки кода</param>
         public void CreateNewOrder(L4L3SoHeader QryData, TL4MsgInfo l4MsgInfo)
         {
-            TSoHeader soHeader=new TSoHeader();
-            ITSoHeader tSo = new TSoHeaderRepo();
+            tsoHeader = new TSoHeader();
             string sNumeration = auxConstant.GetStringAuxConstant("SO_NUMERATION");
             TL4EngineInterfaceMngRepo eimOrderEntry = new TL4EngineInterfaceMngRepo(QryData, l4MsgInfo);
             try
@@ -313,7 +314,7 @@ namespace LPKService.Infrastructure.SOM
             int iShipToCode = ManageShipTo(l4MsgInfo, eimOrderEntry);
             if(iShipToCode>=0)
             {
-                soHeader = tSo.Create(QryData, l4MsgInfo, iShipToCode, true);
+                tsoHeader = tSo.Create(QryData, l4MsgInfo, iShipToCode, true);
                 eimOrderEntry.l4MsgInfo.msgReport = new TMessageResult();
                 eimOrderEntry.l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
                 if (eimOrderEntry.l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
@@ -328,17 +329,18 @@ namespace LPKService.Infrastructure.SOM
         /// <returns>Тип контракта</returns>
         public TContractType DecodeContractType(string soid, string strCustomerId)
         {
-            OracleDynamicParameters odp = null;
-            char flag;
+            OracleDynamicParameters odp = new OracleDynamicParameters();
+            string flag;
             string str = "select internal_customer_flag " +
                 "from customer_catalog " +
-                "where  customer_descr_id = p_customer_descr_id";
-            odp.Add("p_customer_descr_id", strCustomerId, OracleMappingType.Varchar2);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+                "where  customer_descr_id = :p_customer_descr_id";
+            odp.Add("p_customer_descr_id", Convert.ToInt32(strCustomerId));
+            using (OracleConnection connection = GetConnection())
             {
-                flag = connection.QueryFirstOrDefault<char>(str, odp);
+                LogSqlWithParams(str, odp);
+                flag = connection.ExecuteScalar<string>(str, odp);
             }
-            if (flag == 'Y' || soid.Substring(0, 3) == "OMK")
+            if (flag[0] == 'Y' || soid.Substring(0, 2) == "OMK")
                 return TContractType.coInternal;
             return TContractType.coContract;
         }
@@ -556,6 +558,7 @@ namespace LPKService.Infrastructure.SOM
         {
             TCheckResult checkResult = new TCheckResult();
             checkResult.isOK = false;
+            tSo = new TSoHeaderRepo();
             L4L3SoHeaderRepo header = new L4L3SoHeaderRepo();
             L4L3SoHeader soHeader = header.GetData(l4MsgInfo);
             BlockForProcess(l4MsgInfo, true);
@@ -601,6 +604,8 @@ namespace LPKService.Infrastructure.SOM
                         {
                             m_strSO_Line_Id_Params = kSol.soLineId;
                             m_strSO_Line_Id_MET = kSol.metSoLineId;
+                            tSo.m_strSO_Line_Id_MET= kSol.metSoLineId;
+                            tSo.m_strSO_Line_Id_Params = kSol.soLineId;
                             l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
                             l4MsgInfo.msgReport.remark = "";
 

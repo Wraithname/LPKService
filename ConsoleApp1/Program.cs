@@ -19,7 +19,7 @@ namespace ConsoleApp1
         private const string connectionString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA= (SERVICE_NAME=XEPDB1)));User Id=OMK;Password=oracle;";
         static void Main(string[] args)
         {
-            InitClass();
+            //InitClass();
             INewMessageBuilder mng = new NewMessageBuilder(new L4L3InterfaceServiceGlobalCheck(), new CCManagement(), new SOManagment(), new L4L3ServiceShipping(), new Material());
             mng.NewMessage();
             CleanupClass();
@@ -56,6 +56,7 @@ namespace ConsoleApp1
                     connection.Execute("DELETE FROM L4_L3_SO_HEADER WHERE MSG_COUNTER = 1");
                     // AUX_CONSTANT
                     connection.Execute("DELETE FROM AUX_CONSTANT WHERE CONSTANT_ID = 'ONE_TO_SEVERAL_ORDER_FROM_SAP'");
+                    connection.Execute("DELETE FROM AUX_CONSTANT WHERE CONSTANT_ID = 'SO_NUMERATION'");
                     transaction.Commit();
                 }
             }

@@ -18,8 +18,8 @@ namespace LPKService.Infrastructure.SOM
     {
         private Logger logger = LogManager.GetLogger(nameof(SOM));
         private char oneToSeveralOrderFromSap = 'Y';
-        private string m_strSO_Line_Id_MET = "";
-        private string m_strSO_Line_Id_Params = "";
+        public string m_strSO_Line_Id_MET = "";
+        public string m_strSO_Line_Id_Params = "";
         private SOManagment som = new SOManagment();
         private TSoHeader soHeader;
         private TSoLine templine;
@@ -96,14 +96,15 @@ namespace LPKService.Infrastructure.SOM
         {
             bisValid = false;
             int res = 0;
-            List<int> values = new List<int>();
-            string str = "SELECT CUSTOMER_ID AS CUSTOMER_ID" +
+            List<int> values;
+            string str = "SELECT CUSTOMER_ID AS CUSTOMER_ID " +
                 "FROM L4_L3_SO_HEADER " +
                 "WHERE MSG_COUNTER=:MSG_COUNTER";
             OracleDynamicParameters odp = new OracleDynamicParameters();
             odp.Add("MSG_COUNTER", l4MsgInfo.msgCounter);
-            using (OracleConnection connection = BaseRepo.GetDBConnection())
+            using (OracleConnection connection = GetConnection())
             {
+                LogSqlWithParams(str, odp);
                 values = connection.Query<int>(str, odp).AsList();
             }
             if (values.Count > 0)
@@ -112,14 +113,15 @@ namespace LPKService.Infrastructure.SOM
                 {
                     if (val != 0)
                     {
-                        int count = 0;
+                        int count = -1;
                         str = "SELECT COUNT(*) AS COUNTER " +
                             "FROM CUSTOMER_CATALOG " +
                             "WHERE CUSTOMER_DESCR_ID=:CUSTOMER_DESCR_ID";
                         odp = new OracleDynamicParameters();
                         odp.Add("CUSTOMER_DESCR_ID", val);
-                        using (OracleConnection connection = BaseRepo.GetDBConnection())
+                        using (OracleConnection connection = GetConnection())
                         {
+                            LogSqlWithParams(str, odp);
                             count = connection.ExecuteScalar<int>(str, odp);
                         }
                         if (count > 0)
