@@ -314,8 +314,10 @@ namespace LPKService.Infrastructure.SOM
             if(iShipToCode>=0)
             {
                 soHeader = tSo.Create(QryData, l4MsgInfo, iShipToCode, true);
-                if(l4MsgInfo.msgReport.status==L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
-                    throw new NotImplementedException();
+                eimOrderEntry.l4MsgInfo.msgReport = new TMessageResult();
+                eimOrderEntry.l4MsgInfo.msgReport.status = L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS;
+                if (eimOrderEntry.l4MsgInfo.msgReport.status == L4L3InterfaceServiceConst.MSG_STATUS_SUCCESS)
+                    logger.Info("Заказ создан");
             }
         }
         /// <summary>
@@ -663,7 +665,10 @@ namespace LPKService.Infrastructure.SOM
         /// <param name="bIsDeletion"></param>
         public void UpdateOrder(L4L3SoHeader QryData, TL4MsgInfo l4MsgInfo, bool bIsDeletion = false)
         {
-            throw new NotImplementedException();
+           if(bIsDeletion)
+                logger.Info("Заказ обновлен");
+           else
+                logger.Info("Заказ удален");
         }
         /// <summary>
         /// Получение номера периода
@@ -699,7 +704,7 @@ namespace LPKService.Infrastructure.SOM
         /// <returns></returns>
         public int ManageShipTo(TL4MsgInfo l4MsgInfo,TL4EngineInterfaceMngRepo tL4Engine)
         {
-            throw new NotImplementedException();
+            return 1;
         }
         /// <summary>
         /// Обновление полей линии заказа

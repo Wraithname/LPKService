@@ -12,7 +12,7 @@ namespace LPKService.Infrastructure.Work
     public class TL4EngineInterfaceMngRepo : ITL4EngineInterfaceMng
     {
         TL4EngineInterfaceMng tL4Engine;
-        TL4MsgInfo l4MsgInfo;
+        public TL4MsgInfo l4MsgInfo;
         #region Constant
         string userNameNotDefined = "NOT DEFINED";
         int msgRemarkMaxLen = 4000;

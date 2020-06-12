@@ -8,7 +8,7 @@ namespace LPKService.Infrastructure.SOM
 {
     public class AuxConstantRepo : SOMRepoBase,IAuxConstant
     {
-        private AuxConstant auxConstant;
+        AuxConstant auxConstant;
         /// <summary>
         /// Получение значения константы с плавающей запятой
         /// </summary>
@@ -45,10 +45,10 @@ namespace LPKService.Infrastructure.SOM
         /// <param name="constId">ИД константы</param>
         private void AuxConGetData(string constId)
         {
-            string sqlstr = $"SELECT INTEFER_VALUE,CHAR_VALUE,FLOAT_VALUE FROM AUX_CONTSTANT WHERE CONSTANT_ID= {constId}";
+            string sqlstr = $"SELECT INTEGER_VALUE,CHAR_VALUE,FLOAT_VALUE FROM AUX_CONSTANT WHERE CONSTANT_ID= '{constId}'";
             using (OracleConnection conn = GetConnection())
             {
-                auxConstant = conn.ExecuteScalar<AuxConstant>(sqlstr,null);
+                auxConstant = conn.QueryFirstOrDefault<AuxConstant>(sqlstr,null);
             }
         }
     }

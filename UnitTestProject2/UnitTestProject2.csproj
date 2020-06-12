@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="CCMTest\Functions.cs" />
     <Compile Include="CCMTest\CCMWorkTest.cs" />
+    <Compile Include="SOMTest\SOMWorkTest.cs" />
     <Compile Include="WorkTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

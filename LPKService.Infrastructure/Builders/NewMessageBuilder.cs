@@ -138,19 +138,6 @@ namespace LPKService.Infrastructure.Builders
                     acceptOrderConsts = "N";
                 List<L4L3Event> events = new List<L4L3Event>();
                 sqlstr = "SELECT le.* FROM L4_L3_EVENT le WHERE MSG_STATUS = 1 AND msg_id IN (4301,4303, 4304, 4305) AND le.MSG_DATETIME > SYSDATE - 7 ORDER BY MSG_COUNTER";
-                //sqlstr = "SELECT * " +
-                //    "FROM ( " +
-                //    "SELECT le.* FROM L4_L3_EVENT le WHERE MSG_STATUS = 1 AND msg_id IN (4303, 4304, 4305) AND le.MSG_DATETIME > SYSDATE - 7 " +
-                //    "UNION ALL select l.* " +
-                //    "join (select shm.MSG_COUNTER FROM ( SELECT MAX(sh.MSG_COUNTER) as MSG_COUNTER , sh.SO_ID FROM L4_L3_SO_HEADER sh JOIN L4_L3_SO_LINE sl ON sh.MSG_COUNTER =sl.MSG_COUNTER" +
-                //    "WHERE sh.STATUS =20 GROUP BY sh.SO_ID) shm ) sh5 on sh5.MSG_COUNTER=l.MSG_COUNTER" +
-                //    "WHERE l.MSG_STATUS = 1 " +
-                //    "AND   l.msg_id = 4301 " +
-                //    "AND   l.MSG_DATETIME > SYSDATE - 7 " +
-                //    "UNION ALL" +
-                //    "SELECT st.* FROM L4_L3_EVENT st WHERE MSG_STATUS = 1 " +
-                //    "AND msg_id IN (4311,4312,4313,4314,4315)" +
-                //    ") ORDER BY MSG_COUNTER ";
                 using (OracleConnection connection = GetConnection())
                 {
                     events = connection.Query<L4L3Event>(sqlstr, null).AsList();
