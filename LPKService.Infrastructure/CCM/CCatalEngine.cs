@@ -5,6 +5,7 @@ using Dapper;
 using Dapper.Oracle;
 using LPKService.Domain.Models.CCM;
 using LPKService.Infrastructure.Work;
+using System.Collections.Generic;
 
 namespace LPKService.Infrastructure.CCM
 {
@@ -106,6 +107,22 @@ namespace LPKService.Infrastructure.CCM
             }
             return count;
         }
+        private int GetId()
+        {
+            int curId = -1;
+            try
+            {
+                List<int> id = new List<int>();
+                string sqlstr = $"SELECT CUSTOMER_ID FROM customer_catalog Order by CUSTOMER_ID";
+                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                {
+                    id = connection.Query<int>(sqlstr, null).AsList();
+                }
+                curId = id[id.Count - 1];
+            }
+            catch { }
+            return curId;
+        }
         /// <summary>
         /// Получение данных по ИД заказчика
         /// </summary>
@@ -127,19 +144,20 @@ namespace LPKService.Infrastructure.CCM
         /// </returns>
         public bool SaveData()
         {
-            customerCat.custimerId= LoadData();
+            customerCat.custimerId= 1+ GetId();
             bool res = false;
             try
             {
                 OracleDynamicParameters odp = new OracleDynamicParameters();
-                string sqlstr = "INSERT INTO CUSTOMER_CATALOG (FOREIGN_CUSTOMER_FLAG,ADDRESS_ID," +
+                string sqlstr = "INSERT INTO CUSTOMER_CATALOG (CUSTOMER_ID,FOREIGN_CUSTOMER_FLAG,ADDRESS_ID," +
                 "CUSTOMER_SHORT_NAME,INSIDE_CUSTOMER_FLAG,CREATION_DATE,VALIDITY_DATE,CREATION_USER_ID," +
                 "MOD_USER_ID,MOD_DATETIME,INTERNAL_CUSTOMER_FLAG,RETAILER_FLAG," +
                 "CUSTOMER_DESCR_ID,INN,KPP,RWSTATION_CODE)" +
-                    "VALUES('N',:P_ADDRESS_ID," +
+                    "VALUES(:P_CUSTOMER_ID,'N',:P_ADDRESS_ID," +
                     $"'{customerCat.customerShortName}','N',SYSDATE,SYSDATE,:P_CREATION_USER_ID," +
                     ":P_MOD_USER_ID,SYSDATE,'N','N'," +
                     $"'{customerCat.customerDescrId}',:P_INN,:P_KPP,:P_RWSTATION_CODE)";
+                odp.Add("P_CUSTOMER_ID", customerCat.custimerId);
                 odp.Add("P_ADDRESS_ID", customerCat.addresId);
                 odp.Add("P_CREATION_USER_ID", customerCat.creationUserId);
                 odp.Add("P_MOD_USER_ID", customerCat.modUserId);

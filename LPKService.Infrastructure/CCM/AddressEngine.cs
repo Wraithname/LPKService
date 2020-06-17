@@ -7,6 +7,7 @@ using Repository;
 using Dapper;
 using Dapper.Oracle;
 using NLog;
+using System.Collections.Generic;
 
 namespace LPKService.Infrastructure.CCM
 {
@@ -69,6 +70,22 @@ namespace LPKService.Infrastructure.CCM
             }
             return count;
         }
+        private int GetId()
+        {
+            int curId = -1;
+            try
+            {
+                List<int> id = new List<int>();
+                string sqlstr = $"SELECT ADDRESS_ID FROM ADDRESS_CATALOG Order by ADDRESS_ID";
+                using (OracleConnection connection = BaseRepo.GetDBConnection())
+                {
+                    id = connection.Query<int>(sqlstr, null).AsList();
+                }
+                curId = id[id.Count - 1];
+            }
+            catch { }
+            return curId;
+        }
         /// <summary>
         /// Получение данных по ИД адреса
         /// </summary>
@@ -90,15 +107,16 @@ namespace LPKService.Infrastructure.CCM
         /// </returns>
         public bool SaveData()
         {
-            adressCatalog.addressId =LoadData();
+            adressCatalog.addressId =1+GetId();
             bool res = false;
             OracleDynamicParameters odp = new OracleDynamicParameters();
-            string sqlstr = "INSERT INTO ADDRESS_CATALOG (ADDRESS_FULL_NAME,CONTACT_NAME,ZIP_CODE," +
+            string sqlstr = "INSERT INTO ADDRESS_CATALOG (ADDRESS_ID,ADDRESS_FULL_NAME,CONTACT_NAME,ZIP_CODE," +
                 "ADDRESS2,ADDRESS3,ADDRESS1,CITY,STATE_CODE,STATE,COUNTRY,CONTACT_PHONE1,CONTACT_FAX,CONTACT_PHONE2,CONTACT_MOBILE,EDI_ADDRESS," +
                 "EMAIL_ADDRESS,SPECIAL_NOTES,MOD_USER_ID,MOD_DATETIME,RECEIVING_PHONE,COMPANY_PHONE,CONTACT_NAME2,COMPANY_FAX,COMPANY_EMAIL,CONTACT_POSITION,COMPANY_WEB_SITE)" +
-                "VALUES(:P_ADDRESS_FULL_NAME,:P_CONTACT_NAME,:P_ZIP_CODE,:P_ADDRESS2,:P_ADDRESS3,:P_ADDRESS1,:P_CITY,:P_STATE_CODE,:P_STATE," +
+                "VALUES(:P_ADDRESS_ID,:P_ADDRESS_FULL_NAME,:P_CONTACT_NAME,:P_ZIP_CODE,:P_ADDRESS2,:P_ADDRESS3,:P_ADDRESS1,:P_CITY,:P_STATE_CODE,:P_STATE," +
                 ":P_COUNTRY,:P_CONTACT_PHONE1,:P_CONTACT_FAX,:P_CONTACT_PHONE2,:P_CONTACT_MOBILE,:P_EDI_ADDRESS,:P_EMAIL_ADDRESS,:P_SPECIAL_NOTES,:P_MOD_USER_ID," +
                 "SYSDATE,:P_RECEIVING_PHONE,:P_COMPANY_PHONE,:P_CONTACT_NAME2,:P_COMPANY_FAX,:P_COMPANY_EMAIL,:P_CONTACT_POSITION,:P_COMPANY_WEB_SITE)";
+            odp.Add("P_ADDRESS_ID", adressCatalog.addressId);
             odp.Add("P_ADDRESS_FULL_NAME", adressCatalog.addressFullName);
             odp.Add("P_CONTACT_NAME", adressCatalog.contactName);
             odp.Add("P_ZIP_CODE", adressCatalog.zipCode);

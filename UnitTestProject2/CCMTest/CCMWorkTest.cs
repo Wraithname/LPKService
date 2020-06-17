@@ -25,7 +25,7 @@ namespace UnitTestProject2.CCMTest
                     // L4_L3_EVENT
                     connection.Execute("INSERT INTO L4_L3_EVENT(MSG_COUNTER,MSG_ID,MSG_DATETIME,OP_CODE,MSG_STATUS,BLOCK_FOR_PROCESS)VALUES(1,4303,SYSDATE,1,1,1)", transaction);
                     // L4_L3_CUSTOMER
-                    connection.Execute("INSERT INTO L4_L3_CUSTOMER(MSG_COUNTER,CUSTOMER_ID,CUSTOMER_NAME,INTERNAL_CUSTOMER_FLAG,CUSTOMER_CLASSIFICATION_TYPE,CUSTOMER_CURRENCY_CODE,ZIP_CODE,ADDRESS_1,ADDRESS_2,ADDRESS_3,CITY,STATE,COUNTRY,CONTACT_NAME,CONTACT_PHONE,CONTACT_FAX,CONTACT_MOBILE,CONTACT_EMAIL,VALIDITY_FLAG,INN,KPP,RWSTATION_CODE,REGION)VALUES(1,1,'ВлГУ','N','type','31231','606107','123412','12334','123444','Муром','Владимирская','Россия','Кульков','1221334','1232324','1231234','1234','N','1231241244','1235154','1212334','12314144')", transaction);
+                    connection.Execute("INSERT INTO L4_L3_CUSTOMER(MSG_COUNTER,CUSTOMER_ID,CUSTOMER_NAME,INTERNAL_CUSTOMER_FLAG,CUSTOMER_CLASSIFICATION_TYPE,CUSTOMER_CURRENCY_CODE,ZIP_CODE,ADDRESS_1,ADDRESS_2,ADDRESS_3,CITY,STATE,COUNTRY,CONTACT_NAME,CONTACT_PHONE,CONTACT_FAX,CONTACT_MOBILE,CONTACT_EMAIL,VALIDITY_FLAG,INN,KPP,RWSTATION_CODE,REGION) VALUES(1,1,'МИ ВлГУ','N','Внутренний','123','602253','ул. Орловская','N','N','Муром','Владимирская','Россия','Кульков','N','N','N','N','N','3446454433','1','334','33')", transaction);
                     // AUX_CONSTANT
                     connection.Execute("INSERT INTO AUX_CONSTANT(CONSTANT_ID,DESCRIPTION,INTEGER_VALUE,CHAR_VALUE,FLOAT_VALUE,INFO,MOD_USER_ID,VALUE_MODIFIABLE_FLAG)VALUES('ACCEPT_ORDER_IN_SRV','Принятие заказа',0,'Y',0,'lelelo',103,'Y')", transaction);
                     transaction.Commit();
@@ -37,6 +37,7 @@ namespace UnitTestProject2.CCMTest
         {
             INewMessageBuilder mng = new NewMessageBuilder(new L4L3InterfaceServiceGlobalCheck(), new CCManagement(), new SOManagment(), new L4L3ServiceShipping(), new Material());
             mng.NewMessage();
+            bool tr = true;
         }
         [ClassCleanup]
         public static void CleanupClass()

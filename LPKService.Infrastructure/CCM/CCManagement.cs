@@ -262,9 +262,8 @@ namespace LPKService.Infrastructure.CCM
                         LogSqlWithParams(str, odp);
                         connection.Execute(str, odp);
                     }
-                    odp = new OracleDynamicParameters();
                 }
-
+                odp = new OracleDynamicParameters();
                 str = "SELECT * FROM ZIP_CATALOGUE WHERE COUNTRY = '" + customer.country + "' AND ZIP_CODE = '" + customer.zipCode + "' AND CITY = '" + customer.city + "'";
                 using (OracleConnection connection = GetConnection())
                 {
@@ -276,17 +275,20 @@ namespace LPKService.Infrastructure.CCM
                         "COUNTRY," +
                         "ZIP_CODE," +
                         "CITY," +
+                        "STATE, " +
                         "MOD_USER_ID," +
                         "MOD_DATETIME" +
                         ") VALUES (" +
                         ":P_COUNTRY," +
                         ":P_ZIP_CODE," +
                         ":P_CITY," +
+                        ":P_STATE, " +
                         ":P_MOD_USER_ID," +
                         "SYSDATE )";
-                    odp.Add("P_COUNTRY", customer.country.ToString());
-                    odp.Add("P_ZIP_CODE", customer.zipCode.ToString());
-                    odp.Add("P_CITY", customer.city.ToString());
+                    odp.Add("P_COUNTRY", customer.country);
+                    odp.Add("P_ZIP_CODE", customer.zipCode);
+                    odp.Add("P_CITY", customer.city);
+                    odp.Add("P_STATE", customer.state);
                     odp.Add("P_MOD_USER_ID", pModUserId);
                     using (OracleConnection connection = GetConnection())
                     {
